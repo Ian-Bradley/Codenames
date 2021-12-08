@@ -1,10 +1,10 @@
 {
   "name": "codenames",
   "version": "1.0.0",
-  "description": "Replication of the Codenames card game / website",
+  "description": "Replication of Codenames",
   "main": "index.js",
   "scripts": {
-    "dev": "./node_modules/webpack/bin/webpack.js serve --mode development",
+    "start": "./node_modules/webpack/bin/webpack.js serve --mode development",
     "build": "./node_modules/webpack/bin/webpack.js"
   },
   "author": "",

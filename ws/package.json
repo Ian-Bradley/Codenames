@@ -1,7 +1,7 @@
 {
     "name": "codenamesserver",
     "version": "1.0.0",
-    "description": "websocket server for codenames",
+    "description": "websocket server for Codenames",
     "main": "server.js",
     "scripts": {
         "start": "node server.js"

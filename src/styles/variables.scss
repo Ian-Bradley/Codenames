@@ -1,0 +1,124 @@
+/*======================================
+    FONTS
+========================================*/
+
+$font-family: 'Nunito Sans', sans-serif;
+$font-family-cards: 'Oswald', sans-serif;
+
+/*======================================
+    SPACING / SIZING
+========================================*/
+
+$app-spacing: 0.8rem;
+$app-spacing-mobile: 0.6rem;
+
+$game-header-height: 70px;
+$game-message-height: 40px;
+
+$game-log-height: 400px;
+
+$card-margin-bottom: 6px;
+$card-margin-right: 6px;
+
+$list-spacing: 6px;
+$list-spacing-card-highlighting: 1px;
+
+$border-radius: 1rem;
+$border-radius-gm: 5px;
+$border-radius-btn: 1.3rem;
+$border-radius-card: 8px;
+
+$box-shadow-border-width: 1px 1px 3px;
+$box-shadow-border-color: rgba(0,0,0,0.3);
+$box-shadow: 0 0 0 0 transparent, 0 0 0 0 transparent, 0 4px 0 0 $box-shadow-border-color;
+
+$button-icon-size: 20px;
+$button-height: 40px;
+
+/*======================================
+    FONT SIZING
+========================================*/
+
+$game-menu-title: 2rem;
+$game-menu-title-c: 3rem;
+
+$game-card-text: 1.2rem;
+$game-card-highlighted: 0.8rem;
+
+$team-remaining-cards: 3rem;
+$team-list-title: 0.9rem;
+
+$game-log-title: 0.9rem;
+
+$game-message: 1.2rem;
+$game-message-height: 2rem;
+$game-message-weight: 700;
+
+$game-button: 1rem;
+$game-button-height: 1.5rem;
+$game-button-weight: 500;
+
+/*======================================
+    COLORS
+========================================*/
+
+$team-color-red: rgb(143,43,28);
+$team-color-red-light: rgb(230, 88, 49);
+$team-color-red-log-bg: rgb(255, 231, 213);
+$team-color-red-log-name: rgb(193, 32, 5);
+$team-color-blue: rgb(50,132,163);
+$team-color-blue-light: rgb(123, 202, 233);
+$team-color-blue-log-bg: rgb(207, 249, 255);
+$team-color-blue-log-name: rgb(0, 121, 197);
+
+$bg-red-light: rgb(231, 102, 60);
+$bg-red-dark: rgb(72, 12, 2);
+$bg-blue-light: rgb(91, 174, 215);
+$bg-blue-dark: rgb(5, 60, 84);
+$bg-green-light: rgb(101, 215, 91);
+$bg-green-dark: rgb(5, 84, 16);
+
+$button-yellow: rgb(255, 228, 0);
+$button-yellow-hover: rgb(255, 211, 0);
+$button-yellow-border__1: rgb(255, 246, 167);
+$button-yellow-border__2: rgb(255, 228, 0);
+$button-yellow-border__3: rgb(243, 187, 0);
+$button-yellow-border-hover__1: rgb(255, 240, 120);
+$button-yellow-border-hover__2: rgb(255, 211, 0);
+$button-yellow-border-hover__3: rgb(225, 151, 8);
+
+$button-blue: rgb(68, 200, 255);
+$button-blue-hover: rgb(32, 167, 255);
+$button-blue-border__1: rgb(145, 223, 255);
+$button-blue-border__2: rgb(68, 200, 255);
+$button-blue-border__3: rgb(63, 167, 211);
+$button-blue-border-top-hover: rgb(152, 224, 255);
+$button-blue-border-bottom-hover: rgb(26, 124, 193);
+
+$button-green: rgb(106, 233, 17);
+$button-green-hover: rgb(57, 219, 7);
+$button-green-border__1: rgb(199, 247, 156);
+$button-green-border__2: rgb(106, 233, 17);
+$button-green-border__3: rgb(95, 163, 19);
+$button-green-border-top-hover: rgb(173, 242, 128);
+$button-green-border-bottom-hover: rgb(41, 143, 5);
+
+$button-red: rgb(255, 136, 30);
+$button-red-hover: rgb(255, 84, 13);
+$button-red-border__1: rgb(255, 185, 123);
+$button-red-border__2: rgb(255, 136, 30);
+$button-red-border__3: rgb(217, 116, 26);
+$button-red-border-top-hover: rgb(255, 188, 134);
+$button-red-border-bottom-hover: rgb(193, 65, 11);
+
+/*======================================
+    ANIMATIONS
+========================================*/
+
+$animation-time__minor: 200ms;
+$animation-time__cards: 400ms;
+
+$transition__all: all $animation-time__minor ease 0ms;
+$transition__opacity: opacity $animation-time__minor ease-in 0ms;
+$transition__border: border $animation-time__minor ease-in 0ms;
+$transition__transform-cards: transform $animation-time__cards linear 0ms;

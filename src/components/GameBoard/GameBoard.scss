@@ -1,0 +1,10 @@
+@import "../../styles/variables.scss";
+
+main.codenames .game-board {
+    display: flex;
+    width: 100%;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-content: baseline;
+    margin-bottom: 10px;
+}

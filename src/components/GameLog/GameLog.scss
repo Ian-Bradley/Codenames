@@ -1,0 +1,64 @@
+@import "../../styles/variables.scss";
+
+main.codenames .game-log {
+    width: 90%;
+    height: $game-log-height;
+    max-width: 300px;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    background-color: rgba(255,255,255,0.4);
+    border-style: solid;
+    border-image: initial;
+    border-width: $box-shadow-border-width;
+    border-color: $box-shadow-border-color;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+
+    &.active {
+        background-color: rgba(255,255,255,1);
+    }
+
+    & .game-log-title {
+        font-size: $game-log-title;
+        pointer-events: none;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+    
+    & .game-log-list,
+    & .game-log-list ul,
+    & .game-log-list li {
+        width: 100%;
+    }
+    
+    & .game-log-list {
+        max-height: 358px;
+        overflow: hidden;
+    }
+    
+    & .game-log-list li {
+        padding: 4px 2px;
+        margin-bottom: 1px;
+    
+        & span {
+            font-weight: 600;
+        }
+    
+        & span:nth-child(2) {
+            text-transform: uppercase;
+        }
+    
+        & span.game-log-clue {
+            color: #888;
+            background-color: #fff;
+            padding: 0 4px;
+        }
+    
+        &.team-red  { background-color: $team-color-red-log-bg;  }
+        &.team-blue { background-color: $team-color-blue-log-bg; }
+        
+        &.team-red span:nth-child(1), span.card-red { color: $team-color-red-log-name;  }
+        &.team-blue span:nth-child(1), span.card-blue { color: $team-color-blue-log-name; }
+    }
+}

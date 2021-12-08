@@ -1,0 +1,16 @@
+{
+    "name": "codenamesserver",
+    "version": "1.0.0",
+    "description": "websocket server for codenames",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "express": "^4.17.1",
+        "uuid": "^8.3.2",
+        "ws": "^8.3.0"
+    }
+}

@@ -1,0 +1,32 @@
+@import "../../styles/variables.scss";
+
+main.codenames .game-input {
+    width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+
+    & .word-input,
+    .guess-select {
+        border-radius: 10px;
+        background-color: #fff;
+        height: $game-button-height;
+        margin-right: 6px;
+        font-size: 24px;
+        text-transform: uppercase;
+    }
+    
+    & .word-input:focus,
+    .guess-select:focus {
+        outline: none;
+    }
+    
+    & .word-input {
+        min-width: 200px
+    }
+    
+    & .guess-select {
+        width: $game-button-height;
+    }
+}

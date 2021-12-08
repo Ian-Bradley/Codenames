@@ -1,0 +1,28 @@
+@import "../../styles/variables.scss";
+
+main.codenames .game-header {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: flex-end;
+    height: $game-header-height;
+    width: 100%;
+
+    & .game-controls-left,
+    & .game-controls-right {
+        position: absolute;
+        top: $app-spacing;
+        display: flex;
+        flex-flow: row nowrap;
+    }
+    
+    & .game-controls-left {
+        left: $app-spacing;
+        & div { margin-right: 6px; }
+    }
+    
+    & .game-controls-right {
+        right: $app-spacing;
+        & div { margin-left: 6px; }
+    }
+}

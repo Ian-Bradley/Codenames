@@ -1,0 +1,86 @@
+@import "../../styles/variables.scss";
+
+main.codenames .team-card {
+    width: 90%;
+    max-width: 300px;
+    padding: $app-spacing;
+    margin-bottom: $app-spacing;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-evenly;
+    border-style: solid;
+    border-image: initial;
+    border-width: $box-shadow-border-width;
+    border-color: $box-shadow-border-color;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+
+    & .remaining-cards {
+        font-size: $team-remaining-cards;
+        font-weight: 700;
+        display: flex;
+        flex-flow: column nowrap;
+        text-shadow: rgb(0 0 0 / 80%) 0px 0px $app-spacing;
+    }
+
+    & .team-list {
+        display: flex;
+        flex-flow: row wrap;
+
+        & li {
+            margin-right: $list-spacing;
+        }
+    }
+
+    & .team-list,
+    .remaining-guesses span {
+        margin-left: 5px;
+    }
+
+    & .team-list,
+    .remaining-cards,
+    .remaining-guesses span {
+        color: #fff;
+    }
+
+    & .team-list,
+    .team-card-title,
+    .remaining-guesses {
+        font-size: $team-list-title;
+    }
+
+    & .team-list,
+    .team-card-title,
+    .remaining-cards,
+    .remaining-guesses {
+        pointer-events: none;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+}
+
+main.codenames .team-red {
+    & .team-card {
+        background-color: $team-color-red;
+    }
+    & .remaining-cards {
+        align-items: flex-end;
+        margin-right: $app-spacing;
+    }
+    & .team-card-title {
+        color: $team-color-red-light;
+    }
+}
+
+main.codenames .team-blue {
+    & .team-card {
+        background-color: $team-color-blue;
+    }
+    & .remaining-cards {
+        align-items: flex-start;
+        margin-left: $app-spacing;
+    }
+    & .team-card-title {
+        color: $team-color-blue-light;
+    }
+}

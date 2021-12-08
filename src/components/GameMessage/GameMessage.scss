@@ -1,0 +1,18 @@
+@import "../../styles/variables.scss";
+
+main.codenames .game-message {
+    border: none;
+    border-radius: $border-radius-gm;
+    background: #fff;
+    padding: 0.25rem 0.5rem;
+    margin-bottom: $app-spacing;
+    pointer-events: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+main.codenames .game-message {
+    font-size: $game-message;
+    font-weight: $game-message-weight;
+    line-height: $game-message-height;
+}

@@ -1,0 +1,121 @@
+@import "../../styles/variables.scss";
+
+/*======================================
+    BASE
+========================================*/
+
+main.codenames .game-card {
+    background-image: url("./images/card-neutral.png");
+    width: 20%;
+    height: 13%;
+    margin-right: $card-margin-right;
+    margin-bottom:  $card-margin-bottom;
+    border-radius: $border-radius-card;
+    transition: $transition__transform-cards;
+    z-index: 20;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    &:nth-child(5n) { margin-right: 0px; }
+    &.active        { pointer-events: none; }
+    &.card-red      { background-image: url("./images/card-red.png")   }
+    &.card-blue     { background-image: url("./images/card-blue.png")  }
+    &.card-black    { background-image: url("./images/card-black.png") }
+
+    /*======================================
+        HIGHTLIGHTING
+    ========================================*/
+
+    & .game-card-clickable {
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 21;
+        border: 6px solid rgba(0,0,0,0);
+        border-radius: $border-radius-card;
+        transition: $transition__border;
+
+        &:hover {
+            border: 6px solid $button-yellow;
+        }
+        &.highlighted {
+            border: 6px solid $button-yellow;
+        }
+    }
+
+    /*======================================
+        HIGHTLIGHTING LIST
+    ========================================*/
+
+    & .game-card-highlighted {
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        z-index: 30;
+        pointer-events: none;
+        -webkit-user-select: none;
+        user-select: none;
+        max-width: calc( 100% - $button-height );
+        font-size: $game-card-highlighted;
+
+        & ul {
+            display: flex;
+            flex-flow: row wrap;
+        }
+
+        & li {
+            color: #fff;
+            margin-right: $list-spacing-card-highlighting;
+            padding: 0 2px;
+            &.player-red  { background-color: red; }
+            &.player-blue { background-color: blue; }
+        }
+    }
+
+    /*======================================
+        TEXT
+    ========================================*/
+    
+    & .game-card-text {
+        color: #000;
+        font-weight: 900;
+        font-family: $font-family-cards;
+        font-size: $game-card-text;
+        letter-spacing: -1px;
+        text-transform: uppercase;
+        margin-bottom: 10%;
+        pointer-events: none;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+
+    &.card-black .game-card-text {
+        color: #fff;
+    }
+
+    /*======================================
+        CHOOSE BUTTON
+    ========================================*/
+    
+    & .game-card-button {
+        transition: $transition__opacity;
+        position: absolute;
+        opacity: 0;
+        z-index: 40;
+        top: 0;
+        right: 0;
+    }
+
+    &:hover .game-card-button {
+        opacity: 1;
+    }
+}

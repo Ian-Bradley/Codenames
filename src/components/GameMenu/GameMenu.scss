@@ -1,0 +1,35 @@
+@import "../../styles/variables.scss";
+
+main.codenames .game-menu {
+    position: absolute;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-evenly;
+    align-items: center;
+    top: 33%;
+    border: 2px solid #000;
+    border-radius: $border-radius;
+    background-color: #fff;
+    min-width: 300px;
+    min-height: 300px;
+
+    & .game-title {
+        font-size: $game-menu-title;
+        font-weight: 800;
+
+        & span {
+            font-size: $game-menu-title-c;
+        }
+    }
+
+    & .game-menu-buttons {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
+
+        & .game-button {
+            margin-bottom: 6px;
+        }
+    }
+}

@@ -37,6 +37,7 @@ export default class App extends Component
             isHost: false,
             gameState: C.onst.gameState_setup,
             currentPlayer: {
+                id: 0,
                 name: random_name(),
                 team: '',
                 position: '',
@@ -63,6 +64,7 @@ export default class App extends Component
         this.set_wsConnection                     = this.set_wsConnection.bind(this);
         this.set_isHost                           = this.set_isHost.bind(this);
 
+        this.set_current_player__ID               = this.set_current_player__ID.bind(this);
         this.set_current_player__name             = this.set_current_player__name.bind(this);
         this.set_current_player__team             = this.set_current_player__team.bind(this);
         this.set_current_player__position         = this.set_current_player__position.bind(this);
@@ -95,6 +97,8 @@ export default class App extends Component
         this.set_app_dimensions                   = this.set_app_dimensions.bind(this);
         // Functional methods
         this.debounce                             = this.debounce.bind(this);
+        this.set_cookie                           = this.set_cookie.bind(this);
+        this.get_cookie                           = this.get_cookie.bind(this);
         this.card_choose                          = this.card_choose.bind(this);
         this.give_clue                            = this.give_clue.bind(this);
         // this.disable_interactions                 = this.disable_interactions.bind(this);
@@ -120,6 +124,18 @@ export default class App extends Component
         this.setState({ isHost: state });
     }
 
+    /*======================================*/
+
+    // ANCHOR: set_current_player__ID
+    set_current_player__ID ( ID )
+    {
+        this.setState(prevState => {
+            let currentPlayer = { ...prevState.currentPlayer };
+            currentPlayer.id = ID;
+            return { currentPlayer };
+        });
+    }
+    
     /*======================================*/
     
     // ANCHOR: set_current_player__name
@@ -477,7 +493,6 @@ export default class App extends Component
         ANCHOR: FUNCTIONAL METHODS
     ========================================*/
 
-    // Underscore.js / Lodash
     // ANCHOR: debounce
     debounce ( func, wait, immediate )
     {
@@ -493,7 +508,40 @@ export default class App extends Component
             timeout = setTimeout(later, wait);
             if (callNow) func.apply(context, args);
         };
-    };
+    }
+
+    /*======================================*/
+
+    // ANCHOR set_cookie
+    set_cookie ( name, value, days )
+    {
+        var expires = '';
+        if ( days )
+        {
+            var date = new Date();
+            date.setTime(date.getTime() + ( days*24*60*60*1000 ) );
+            expires = '; expires=' + date.toUTCString();
+        }
+        document.cookie = name + '=' + ( value || '' )  + expires + '; path=/';
+    }
+
+    /*======================================*/
+
+    // ANCHOR get_cookie
+    get_cookie ( name )
+    {
+        var nameEQ = name + '=';
+        var ca = document.cookie.split( ';' );
+        for ( var i = 0; i < ca.length; i++ )
+        {
+            var c = ca[i];
+            while ( c.charAt(0)==' ' )
+            { c = c.substring( 1, c.length ); }
+            if ( c.indexOf( nameEQ ) == 0 )
+            { return c.substring( nameEQ.length, c.length ); }
+        }
+        return null;
+    }
     
     /*======================================*/
 
@@ -582,22 +630,19 @@ export default class App extends Component
             if ( !this.state.wsConnected )
             {
                 // Set cards
-                this.set_cards( updateData.cards ); 
+                this.set_cards( updateData.cards );
+                // Set currentPlayer ID
+                if ( updateData.player.id )
+                { this.set_current_player__ID( updateData.player.id );  }
                 // Set players
                 for ( let i = 0; i < updateData.players.length; i++ )
                 {
                     if ( !this.state.players.includes( updateData.players[i] ) )
-                    {
-                        this.add_player( updateData.players[i] );
-                    }
+                    { this.add_player( updateData.players[i] ); }
                 }
                 // Set host
-                console.log('updateData.host: ', updateData.host);
                 if ( updateData.host )
-                {
-                    console.log('==> setting host');
-                    this.set_isHost( updateData.host );
-                }
+                { this.set_isHost( updateData.host ); }
                 // Set connection state
                 this.set_wsConnection( true ); 
             }
@@ -805,12 +850,13 @@ export default class App extends Component
                     <div>
                         <ul>
                             <li>Players: {dev_list_players(this.state.players)}</li>
-                            <li>Current Player: {this.state.currentPlayer.name},
+                            <li>Current Player: {this.state.currentPlayer.id},
+                                {this.state.currentPlayer.name},
                                 {this.state.currentPlayer.team},
                                 {this.state.currentPlayer.position},
                             </li>
                             <li>State: {this.state.gameState}</li>
-                            <li>Host: {this.state.isHost}</li>
+                            <li>Host: {this.state.isHost.toString()}</li>
                         </ul>
                     </div>
                     <div>

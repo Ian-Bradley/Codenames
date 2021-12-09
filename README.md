@@ -27,3 +27,14 @@ In the `/ws` directory
 ```sh
 npm start
 ```
+
+## Common Function Credits
+
+Set and Get Cookie:
+https://stackoverflow.com/questions/14573223/set-cookie-and-get-cookie-with-javascript/24103596#24103596
+
+Array shuffle:
+http://stackoverflow.com/questions/962802#962890
+
+Debouncing:
+`Lodash` || `Underscore.js`

@@ -16,7 +16,6 @@ const wss = new SocketServer.Server({ server });
     ANCHOR: FUNCTIONAL METHODS
 ========================================*/
 
-// http://stackoverflow.com/questions/962802#962890
 const shuffle_array = ( array ) =>
 {
     var tmp, current, top = array.length;
@@ -102,8 +101,8 @@ class Codenames
         this.gameState = 'setup'
         this.round = 0;
         this.cards = build_cards();
-        this.originalHost = '';
-        this.host = '';
+        this.originalHost = {};
+        this.host = {};
         this.players = [];
         this.gameLog = [];
         this.teamBlue = {
@@ -125,6 +124,8 @@ class Codenames
         this.update_player_position = this.update_player_position.bind(this);
         this.add_highlight          = this.add_highlight.bind(this);
         this.remove_highlight       = this.remove_highlight.bind(this);
+        this.set_team__cards        = this.set_team__cards.bind(this);
+        this.set_team__guesses      = this.set_team__guesses.bind(this);
 
         this.clear_card_highlights  = this.clear_card_highlights.bind(this);
         this.clear_highlights       = this.clear_highlights.bind(this);
@@ -259,6 +260,34 @@ class Codenames
                     );
                 }
             }
+        }
+    }
+
+    /*======================================*/
+
+    set_team__cards ( team, cards )
+    {
+        if ( team === 'red' )
+        {
+            this.teamRed.cards = cards;
+        }
+        if ( team === 'blue' )
+        {
+            this.teamBlue.cards = cards;
+        }
+    }
+
+    /*======================================*/
+
+    set_team__guesses ( team, guesses )
+    {
+        if ( team === 'red' )
+        {
+            this.teamRed.guesses = guesses;
+        }
+        if ( team === 'blue' )
+        {
+            this.teamBlue.guesses = guesses;
         }
     }
 

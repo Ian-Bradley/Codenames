@@ -100,31 +100,24 @@ class Codenames
     constructor()
     {
         this.gameState = 'setup'
-        this.round     = 0;
-        this.cards     = build_cards();
-        this.host      = {
-            name: '',
-            team: '',
-            position: '',
-            highlights: [],
-        };
-        this.players   = [];
-        this.gameLog   = [];
+        this.round = 0;
+        this.cards = build_cards();
+        this.originalHost = '';
+        this.host = '';
+        this.players = [];
+        this.gameLog = [];
         this.teamBlue = {
             cards: 0,
             guesses: 0,
-            operatives: 0,
-            spymasters: 0,
         };
         this.teamBlue = {
             cards: 0,
             guesses: 0,
-            operatives: 0,
-            spymasters: 0,
         };
         this.set_game_state         = this.set_game_state.bind(this);
         this.set_round              = this.set_round.bind(this);
-        this.set_host               = this.set_host(this);
+        this.set_host               = this.set_host.bind(this);
+        this.set_original_host      = this.set_original_host.bind(this);
         this.add_player             = this.add_player.bind(this);
         this.remove_player          = this.remove_player.bind(this);
         this.update_player_name     = this.update_player_name.bind(this);
@@ -156,10 +149,18 @@ class Codenames
 
     /*======================================*/
 
-    // ANCHOR: set_host
-    set_host ( player )
+    // ANCHOR: set_original_host
+    set_original_host ( name )
     {
-        this.host = player;
+        this.originalHost = name;
+    }
+
+    /*======================================*/
+
+    // ANCHOR: set_host
+    set_host ( name )
+    {
+        this.host = name;
     }
 
     /*======================================*/
@@ -339,26 +340,26 @@ wss.on('connection', ( wsClient ) =>
     ========================================*/
     
     console.log('Client connected');
-    let clientName = '';
-    let connectionData = {
+    let clientData = {
         id: uuidv4(),
         messageType: 'clientConnected',
         total: wss.clients.size,
         cards: game.cards,
         players: game.players,
+        originalHost: false,
         host: false,
-        player: {
-            name: '',
-            team: '',
-            position: '',
-            highlights: [],
-        },
+        name: '',
     }
     // Send total players to all other clients
-    wss.broadcast( JSON.stringify( connectionData ), wsClient );
+    wss.broadcast( JSON.stringify( clientData ), wsClient );
     // Send cards, players, and set host on connection for current client
-    if ( wss.clients.size === 1 ) { connectionData.host = true; }
-    wss.broadcast( JSON.stringify( connectionData ), wsClient, true );
+    if ( wss.clients.size === 1 )
+    { clientData.host = true; }
+    if ( !game.originalHost )
+    { clientData.originalHost = true; }
+    console.log('clientData.host: ', clientData.host);
+    console.log('clientData.originalHost: ', clientData.originalHost);
+    wss.broadcast( JSON.stringify( clientData ), wsClient, true );
 
     /*======================================
         ANCHOR: HANDLERS
@@ -381,12 +382,25 @@ wss.on('connection', ( wsClient ) =>
             case 'addPlayer':
             {
                 updateData.id = uuidv4();
-                clientName = updateData.player.name;
-                if ( game.host.name === clientName )
-                {
-
-                }
+                clientData.name = updateData.player.name;
                 game.add_player( updateData.player );
+                // change host and originalHost from '' to {}
+                // change remove_player() call to be sent the correct name variable (player.name)
+                // change clientData to have a player {} instead of name ''
+                // longer - add ids to players so name changes are less important
+                //        - use the uuid given to connectedData
+                if ( clientData.host || ( game.originalHost === updateData.player.name ) )
+                {
+                    console.log('==> setting host');
+                    game.set_host( updateData.player.name );
+                    console.log('game.host: ', game.host);
+                }
+                if ( clientData.originalHost )
+                {
+                    console.log('==> setting original host');
+                    game.set_original_host( updateData.player.name );
+                    console.log('game.originalHost: ', game.originalHost);
+                }
                 output = JSON.stringify( updateData );
                 wss.broadcast( output, wsClient );
                 break;
@@ -399,7 +413,7 @@ wss.on('connection', ( wsClient ) =>
             case 'updatePlayerName':
             {
                 updateData.id = uuidv4();
-                clientName = updateData.newName;
+                clientData.name = updateData.newName;
                 game.update_player_name( updateData.player.name, updateData.newName );
                 output = JSON.stringify( updateData );
                 wss.broadcast( output, wsClient );
@@ -487,16 +501,18 @@ wss.on('connection', ( wsClient ) =>
     wsClient.on('close', ( wsClient ) =>
     {
         console.log('Client disconnected');
-        if ( game.host.name === clientName )
-        {// TODO: determine who should be host on host disconnection
-            // game.set_host();
-        }
-        game.remove_player( clientName );
-        connectionData.id          = uuidv4();
-        connectionData.messageType = 'clientDisconnected';
-        connectionData.total       = wss.clients.size;
-        connectionData.player.name = clientName;
-        connectionData.host        = false;
-        wss.broadcast( JSON.stringify( connectionData ), wsClient );
+        game.remove_player( clientData.name );
+        // Set host to next player in line on host disconnect
+        if ( ( game.host === clientData.name ) && ( game.players.length ) )
+        { game.set_host( game.players[0].name ); }
+        if ( !game.players.length )
+        { game.set_host( '' ); }
+        console.log('game.host: ', game.host);
+        console.log('game.originalHost: ', game.originalHost);        
+        // clientData.id          = uuidv4();
+        clientData.messageType = 'clientDisconnected';
+        clientData.total       = wss.clients.size;
+        clientData.host        = false;
+        wss.broadcast( JSON.stringify( clientData ), wsClient );
     });
 });

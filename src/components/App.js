@@ -331,10 +331,10 @@ export default class App extends Component
     /*======================================*/
 
     // ANCHOR: remove_player
-    remove_player ( player )
+    remove_player ( playerName )
     {
         this.setState( prevState => {
-            let players = prevState.players.filter( gamePlayer => gamePlayer.name !== player.name );
+            let players = prevState.players.filter( gamePlayer => gamePlayer.name !== playerName );
             return { players };
         });
     }
@@ -623,7 +623,7 @@ export default class App extends Component
 
                 case 'clientDisconnected':
                 {
-                    this.remove_player( updateData.player );
+                    this.remove_player( updateData.player.name );
                     this.set_players_total( updateData.total );
                     break;
                 }

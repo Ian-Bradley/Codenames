@@ -17,52 +17,55 @@ export default class Header extends Component
     render()
     {
 
-        // ANCHOR: on_game_players
         const on_game_players = () =>
         {
-            console.log('on_game_players');
+            console.log('===> on_game_players');
+            console.log('===> END - on_game_players');
         }
 
         /*======================================*/
+        /*======================================*/
 
-        // ANCHOR: on_game_timer
         const on_game_timer = () =>
         {
-            console.log('on_game_timer');
+            console.log('===> on_game_timer');
+            console.log('===> END - on_game_timer');
         }
 
         /*======================================*/
+        /*======================================*/
 
-        // ANCHOR: on_game_info
         const on_game_info = () =>
         {
-            console.log('on_game_info');
+            console.log('===> on_game_info');
+            console.log('===> END - on_game_info');
         }
 
         /*======================================*/
+        /*======================================*/
 
-        // ANCHOR: on_game_reset
         const on_game_reset = () =>
         {
-            console.log('on_game_reset');
+            console.log('===> on_game_reset');
+            console.log('===> END - on_game_reset');
         }
 
         /*======================================*/
-
-        // ANCHOR: on_game_current_player
+        /*======================================*/
+        
         const on_game_current_player = () =>
         {
-            console.log('on_game_current_player');
+            console.log('===> on_game_current_player');
+            console.log('===> END - on_game_current_player');
         }
 
-
+        /*======================================*/
         /*======================================*/
 
-        // ANCHOR: display_button_reset
         const display_button_reset = () =>
         {
             let displayClass = '';
-            if ( !this.props.isHost )
+            if ( !this.props.currentPlayer.isHost )
             { displayClass = C.onst.classHidden; }
             return displayClass;
         }

@@ -3,14 +3,15 @@ export const onst = {
 
     debounceDelay: 200,
 
-    maxOperatives: 3,
-    maxSpymasters: 1,
-    maxPlayers:    8,
+    maxOperatives: 5,
+    maxSpymasters: 2,
+    maxPlayers:    12,
 
     classActive:      'active',
     classDisabled:    'disabled',
     classHidden:      'hidden',
     classHighlighted: 'highlighted',
+    classChosen:      'chosen',
 
     transitionTime__fade:        200,
     transitionTime__stateChange: 2000,

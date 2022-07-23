@@ -20,7 +20,6 @@ export default class TeamCard extends Component
         FUNCTIONAL METHODS
     ========================================*/
 
-    // ANCHOR: count_positions
     count_positions ( currentPlayer, players, team, position )
     {
         let count = 0;
@@ -47,7 +46,6 @@ export default class TeamCard extends Component
     render()
     {
 
-        // ANCHOR: on_select_position
         const on_select_position = ( buttonPosition ) =>
         {
             // Prop assignment
@@ -99,11 +97,12 @@ export default class TeamCard extends Component
         }
         
         /*======================================*/
+        /*======================================*/
 
-        // ANCHOR: list_players
-        const list_players = ( position ) =>
+        const display_list_players = ( position ) =>
         {
             let players = [];
+
             // Connected players
             if ( this.props.players.length )
             {
@@ -115,6 +114,7 @@ export default class TeamCard extends Component
                     }
                 }
             }
+
             // Current player
             if ( ( this.props.currentPlayer.team === this.props.team ) && ( this.props.currentPlayer.position === position ) )
             {
@@ -124,8 +124,8 @@ export default class TeamCard extends Component
         }
 
         /*======================================*/
+        /*======================================*/
 
-        // ANCHOR: display_remaining_cards
         const display_remaining_cards = () =>
         {
             let remaining = this.props.teamData.cards;
@@ -137,8 +137,8 @@ export default class TeamCard extends Component
         }
 
         /*======================================*/
+        /*======================================*/
 
-        // ANCHOR: display_remaining_guesses
         const display_remaining_guesses = () =>
         {
             let remaining = this.props.teamData.guesses;
@@ -150,8 +150,8 @@ export default class TeamCard extends Component
         }
 
         /*======================================*/
+        /*======================================*/
 
-        // ANCHOR: display_button_operative
         const display_button_operative = () =>
         {
             let operativesTotal = this.count_positions( this.props.currentPlayer, this.props.players, this.props.team, C.onst.positionOperative );
@@ -162,8 +162,8 @@ export default class TeamCard extends Component
         }
 
         /*======================================*/
+        /*======================================*/
 
-        // ANCHOR: display_button_spymaster
         const display_button_spymaster = () =>
         {
             let spymastersTotal = this.count_positions( this.props.currentPlayer, this.props.players, this.props.team, C.onst.positionSpymaster );
@@ -189,7 +189,7 @@ export default class TeamCard extends Component
                 <div className='team-operatives'>
                     <div className='team-card-title'>Operative(s)</div>
                     <ul className='team-list'>
-                        {list_players(C.onst.positionOperative)}
+                        {display_list_players(C.onst.positionOperative)}
                     </ul>
                     <Button
                         btnValue={C.onst.positionOperative}
@@ -202,7 +202,7 @@ export default class TeamCard extends Component
                 <div className='team-spymaster'>
                     <div className='team-card-title'>Spymaster</div>
                     <ul className='team-list'>
-                        {list_players(C.onst.positionSpymaster)}
+                        {display_list_players(C.onst.positionSpymaster)}
                     </ul>
                     <Button
                         btnValue={C.onst.positionSpymaster}

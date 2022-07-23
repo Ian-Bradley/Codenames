@@ -5,21 +5,31 @@
     width: 100%;
     bottom: 5px;
     left: 5px;
-    z-index: 100;
+    z-index: 1000;
     display: flex;
     flex-flow: row wrap;
     align-items: flex-end;
 
     &>div:nth-child(1) {
-        min-width: 220px;
-        max-width: 220px;
-        overflow: hidden;
+        width: auto;
+        white-space: nowrap;
+
+        & li {
+            margin-top: 2px;
+        }
+
+        & span {
+            font-weight: 800;
+            border: 2px solid black;
+            padding: 0px 2px;
+        }
     }
 
     &>div:nth-child(2) {
         display: flex;
         flex-flow: row nowrap;
         max-height: 38px;
+        margin-left: auto;
     }
 
     &>div>div,>div>input {

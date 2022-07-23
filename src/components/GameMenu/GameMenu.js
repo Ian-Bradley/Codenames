@@ -12,36 +12,35 @@ export default class GameMenu extends Component
     render()
     {
 
-        // ANCHOR: on_randomize_teams
         const on_randomize_teams = () =>
         {
             console.log('on_randomize_teams');
         }
 
         /*======================================*/
+        /*======================================*/
 
-        // ANCHOR: on_reset_teams
         const on_reset_teams = () =>
         {
             console.log('on_reset_teams');
         }
 
         /*======================================*/
+        /*======================================*/
 
-        // ANCHOR: on_start_new_game
         const on_start_new_game = () =>
         {
             console.log('on_start_new_game');
-            this.props_set_game_state( C.onst.gameState_deal );
+            // this.props_set_game_state( C.onst.gameState_deal );
         }
 
         /*======================================*/
+        /*======================================*/
 
-        // ANCHOR: display_button_menu
         const display_button_menu = () =>
         {
             let displayClass = '';
-            if ( !this.props.isHost )
+            if ( !this.props.currentPlayer.isHost )
             { displayClass = C.onst.classHidden; }
             return displayClass;
         }

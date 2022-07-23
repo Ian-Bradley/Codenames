@@ -10,7 +10,7 @@ main.codenames .game-card {
     height: 13%;
     margin-right: $card-margin-right;
     margin-bottom:  $card-margin-bottom;
-    border-radius: $border-radius-card;
+    border-radius: $card-border-radius;
     transition: $transition__transform-cards;
     z-index: 20;
     position: relative;
@@ -40,15 +40,20 @@ main.codenames .game-card {
         width: 100%;
         height: 100%;
         z-index: 21;
-        border: 6px solid rgba(0,0,0,0);
-        border-radius: $border-radius-card;
+        border: $card-border-size solid rgba(0,0,0,0);
+        border-radius: $card-border-radius;
         transition: $transition__border;
 
         &:hover {
-            border: 6px solid $button-yellow;
+            border-color: $button-yellow;
         }
         &.highlighted {
-            border: 6px solid $button-yellow;
+            border-color: $button-yellow;
+        }
+        &.chosen {
+            border: none;
+            cursor: default;
+            pointer-events: none;
         }
     }
 

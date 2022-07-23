@@ -7,7 +7,7 @@ import './GameCard.scss';
 export default class GameCard extends Component
 {
     /*======================================
-        ANCHOR: STATE + FUNCTION BINDINGS
+        STATE + FUNCTION BINDINGS
     ========================================*/
 
     constructor(props)
@@ -20,16 +20,16 @@ export default class GameCard extends Component
     }
 
     /*======================================
-        ANCHOR: STATE METHODS
+        STATE METHODS
     ========================================*/
 
-    set_card_highlight ( state )
+    set_card_highlight ( stateClass )
     {
-        this.setState({ cardHighlight: state });
+        this.setState({ cardHighlight: stateClass }); 
     }
 
     /*======================================
-        ANCHOR: RENDER FUNCTIONS
+        RENDER FUNCTIONS
     ========================================*/
 
     render()
@@ -37,69 +37,102 @@ export default class GameCard extends Component
 
         const on_card_highlight = e =>
         {
+            // console.log('===> on_card_highlight');
             if ( !this.props.cardChosen )
             {
-                // if (  )
-                // {
-
-                // }
-
-
-                if ( this.state.cardHighlight )
+                // Operative action
+                if ( this.props.currentPlayer.position === C.onst.positionOperative )
                 {
-                    this.set_card_highlight( '' );
-                    this.props.remove_highlight( this.props.cardIndex );
-                }
-                else
-                {
-                    this.set_card_highlight( C.onst.classHighlighted );
-                    this.props.add_highlight( this.props.cardIndex );
+                    // console.log('> Operative - Highlight');
+                    this.props.card_highlight( this.props.cardIndex );
+                    // console.log('> END - Operative - Highlight');
                 }
 
+                // Spymaster action
+                if ( this.props.currentPlayer.position === C.onst.positionSpymaster )
+                {
+                    // console.log('> Spymaster - Highlight');
+                    // console.log('> Spymaster - Adding border highlight');
+                    // console.log('> Spymaster - Removing border highlight');
+                    // TODO: add check for already having been highlighted (new state var?)
 
+                    // // this.set_card_highlight( C.onst.classHighlighted );
+                    // this.set_card_highlight( '' );
 
-
-
+                    // TODO: add to guesses on clue input bar for spymaster
+                    // TODO: check for gameState so only specific spymaster can select cards
+                    // console.log('> END - Spymaster - Highlight');
+                }
             }
+            // console.log('===> END - on_card_highlight');
         }
 
+        /*======================================*/
         /*======================================*/
 
         const on_card_choose = () =>
         {
-            if ( this.state.cardHighlight )
-            { this.set_card_highlight( '' ); }
-            this.props.card_choose( this.props.cardIndex );
+            console.log('===> on_card_choose');
+            // make spymaster not able to see choose button, so only operative can choose
+            // this.props.card_choose( this.props.cardIndex );
+            console.log('===> END - on_card_choose');
         }
 
+        /*======================================*/
         /*======================================*/
 
         const list_highlighting_players = () =>
         {
-            let highlighting = [];
-            if ( this.props.highlights.length )
+            if ( !( this.props.highlights === undefined ) && ( this.props.highlights.length ) )
             {
+                // console.log('===> list_highlighting_players');
+                let highlights = [];
+                // console.log('this.props.highlights: ', this.props.highlights);
+                // console.log('> Beggining highlight array.push loop');
                 for ( let i = 0; i < this.props.highlights.length; i++ )
                 {
-                    highlighting.push(
+                    highlights.push(
                         <li key={i} className={'player-' + this.props.highlights[i].team}>
                             {this.props.highlights[i].name}
                         </li>
                     );
                 }
+                // console.log('highlights: ', highlights);
+                // console.log('===> END - list_highlighting_players');
+                return highlights;
             }
-            return highlighting;
+            return [];
+        }
+
+        /*======================================*/
+        /*======================================*/
+
+        const list_classes = () =>
+        {
+            // Class for displaying card type to spymasters
+            let cardClass = '';
+            if ( this.props.currentPlayer.position === C.onst.positionSpymaster )
+            {
+                if ( this.props.cardType === C.onst.teamRed   ) { cardClass += C.onst.cardRed;   }
+                if ( this.props.cardType === C.onst.teamBlue  ) { cardClass += C.onst.cardBlue;  }
+                if ( this.props.cardType === C.onst.teamBlack ) { cardClass += C.onst.cardBlack; }
+                if ( this.props.cardType === C.onst.teamGreen ) { cardClass += C.onst.cardGreen; }
+            }
+            // Class for chosen cards to disable interaction
+            if ( this.props.cardChosen ) { cardClass += ' ' + C.onst.classChosen }
+            return cardClass;
         }
 
         /*======================================
-            ANCHOR: COMPONENTS
+            COMPONENTS
         ========================================*/
 
         return (
             <div
                 className={
                     'game-card'
-                    + ' ' + this.props.cardClasses
+                    + ' '
+                    + list_classes()
                 }
                 style={{
                     width: this.props.cardWidth + 'px',
@@ -109,7 +142,8 @@ export default class GameCard extends Component
                 <div
                     className={
                         'game-card-clickable'
-                        + ' ' + this.state.cardHighlight
+                        + ' '
+                        + this.state.cardHighlight
                     }
                     onClick={on_card_highlight}>
                 </div>
@@ -119,10 +153,10 @@ export default class GameCard extends Component
                     </ul>
                 </div>
                 <Button
-                    btnClasses={'card-choose'}
-                    btnContainerClasses={'game-card-button'}
-                    btnFunction={on_card_choose}
-                    btnIcon={IconHand}
+                    btnClasses          ={'card-choose'}
+                    btnContainerClasses ={'game-card-button'}
+                    btnFunction         ={on_card_choose}
+                    btnIcon             ={IconHand}
                 />
                 <div
                     className='game-card-text'

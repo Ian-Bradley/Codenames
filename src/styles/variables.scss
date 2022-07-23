@@ -12,21 +12,20 @@ $font-family-cards: 'Oswald', sans-serif;
 $app-spacing: 0.8rem;
 $app-spacing-mobile: 0.6rem;
 
+$game-log-height: 400px;
 $game-header-height: 70px;
 $game-message-height: 40px;
-
-$game-log-height: 400px;
+$game-message-border-radius: 5px;
 
 $card-margin-bottom: 6px;
 $card-margin-right: 6px;
+$card-border-size: 6px;
+$card-border-radius: 8px;
 
 $list-spacing: 6px;
 $list-spacing-card-highlighting: 1px;
 
 $border-radius: 1rem;
-$border-radius-gm: 5px;
-$border-radius-btn: 1.3rem;
-$border-radius-card: 8px;
 
 $box-shadow-border-width: 1px 1px 3px;
 $box-shadow-border-color: rgba(0,0,0,0.3);
@@ -34,6 +33,7 @@ $box-shadow: 0 0 0 0 transparent, 0 0 0 0 transparent, 0 4px 0 0 $box-shadow-bor
 
 $button-icon-size: 20px;
 $button-height: 40px;
+$button-border-radius: 1.3rem;
 
 /*======================================
     FONT SIZING

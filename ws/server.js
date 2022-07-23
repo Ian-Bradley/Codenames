@@ -1,5 +1,5 @@
 /*======================================
-    ANCHOR: SERVER CONFIGURATION
+    SERVER CONFIGURATION
 ========================================*/
 
 const express = require('express');
@@ -13,8 +13,20 @@ const server = express()
 const wss = new SocketServer.Server({ server });
 
 /*======================================
-    ANCHOR: FUNCTIONAL METHODS
+    FUNCTIONAL METHODS
 ========================================*/
+
+// const isEmpty = ( object ) =>
+// {
+//     for (const property in object)
+//     {
+//         return false;
+//     }
+//     return true;
+// }
+
+/*======================================*/
+/*======================================*/
 
 const shuffle_array = ( array ) =>
 {
@@ -29,6 +41,7 @@ const shuffle_array = ( array ) =>
 }
 
 /*======================================*/
+/*======================================*/
 
 const create_card_indexes = () =>
 {
@@ -39,6 +52,7 @@ const create_card_indexes = () =>
     return indexArray;
 }
 
+/*======================================*/
 /*======================================*/
 
 const get_codenames = () =>
@@ -51,23 +65,22 @@ const get_codenames = () =>
 }
 
 /*======================================*/
+/*======================================*/
 
 // C.onst.cardTotalNeutral: 7,   N,   0-6
 // C.onst.cardTotalBlue:    8,   B,   7-14
 // C.onst.cardTotalRed:     9,   R,   15-23
 // C.onst.cardTotalBlack:   1,  Bl,   24
-
 // [  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24] array key
 // [  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25] position key
-
 // [ 10,  9, 25, 14,  4, 24, 16, 11, 19,  3, 22,  5,  7, 17, 13, 18,  2, 21, 15,  1,  6, 20, 12,  8, 23] index (random)
 // [  N,  N,  N,  N,  N,  N,  N,  R,  R,  R,  R,  R,  R,  R,  R,  R,  B,  B,  B,  B,  B,  B,  B,  B, Bl] card-type
 
 const build_cards = () =>
 {
-    let codenames   = get_codenames();
-    let indexes = create_card_indexes();
-    let cards = [];
+    let codenames = get_codenames();
+    let indexes   = create_card_indexes();
+    let cards     = [];
     for ( let i = 0; i < codenames.length; i++ )
     {
         let cardType = '';
@@ -83,7 +96,7 @@ const build_cards = () =>
             index: indexes[i],
             text: codenames[i],
             type: cardType,
-            chosen: '',
+            chosen: false,
         };
         cards[i] = card;
     }
@@ -91,431 +104,637 @@ const build_cards = () =>
 }
 
 /*======================================
-    ANCHOR: GAME CLASS - CODENAMES
+    GAME CLASS - CODENAMES
 ========================================*/
 
 class Codenames
 {
     constructor()
     {
-        this.gameState = 'setup'
-        this.round = 0;
-        this.cards = build_cards();
-        this.originalHost = {};
-        this.host = {};
-        this.players = [];
-        this.gameLog = [];
-        this.teamBlue = {
-            cards: 0,
-            guesses: 0,
+        this.state = {
+            // Host
+            originalHost: '',
+            // Game Settings
+            gameState: 'setup',
+            round: 0,
+            cards: build_cards(),
+            // Teams
+            teamRed: {
+                cards: 0,
+                guesses: 0,
+            },
+            teamBlue: {
+                cards: 0,
+                guesses: 0,
+            },
+            // Players
+            players: [],
+            playersDisconnected: [],
+            // Game Log
+            gameLog: [],
         };
-        this.teamBlue = {
-            cards: 0,
-            guesses: 0,
-        };
-        this.set_game_state         = this.set_game_state.bind(this);
-        this.set_round              = this.set_round.bind(this);
-        this.set_host               = this.set_host.bind(this);
-        this.set_original_host      = this.set_original_host.bind(this);
-        this.add_player             = this.add_player.bind(this);
-        this.remove_player          = this.remove_player.bind(this);
-        this.update_player_name     = this.update_player_name.bind(this);
-        this.update_player_team     = this.update_player_team.bind(this);
-        this.update_player_position = this.update_player_position.bind(this);
-        this.add_highlight          = this.add_highlight.bind(this);
-        this.remove_highlight       = this.remove_highlight.bind(this);
-        this.set_team__cards        = this.set_team__cards.bind(this);
-        this.set_team__guesses      = this.set_team__guesses.bind(this);
 
-        this.clear_card_highlights  = this.clear_card_highlights.bind(this);
-        this.clear_highlights       = this.clear_highlights.bind(this);
-        this.add_log_item           = this.add_log_item.bind(this);
-        this.clear_log              = this.clear_log.bind(this);
+        /*======================================*/
+        /*======================================*/
+
+        // State methods - Host
+        this.is_host                  = this.is_host.bind(this);
+
+        // State methods - Game Settings
+        this.set_game_state           = this.set_game_state.bind(this);
+        this.next_round               = this.next_round.bind(this);
+
+        // State methods - Teams
+        this.set_team__cards          = this.set_team__cards.bind(this);
+        this.set_team__guesses        = this.set_team__guesses.bind(this);
+
+        // State methods - Players
+        this.player_add               = this.player_add.bind(this);
+        this.player_remove            = this.player_remove.bind(this);
+
+        // State methods - Player Info
+        this.set_player_name          = this.set_player_name.bind(this);
+        this.set_player_team          = this.set_player_team.bind(this);
+        this.set_player_position      = this.set_player_position.bind(this);
+        this.set_player_host          = this.set_player_host.bind(this);
+        this.set_player_original_host = this.set_player_original_host.bind(this);
+
+        // State methods - Highlighting
+        this.highlight_add            = this.highlight_add.bind(this);
+        this.highlight_remove         = this.highlight_remove.bind(this);
+        this.highlight_clear_card     = this.highlight_clear_card.bind(this);
+        this.highlight_clear_all      = this.highlight_clear_all.bind(this);
+
+        // State methods - Game Log
+        this.log_add_item             = this.log_add_item.bind(this);
+        this.log_clear                = this.log_clear.bind(this);
+
+        // State methods - Player Interactions
+        // this.card_choose              = this.card_choose.bind(this);
+        // this.clue_give                = this.clue_give.bind(this);
     }
-    /*======================================*/
 
-    // ANCHOR: set_game_state
+    /*======================================
+        STATE METHODS - Host
+    ========================================*/
+
+    is_host ( playerID )
+    {
+        console.log('===> is_host: ', playerID);
+        if ( this.state.players.find( player => player.id === playerID ) )
+        {
+            console.log('===> END - is_host - player found');
+            return this.state.players.find( player => player.id === playerID ).isHost;
+        }
+        console.log('===> END - is_host - player not found');
+    }
+
+    /*======================================
+        STATE METHODS - Game Settings
+    ========================================*/
+
     set_game_state ( state )
     {
-        this.gameState = state;
+        console.log('===> set_game_state: ', state);
+        console.log('> BEFORE: ', this.state.gameState);
+        this.state.gameState = state;
+        console.log('> AFTER: ', this.state.gameState);
+        console.log('===> END - set_game_state');
     }
 
     /*======================================*/
+    /*======================================*/
 
-    // ANCHOR: set_round
-    set_round ( amount )
+    next_round ()
     {
-        this.round = amount;
+        console.log('===> next_round');
+        console.log('> BEFORE: ', this.state.round);
+        this.state.round++;
+        console.log('> AFTER: ', this.state.round);
+        console.log('===> END - next_round');
     }
 
-    /*======================================*/
-
-    // ANCHOR: set_original_host
-    set_original_host ( name )
-    {
-        this.originalHost = name;
-    }
-
-    /*======================================*/
-
-    // ANCHOR: set_host
-    set_host ( name )
-    {
-        this.host = name;
-    }
-
-    /*======================================*/
-
-    // ANCHOR: add_player
-    add_player ( player )
-    {
-        this.players.push( player );
-    }
-
-    /*======================================*/
-
-    // ANCHOR: remove_player
-    remove_player ( playerName )
-    {
-        this.players = this.players.filter( player => player.name !== playerName );
-    }
-
-    /*======================================*/
-
-    // ANCHOR: update_player_name
-    update_player_name ( playerName, newName )
-    {
-        for ( let i = 0; i < this.players.length; i++ )
-        {
-            if ( this.players[i].name === playerName )
-            {
-                this.players[i].name = newName;
-            }
-        }
-    }
-
-    /*======================================*/
-
-    // ANCHOR: update_player_team
-    update_player_team ( playerName, newTeam )
-    {
-        for ( let i = 0; i < this.players.length; i++ )
-        {
-            if ( this.players[i].name === playerName )
-            {
-                this.players[i].team = newTeam;
-            }
-        }
-    }
-
-    /*======================================*/
-
-    // ANCHOR: update_player_position
-    update_player_position ( playerName, newPosition )
-    {
-        for ( let i = 0; i < this.players.length; i++ )
-        {
-            if ( this.players[i].name === playerName )
-            {
-                this.players[i].position = newPosition;
-            }
-        }
-    }
-
-    /*======================================*/
-
-    // ANCHOR: add_highlight
-    add_highlight ( player, cardIndex )
-    {
-        if ( this.players.length )
-        {
-            for ( let i = 0; i < this.players.length; i++ )
-            {
-                if ( this.players[i].name === player.name )
-                {
-                    this.players[i].highlights.push( cardIndex );
-                }
-            }
-        }
-    }
-
-    /*======================================*/
-
-    // ANCHOR: remove_highlight
-    remove_highlight ( player, cardIndex )
-    {
-        if ( this.players.length )
-        {
-            for ( let i = 0; i < this.players.length; i++ )
-            {
-                if
-                (
-                    ( this.players[i].name === player.name )
-                    &&
-                    ( this.players[i].highlights.includes( cardIndex ) )
-                )
-                {
-                    this.players[i].highlights = this.players[i].highlights.filter(
-                        highlightItem => ( highlightItem !== cardIndex )
-                    );
-                }
-            }
-        }
-    }
-
-    /*======================================*/
+    /*======================================
+        STATE METHODS - Team Info
+    ========================================*/
 
     set_team__cards ( team, cards )
     {
+        console.log('===> set_team__cards: ', team, ' ', cards);
         if ( team === 'red' )
         {
-            this.teamRed.cards = cards;
+            console.log('> BEFORE: ', this.state.teamRed.cards);
+            this.state.teamRed.cards = cards;
+            console.log('> AFTER: ', this.state.teamRed.cards);
         }
         if ( team === 'blue' )
         {
-            this.teamBlue.cards = cards;
+            console.log('> BEFORE: ', this.state.teamBlue.cards);
+            this.state.teamBlue.cards = cards;
+            console.log('> AFTER: ', this.state.teamBlue.cards);
         }
+        console.log('===> END - set_team__cards');
     }
 
+    /*======================================*/
     /*======================================*/
 
     set_team__guesses ( team, guesses )
     {
+        console.log('===> set_team__guesses: ', team, ' ', guesses);
         if ( team === 'red' )
         {
-            this.teamRed.guesses = guesses;
+            console.log('> BEFORE: ', this.state.teamRed.guesses);
+            this.state.teamRed.guesses = guesses;
+            console.log('> AFTER: ', this.state.teamRed.guesses);
         }
         if ( team === 'blue' )
         {
-            this.teamBlue.guesses = guesses;
+            console.log('> BEFORE: ', this.state.teamBlue.guesses);
+            this.state.teamBlue.guesses = guesses;
+            console.log('> AFTER: ', this.state.teamBlue.guesses);
+        }
+        console.log('===> END - set_team__guesses');
+    }
+
+    /*======================================
+        STATE METHODS - Players
+    ========================================*/
+
+    player_add ( player )
+    {
+        // console.log('===> player_add: ', player);
+        // console.log('> BEFORE: ',this.state.players);
+        this.state.players.push( player );
+        // console.log('> AFTER: ', this.state.players);
+        // console.log('===> END - player_add');
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    player_remove ( playerID )
+    {
+        // console.log('===> player_remove: ', playerID);
+        // console.log('> BEFORE: ', this.state.players);
+        this.state.players = this.state.players.filter( player => ( player.id !== playerID ) );
+        // console.log('> AFTER: ', this.state.players);
+        // console.log('===> END - player_remove');
+    }
+
+    /*======================================
+        STATE METHODS - Player Info
+    ========================================*/
+
+    set_player_name ( player, newName )
+    {
+        // console.log('===> set_player_name: ', player, ' ', newName);
+        for ( let i = 0; i < this.state.players.length; i++ )
+        {
+            if ( this.state.players[i].id === player.id )
+            {
+                // console.log('> BEFORE: ', this.state.players[i].name);
+                this.state.players[i].name = newName;
+                // console.log('> AFTER: ', this.state.players[i].name);
+            }
+        }
+        // console.log('===> END - set_player_name');
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    set_player_team ( player, newTeam )
+    {
+        // console.log('===> set_player_team: ', player, ' ', newTeam);
+        for ( let i = 0; i < this.state.players.length; i++ )
+        {
+            if ( this.state.players[i].id === player.id )
+            {
+                // console.log('> BEFORE: ', this.state.players[i].team);
+                this.state.players[i].team = newTeam;
+                // console.log('> AFTER: ', this.state.players[i].team);
+            }
+        }
+        // console.log('===> END - set_player_team');
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    set_player_position ( player, newPosition )
+    {
+        // console.log('===> set_player_position: ', player, ' ', newPosition);
+        for ( let i = 0; i < this.state.players.length; i++ )
+        {
+            if ( this.state.players[i].id === player.id )
+            {
+                // console.log('> BEFORE: ', this.state.players[i].position);
+                this.state.players[i].position = newPosition;
+                // console.log('> AFTER: ', this.state.players[i].position);
+            }
+        }
+        // console.log('===> END - set_player_position');
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    set_player_host ( player )
+    {
+        console.log('===> set_player_host: ', player);
+        if ( this.state.players.length )
+        {
+            for ( let i = 0; i < this.state.players.length; i++ )
+            {
+                // Unset any other host player
+                if ( ( this.state.players[i].id !== player.id ) && ( this.state.players[i].isHost ) )
+                {
+                    // console.log('> BEFORE: ', this.state.players[i].isHost); // false
+                    this.state.players[i].isHost = false;
+                    // console.log('> AFTER: ', this.state.players[i].isHost); // true
+                    console.log('> (Other) Player removed as host');
+                }
+
+                // Set player as host
+                if ( this.state.players[i].id === player.id )
+                {
+                    if ( !this.state.players[i].isHost )
+                    {
+                        // console.log('> BEFORE: ', this.state.players[i].isHost); // false
+                        this.state.players[i].isHost = true;
+                        // console.log('> AFTER: ', this.state.players[i].isHost); // true
+                        console.log('> Player set as host');
+                        console.log('===> END - set_player_host');
+                        return true;
+                    }
+                    else
+                    {
+                        console.log('> Player is already host');
+                        console.log('===> END - set_player_host');
+                        return false;
+                    }
+                }
+                else
+                {
+                    console.log('> Cannot find player');
+                    console.log('===> END - set_player_host');
+                    return false;
+                }
+            }
+        }
+        else
+        {
+            console.log('> No players');
+            console.log('===> END - set_player_host');
+            return false;
         }
     }
 
     /*======================================*/
+    /*======================================*/
 
-    // ANCHOR: clear_card_highlights
-    clear_card_highlights ( index )
+    set_player_original_host ( playerID )
     {
-        this.hightlights = this.hightlights.filter(
-            highlightItem => ( highlightItem.index !== index )
-        );
+        // console.log('===> set_player_original_host: ', playerID);
+        // console.log('> BEFORE: ', this.state.originalHost);
+        this.state.originalHost = playerID;
+        // console.log('> AFTER: ', this.state.originalHost);
+        // console.log('===> END - set_player_original_host');
+    }
+
+    /*======================================
+        STATE METHODS - Highlighting
+    ========================================*/
+
+    highlight_add ( player, cardIndex )
+    {
+        // console.log('===> highlight_add: ', player, ' ', cardIndex);
+        if ( this.state.players.length )
+        {
+            for ( let i = 0; i < this.state.players.length; i++ )
+            {
+                if ( this.state.players[i].id === player.id )
+                {
+                    // console.log('> BEFORE: ', this.state.players[i].highlights);
+                    this.state.players[i].highlights.push(cardIndex);
+                    // console.log('> AFTER: ', this.state.players[i].highlights);
+                }
+            }
+        }
+        // console.log('===> END - highlight_add');
     }
 
     /*======================================*/
+    /*======================================*/
 
-    // ANCHOR: clear_highlights
-    clear_highlights ()
+    highlight_remove ( player, cardIndex )
     {
-        this.highlights = [];
+        // console.log('===> highlight_remove: ', player, ' ', cardIndex);
+        if ( this.state.players.length )
+        {
+            for ( let i = 0; i < this.state.players.length; i++ )
+            {
+                if ( this.state.players[i].id === player.id )
+                {
+                    // console.log('> BEFORE: ', this.state.players[i].highlights);
+                    this.state.players[i].highlights = this.state.players[i].highlights.filter(
+                        highlightIndex => ( highlightIndex !== cardIndex )
+                    );
+                    // console.log('> AFTER: ', this.state.players[i].highlights);
+                }
+            }
+        }
+        // console.log('===> END - highlight_remove');
+
     }
 
     /*======================================*/
+    /*======================================*/
 
-    // ANCHOR: add_log_item
-    add_log_item ( logItem )
+    // TODO
+    highlight_clear_card ( cardIndex )
     {
-        this.gameLog.push( logItem );
+        console.log('===> highlight_clear_card: ', cardIndex);
+        console.log('===> END - highlight_clear_card');
+
     }
 
     /*======================================*/
+    /*======================================*/
 
-    // ANCHOR: clear_log
-    clear_log ()
+    // TODO
+    highlight_clear_all ()
     {
-        this.gameLog = [];
+        console.log('===> highlight_clear_all');
+        console.log('===> END - highlight_clear_all');
     }
+
+    /*======================================
+        STATE METHODS - Game Log
+    ========================================*/
+
+    // TODO
+    log_add_item ( logItem )
+    {
+        console.log('===> log_add_item: ', logItem);
+        this.state.gameLog.push( logItem );
+        console.log('===> END - log_add_item');
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    // TODO
+    log_clear ()
+    {
+        console.log('===> log_clear');
+        this.state.gameLog = [];
+        console.log('===> END - log_clear');
+    }
+
+    /*======================================
+        STATE METHODS - Player Interactions
+    ========================================*/
+
+    // // TODO
+    // card_choose ( cardIndex )
+    // { 
+
+    // }
+
+    // /*======================================*/
+    // /*======================================*/
+
+    // // TODO
+    // clue_give ( clue )
+    // {
+
+    // }
+
 }
 
 /*======================================
-    ANCHOR: CLASS INITIATION
+    CLASS INITIATION
 ========================================*/
 
 let game = new Codenames();
 
 /*======================================
-    ANCHOR: WS SERVER FUNCTIONS
+    WS SERVER FUNCTIONS
 ========================================*/
 
-wss.broadcast = ( data, wsClient, toClient ) =>
+wss.broadcast = ( data, wsClient ) =>
 {
-    if ( !toClient )
+    wss.clients.forEach( client =>
     {
-        wss.clients.forEach( client =>
+        if ( ( client.readyState === SocketServer.OPEN ) && ( wsClient !== client ) )
         {
-            if ( ( client.readyState === SocketServer.OPEN ) && ( wsClient !== client ) )
-            {
-                client.send( data );
-            }
-        });
-    }
-    else
-    {
-        if ( wsClient.readyState === SocketServer.OPEN )
-        {
-            wsClient.send( data );
+            client.send( data );
         }
+    });
+};
+
+wss.broadcast_client = ( data, wsClient ) =>
+{
+    if ( wsClient.readyState === SocketServer.OPEN )
+    {
+        wsClient.send( data );
     }
+    
+};
+
+wss.broadcast_all = ( data ) =>
+{
+    wss.clients.forEach( client =>
+    {
+        if ( client.readyState === SocketServer.OPEN )
+        {
+            client.send( data );
+        }
+    });
 };
 
 /*======================================
-    ANCHOR: WS SERVER
+    WS SERVER
 ========================================*/
 
 wss.on('connection', ( wsClient ) =>
 {
 
     /*======================================
-        ANCHOR: OPENING CONNECTION
+        INITIAL CONNECTION TO CLIENT
     ========================================*/
     
-    console.log('Client connected');
+    // console.log('======= Client Connected =======');
+ 
+    // Set initial client data
     let clientData = {
-        id: uuidv4(),
+        id:          '', // id for disconnecting player removal
         messageType: 'clientConnected',
-        total: wss.clients.size,
-        cards: game.cards,
-        players: game.players,
-        originalHost: false,
-        host: false,
-        name: '',
-    }
-    // Send total players to all other clients
-    wss.broadcast( JSON.stringify( clientData ), wsClient );
-    // Send cards, players, and set host on connection for current client
-    if ( wss.clients.size === 1 )
-    { clientData.host = true; }
-    if ( !game.originalHost )
-    { clientData.originalHost = true; }
-    console.log('clientData.host: ', clientData.host);
-    console.log('clientData.originalHost: ', clientData.originalHost);
-    wss.broadcast( JSON.stringify( clientData ), wsClient, true );
+        cards:       game.state.cards,
+        players:     game.state.players,
+    };
+    
+    // TODO: Send team guesses/cards remaining as well (returning players)
+    
+    // Send cards, players on connection for current client
+    wss.broadcast_client( JSON.stringify( clientData ), wsClient );
+    // console.log('>>>>>>>>> Message Sent - Client Data >>>>>>>>>');
+    // console.log('======= END - Client Connected =======');
+
 
     /*======================================
-        ANCHOR: HANDLERS
+        HANDLERS
     ========================================*/
 
     wsClient.on('message', function incoming( data )
     {
+        console.log('>>>>>>>>> Message Recieved >>>>>>>>>');
         let updateData = JSON.parse( data );
-        console.log('======= Message Recieved =======');
         console.log('updateData: ', updateData);
-        let output;
-        
+
         switch ( updateData.messageType )
         {
 
             /*======================================
-                ANCHOR: HANDLER - CONNECTIONS
+                HANDLER - PLAYER CONNECTIONS
             ========================================*/
 
-            case 'addPlayer':
+            case 'newPlayer':
             {
-                updateData.id = uuidv4();
-                clientData.name = updateData.player.name;
-                game.add_player( updateData.player );
-                // change host and originalHost from '' to {}
-                // change remove_player() call to be sent the correct name variable (player.name)
-                // change clientData to have a player {} instead of name ''
-                // longer - add ids to players so name changes are less important
-                //        - use the uuid given to connectedData
-                if ( clientData.host || ( game.originalHost === updateData.player.name ) )
+                // Send new player data to all other players
+                // console.log('======= HANDLER - newPlayer =======');
+                updateData.id = uuidv4(); // message id
+                clientData.id = updateData.player.id // set id for disconnecting player removal
+                game.player_add( updateData.player );
+                wss.broadcast( JSON.stringify( updateData ), wsClient );
+                // console.log('>>>>>>>>> Message Sent - newPlayer >>>>>>>>>');
+
+                // Determine/set/send host
+                if ( !game.state.originalHost )
                 {
-                    console.log('==> setting host');
-                    game.set_host( updateData.player.name );
-                    console.log('game.host: ', game.host);
+                    // console.log('> Original Host');
+                    game.set_player_original_host( updateData.player.id );
                 }
-                if ( clientData.originalHost )
+
+                if ( wss.clients.size === 1 || ( game.state.originalHost === updateData.player.id ) )
                 {
-                    console.log('==> setting original host');
-                    game.set_original_host( updateData.player.name );
-                    console.log('game.originalHost: ', game.originalHost);
+                    updateData.player.isHost = game.set_player_host( updateData.player );
+
+                    // Send host data to all
+                    updateData.id = uuidv4(); // message id
+                    updateData.messageType = 'updatePlayerIsHost';
+                    wss.broadcast_all( JSON.stringify( updateData ), wsClient );
+                    // console.log('>>>>>>>>> Message Sent - updatePlayerIsHost >>>>>>>>>');
                 }
-                output = JSON.stringify( updateData );
-                wss.broadcast( output, wsClient );
+        
+                // console.log('======= END HANDLER - newPlayer =======');
                 break;
             }
 
             /*======================================
-                ANCHOR: HANDLER - PLAYERS
+                HANDLER - PLAYERS INFO
             ========================================*/
 
             case 'updatePlayerName':
             {
-                updateData.id = uuidv4();
-                clientData.name = updateData.newName;
-                game.update_player_name( updateData.player.name, updateData.newName );
-                output = JSON.stringify( updateData );
-                wss.broadcast( output, wsClient );
+                // console.log('======= HANDLER - updatePlayerName =======');
+                updateData.id = uuidv4(); // message id
+                game.set_player_name( updateData.player, updateData.newName );
+                wss.broadcast( JSON.stringify( updateData ), wsClient );
+                // console.log('>>>>>>>>> Message Sent - updatePlayerName >>>>>>>>>');
+                // console.log('======= END HANDLER - updatePlayerName =======');
                 break;
             }
+
+            /*======================================*/
+            /*======================================*/
 
             case 'updatePlayerTeam':
             {
-                updateData.id = uuidv4();
-                game.update_player_team( updateData.player.name, updateData.newTeam );
-                output = JSON.stringify( updateData );
-                wss.broadcast( output, wsClient );
+                // console.log('======= HANDLER - updatePlayerTeam =======');
+                updateData.id = uuidv4(); // message id
+                game.set_player_team( updateData.player, updateData.newTeam );
+                wss.broadcast( JSON.stringify( updateData ), wsClient );
+                // console.log('>>>>>>>>> Message Sent - updatePlayerTeam >>>>>>>>>');
+                // console.log('======= END HANDLER - updatePlayerTeam =======');
                 break;
             }
 
+            /*======================================*/
+            /*======================================*/
+
             case 'updatePlayerPosition':
             {
-                updateData.id = uuidv4();
-                game.update_player_position( updateData.player.name, updateData.newPosition );
-                output = JSON.stringify( updateData );
-                wss.broadcast( output, wsClient );
+                // console.log('======= HANDLER - updatePlayerPosition =======');
+                updateData.id = uuidv4(); // message id
+                game.set_player_position( updateData.player, updateData.newPosition );
+                wss.broadcast( JSON.stringify( updateData ), wsClient );
+                // console.log('>>>>>>>>> Message Sent - updatePlayerPosition >>>>>>>>>');
+                // console.log('======= END HANDLER - updatePlayerPosition =======');
                 break;
             }
 
             /*======================================
-                ANCHOR: HANDLER - HIGHLIGHTS
+                HANDLER - HIGHLIGHTS
             ========================================*/
 
             case 'updateAddHighlight':
             {
-                updateData.id = uuidv4();
-                game.add_highlight( updateData.player, updateData.index );
-                output = JSON.stringify( updateData );
-                wss.broadcast( output, wsClient );
+                console.log('======= HANDLER - updateAddHighlight =======');
+                updateData.id = uuidv4(); // message id
+                game.highlight_add( updateData.player, updateData.index );
+                wss.broadcast( JSON.stringify( updateData ), wsClient );
+                console.log('>>>>>>>>> Message Sent - updateAddHighlight >>>>>>>>>');
+                console.log('======= END HANDLER - updateAddHighlight =======');
                 break;
             }
+            
+            /*======================================*/
+            /*======================================*/
 
             case 'updateRemoveHighlight':
             {
-                updateData.id = uuidv4();
-                game.remove_highlight( updateData.player, updateData.index );
-                output = JSON.stringify( updateData );
-                wss.broadcast( output, wsClient );
+                console.log('======= HANDLER - updateRemoveHighlight =======');
+                updateData.id = uuidv4(); // message id
+                game.highlight_remove( updateData.player, updateData.index );
+                wss.broadcast( JSON.stringify( updateData ), wsClient );
+                console.log('>>>>>>>>> Message Sent - updateRemoveHighlight >>>>>>>>>');
+                console.log('======= END HANDLER - updateRemoveHighlight =======');
                 break;
             }
+            
+            /*======================================*/
+            /*======================================*/
 
             // case 'updateClearCardHighlights':
             // {
-            //     updateData.id = uuidv4();
+            //     updateData.id = uuidv4(); // message id
             //     game.clear_card_highlights( updateData.index );
-            //     output = JSON.stringify( updateData );
-            //     wss.broadcast( output, wsClient );
+            //     wss.broadcast( JSON.stringify( updateData ), wsClient );
             //     break;
             // }
+            
+            /*======================================*/
+            /*======================================*/
 
             // case 'updateClearHighlights':
             // {
-            //     updateData.id = uuidv4();
+            //     updateData.id = uuidv4(); // message id
             //     game.clear_highlights();
-            //     output = JSON.stringify( updateData );
-            //     wss.broadcast( output, wsClient );
+            //     wss.broadcast( JSON.stringify( updateData ), wsClient );
             //     break;
             // }
 
             /*======================================
-                ANCHOR: HANDLER - CARD CHOOSING
+                HANDLER - CARD CHOOSING
             ========================================*/
 
             // case 'updateCardChoose':
             // {
-            //     updateData.id = uuidv4();
-            //     output = JSON.stringify( updateData );
-            //     wss.broadcast( output, wsClient );
+            //     updateData.id = uuidv4(); // message id
+            //     wss.broadcast( JSON.stringify( updateData ), wsClient );
             //     break;
             // }
 
@@ -524,24 +743,50 @@ wss.on('connection', ( wsClient ) =>
     });
 
     /*======================================
-        ANCHOR: CLOSING CONNECTION
+        CLOSING CONNECTION
     ========================================*/
 
     wsClient.on('close', ( wsClient ) =>
     {
-        console.log('Client disconnected');
-        game.remove_player( clientData.name );
-        // Set host to next player in line on host disconnect
-        if ( ( game.host === clientData.name ) && ( game.players.length ) )
-        { game.set_host( game.players[0].name ); }
-        if ( !game.players.length )
-        { game.set_host( '' ); }
-        console.log('game.host: ', game.host);
-        console.log('game.originalHost: ', game.originalHost);        
-        // clientData.id          = uuidv4();
-        clientData.messageType = 'clientDisconnected';
-        clientData.total       = wss.clients.size;
-        clientData.host        = false;
-        wss.broadcast( JSON.stringify( clientData ), wsClient );
+        // console.log('======= Client Disonnected =======');
+
+        // Determine if host
+        // console.log('game.is_host( clientData.id ): ', game.is_host( clientData.id ));
+        let isHost = game.is_host( clientData.id );
+
+        // TODO: Log players who have left in playersRemoved state array
+
+        // Remove disconnecting player
+        game.player_remove( clientData.id );  
+
+        // Set host to next player in line if disconnecting player is host
+        if ( ( isHost ) && ( game.state.players.length > 0 ) )
+        {
+            game.set_player_host( game.state.players[0] );
+
+            // Send new host data to all
+            let updateData = {
+                id: uuidv4(), // message id
+                messageType: 'updatePlayerIsHost',
+                player: game.state.players[0]
+            };
+            wss.broadcast_all( JSON.stringify( updateData ), wsClient );
+            // console.log('>>>>>>>>> Message Sent - updatePlayerIsHost >>>>>>>>>');
+        }
+
+        // If all players have left, begin session closing countdown
+        if ( game.state.players.length === 0 )
+        {
+            // TODO: start timer for 5-10 minutes then close session
+        }
+
+        // Set data for disconnect message
+        let updateData = {
+            id: clientData.id, // player removal id
+            messageType: 'clientDisconnected'
+        };
+        wss.broadcast( JSON.stringify( updateData ), wsClient );
+            // console.log('>>>>>>>>> Message Sent - clientDisconnected >>>>>>>>>');
+            // console.log('======= END - Client Disonnected =======');
     });
 });

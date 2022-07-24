@@ -9,7 +9,7 @@ export default class GameInputs extends Component
     {
 
         /*======================================
-            RENDER FUNCTIONS - Player Interactions
+            RENDER FUNCTIONS - Interactions
         ========================================*/
 
         const on_input_change = () =>
@@ -49,7 +49,7 @@ export default class GameInputs extends Component
             RENDER FUNCTIONS - Displaying
         ========================================*/
 
-        const list_select_options = () =>
+        const display_select_options = () =>
         {
             // if()
 
@@ -74,27 +74,27 @@ export default class GameInputs extends Component
                 <div className='clue-input-container'>
 
                     <input
-                        type='text'
-                        className='clue-input'
-                        placeholder='Type your clue here'
-                        defaultValue=''
-                        onChange={on_input_change}
+                        type         ='text'
+                        className    ='clue-input'
+                        placeholder  ='Type your clue here'
+                        defaultValue =''
+                        onChange     ={on_input_change}
                     />
 
                     <div className='guess-select-container'>
                         <input
-                            type='button'
-                            className='guess-select'
-                            defaultValue=''
-                            onClick={on_select_guesses}
+                            type         ='button'
+                            className    ='guess-select'
+                            defaultValue =''
+                            onClick      ={on_select_guesses}
                         />
-                        {list_select_options()}
+                        {display_select_options()}
                     </div>
                     
                     <Button
-                        btnClasses={'give-clue button-green'}
-                        btnFunction={on_give_clue}
-                        btnText={'Give Clue'}
+                        btnClasses  ={'give-clue button-green'}
+                        btnFunction ={on_give_clue}
+                        btnText     ={'Give Clue'}
                     />
 
                 </div>
@@ -108,9 +108,9 @@ export default class GameInputs extends Component
                 </div>
                 <div className='clue-end-container'>
                     <Button
-                            btnClasses={'end-guessing button-yellow'}
-                            btnFunction={on_end_guessing}
-                            btnText={'End Guessing'}
+                            btnClasses  ={'end-guessing button-yellow'}
+                            btnFunction ={on_end_guessing}
+                            btnText     ={'End Guessing'}
                         />
                 </div>
             </div>

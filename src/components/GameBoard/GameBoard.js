@@ -101,7 +101,7 @@ export default class GameBoard extends Component
             RENDER FUNCTIONS - Displaying
         ========================================*/
 
-        const list_cards = () =>
+        const display_cards = () =>
         {
             if ( this.props.cards.length )
             {
@@ -146,7 +146,7 @@ export default class GameBoard extends Component
 
                     // if ( !( highlights === undefined ) && ( highlights.length ) )
                     // {
-                    //     console.log('==> list_cards > highlights: ', highlights);
+                    //     console.log('==> display_cards > highlights: ', highlights);
                     // }
 
                     // Create component array
@@ -168,7 +168,7 @@ export default class GameBoard extends Component
                 } // End - For loop
                 return cardArray;
             } // End - If array empty check
-        } // End - list_cards
+        } // End - display_cards
         
         /*======================================
             COMPONENTS
@@ -176,7 +176,7 @@ export default class GameBoard extends Component
 
         return (
             <div className='game-board'>
-                {list_cards()}
+                {display_cards()}
             </div>
         );
     }

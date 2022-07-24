@@ -9,7 +9,7 @@ export default class GameMenu extends Component
     render()
     {
         /*======================================
-            RENDER FUNCTIONS - Player Interactions
+            RENDER FUNCTIONS - Interactions
         ========================================*/
 
         const on_randomize_teams = () =>
@@ -38,7 +38,7 @@ export default class GameMenu extends Component
             RENDER FUNCTIONS - Displaying
         ========================================*/
 
-        const display_button_menu = () =>
+        const display_button_classes = () =>
         {
             let displayClass = '';
             if ( !this.props.currentPlayer.isHost )
@@ -58,22 +58,22 @@ export default class GameMenu extends Component
 
                 <div className='game-menu-buttons'>
                     <Button
-                        btnContainerClasses={display_button_menu()}
-                        btnClasses={'randomize-teams'}
-                        btnFunction={on_randomize_teams}
-                        btnText={'Randomize Teams'}
+                        btnDisplayClasses ={display_button_classes()}
+                        btnClasses        ={'randomize-teams'}
+                        btnFunction       ={on_randomize_teams}
+                        btnText           ={'Randomize Teams'}
                     />
                     <Button
-                        btnContainerClasses={display_button_menu()}
-                        btnClasses={'reset-teams'}
-                        btnFunction={on_reset_teams}
-                        btnText={'Reset Teams'}
+                        btnDisplayClasses ={display_button_classes()}
+                        btnClasses        ={'reset-teams'}
+                        btnFunction       ={on_reset_teams}
+                        btnText           ={'Reset Teams'}
                     />
                     <Button
-                        btnContainerClasses={display_button_menu()}
-                        btnClasses={'start-new-game button-green'}
-                        btnFunction={on_start_new_game}
-                        btnText={'Start New Game'}
+                        btnDisplayClasses ={display_button_classes()}
+                        btnClasses        ={'start-new-game button-green'}
+                        btnFunction       ={on_start_new_game}
+                        btnText           ={'Start New Game'}
                     />
                 </div>
             </div>

@@ -14,7 +14,7 @@ export default class Header extends Component
     {
 
         /*======================================
-            RENDER FUNCTIONS - Player Interactions
+            RENDER FUNCTIONS - Interactions
         ========================================*/
 
         const on_game_players = () =>
@@ -65,12 +65,17 @@ export default class Header extends Component
 
         const display_button_reset = () =>
         {
-            // TODO: find new way to hide items without classes, ex: do not render at all
-            // suggestion ==> use list_function and check for position/host
-            let displayClass = '';
-            if ( !this.props.currentPlayer.isHost )
-            { displayClass = C.onst.classHidden; }
-            return displayClass;
+            if ( this.props.currentPlayer.isHost )
+            {
+                let button = (
+                    <Button
+                        btnClasses  ={'game-reset'}
+                        btnFunction ={on_game_reset}
+                        btnText     ={'Reset Game'}
+                    />
+                )
+                return button;
+            }   
         }
 
         /*======================================
@@ -81,36 +86,31 @@ export default class Header extends Component
             <div className='game-header'>
                 <div className='game-controls-left'>
                     <Button
-                        btnClasses={'game-players'}
-                        btnFunction={on_game_players}
-                        btnText={'Players'}
-                        btnIcon={IconUser}
-                        btnData={this.props.playersTotal}
+                        btnClasses  ={'game-players'}
+                        btnFunction ={on_game_players}
+                        btnText     ={'Players'}
+                        btnIcon     ={IconUser}
+                        btnData     ={this.props.playersTotal}
                     />
                     <Button
-                        btnContainerClasses={C.onst.classDisabled}
-                        btnClasses={'game-timer'}
-                        btnFunction={on_game_timer}
-                        btnIcon={IconStopwatch}
+                        btnDisplayClasses ={C.onst.classDisabled}
+                        btnClasses        ={'game-timer'}
+                        btnFunction       ={on_game_timer}
+                        btnIcon           ={IconStopwatch}
                     />
                     <Button
-                        btnClasses={'game-info'}
-                        btnFunction={on_game_info}
-                        btnIcon={IconQuestion}
+                        btnClasses  ={'game-info'}
+                        btnFunction ={on_game_info}
+                        btnIcon     ={IconQuestion}
                     />
                 </div>
                 <div className='game-controls-right'>
+                    {display_button_reset()}
                     <Button
-                        btnContainerClasses={display_button_reset()}
-                        btnClasses={'game-reset'}
-                        btnFunction={on_game_reset}
-                        btnText={'Reset Game'}
-                    />
-                    <Button
-                        btnClasses={'game-current-player button-' + this.props.currentPlayer.team}
-                        btnFunction={on_game_current_player}
-                        btnText={this.props.currentPlayer.name}
-                        btnIcon={IconFace}
+                        btnClasses  ={'game-current-player button-' + this.props.currentPlayer.team}
+                        btnFunction ={on_game_current_player}
+                        btnText     ={this.props.currentPlayer.name}
+                        btnIcon     ={IconFace}
                     />
                 </div>
             </div>

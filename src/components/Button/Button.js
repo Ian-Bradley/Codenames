@@ -8,7 +8,7 @@ export default class Button extends Component
     {
 
         /*======================================
-            RENDER FUNCTIONS - Player Interactions
+            RENDER FUNCTIONS - Interactions
         ========================================*/
 
         const on_button_click = e =>
@@ -28,12 +28,12 @@ export default class Button extends Component
             RENDER FUNCTIONS - Displaying
         ========================================*/
 
-        const container_classes = () =>
+        const display_classes = () =>
         {
             let additionalClasses = '';
-            if ( this.props.btnContainerClasses )
+            if ( this.props.btnDisplayClasses )
             {
-                additionalClasses += ' ' + this.props.btnContainerClasses;
+                additionalClasses += ' ' + this.props.btnDisplayClasses;
             }
             return 'button-container' + additionalClasses;
         }
@@ -41,7 +41,7 @@ export default class Button extends Component
         /*======================================*/
         /*======================================*/
 
-        const button_classes = () =>
+        const display_button_classes = () =>
         {
             let additionalClasses = '';
             if ( this.props.btnIcon && ( !this.props.btnText && !this.props.btnData ) )
@@ -58,7 +58,7 @@ export default class Button extends Component
         /*======================================*/
         /*======================================*/
 
-        const button_icon = () =>
+        const display_button_icon = () =>
         {
             if ( this.props.btnIcon )
             {
@@ -74,13 +74,13 @@ export default class Button extends Component
         ========================================*/
 
         return (
-            <div className={container_classes()}>
+            <div className={display_classes()}>
                 <button
-                    type='button'
-                    data-value={this.props.btnValue}
-                    className={button_classes()}
-                    onClick={on_button_click}>
-                    {this.props.btnText} {button_icon()} {this.props.btnData}
+                    type       ='button'
+                    data-value ={this.props.btnValue}
+                    className  ={display_button_classes()}
+                    onClick    ={on_button_click}>
+                    {this.props.btnText} {display_button_icon()} {this.props.btnData}
                 </button>
             </div>
         );

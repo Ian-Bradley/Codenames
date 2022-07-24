@@ -35,7 +35,7 @@ export default class GameCard extends Component
     {
 
         /*======================================
-            RENDER FUNCTIONS - Player Interactions
+            RENDER FUNCTIONS - Interactions
         ========================================*/
 
         const on_card_highlight = () =>
@@ -85,11 +85,11 @@ export default class GameCard extends Component
             RENDER FUNCTIONS - Displaying
         ========================================*/
 
-        const list_highlighting_players = () =>
+        const display_highlighting = () =>
         {
             if ( !( this.props.highlights === undefined ) && ( this.props.highlights.length ) )
             {
-                // console.log('===> list_highlighting_players');
+                // console.log('===> display_highlighting');
                 let highlights = [];
                 // console.log('this.props.highlights: ', this.props.highlights);
                 // console.log('> Beggining highlight array.push loop');
@@ -102,7 +102,7 @@ export default class GameCard extends Component
                     );
                 }
                 // console.log('highlights: ', highlights);
-                // console.log('===> END - list_highlighting_players');
+                // console.log('===> END - display_highlighting');
                 return highlights;
             }
             return [];
@@ -111,7 +111,7 @@ export default class GameCard extends Component
         /*======================================*/
         /*======================================*/
 
-        const list_classes = () =>
+        const display_classes = () =>
         {
             // Class for displaying card type to spymasters
             let cardClass = '';
@@ -136,7 +136,7 @@ export default class GameCard extends Component
                 className={
                     'game-card'
                     + ' '
-                    + list_classes()
+                    + display_classes()
                 }
                 style={{
                     width: this.props.cardWidth + 'px',
@@ -153,14 +153,14 @@ export default class GameCard extends Component
                 </div>
                 <div className='game-card-highlighted'>
                     <ul>
-                        {list_highlighting_players()}
+                        {display_highlighting()}
                     </ul>
                 </div>
                 <Button
-                    btnClasses          ={'card-choose'}
-                    btnContainerClasses ={'game-card-button'}
-                    btnFunction         ={on_card_choose}
-                    btnIcon             ={IconHand}
+                    btnClasses        ={'card-choose'}
+                    btnDisplayClasses ={'game-card-button'}
+                    btnFunction       ={on_card_choose}
+                    btnIcon           ={IconHand}
                 />
                 <div
                     className='game-card-text'

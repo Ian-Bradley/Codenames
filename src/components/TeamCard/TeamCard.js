@@ -46,7 +46,7 @@ export default class TeamCard extends Component
     {
 
         /*======================================
-            RENDER FUNCTIONS - Player Interactions
+            RENDER FUNCTIONS - Interactions
         ========================================*/
 
         const on_select_position = ( buttonPosition ) =>
@@ -103,7 +103,7 @@ export default class TeamCard extends Component
             RENDER FUNCTIONS - Displaying
         ========================================*/
 
-        const display_list_players = ( position ) =>
+        const display_players_list = ( position ) =>
         {
             let players = [];
 
@@ -193,27 +193,27 @@ export default class TeamCard extends Component
                 <div className='team-operatives'>
                     <div className='team-card-title'>Operative(s)</div>
                     <ul className='team-list'>
-                        {display_list_players(C.onst.positionOperative)}
+                        {display_players_list(C.onst.positionOperative)}
                     </ul>
                     <Button
-                        btnValue={C.onst.positionOperative}
-                        btnContainerClasses={display_button_operative()}
-                        btnClasses={'select-operative'}
-                        btnFunction={on_select_position}
-                        btnText={'Join as Operative'}
+                        btnValue          ={C.onst.positionOperative}
+                        btnDisplayClasses ={display_button_operative()}
+                        btnClasses        ={'select-operative'}
+                        btnFunction       ={on_select_position}
+                        btnText           ={'Join as Operative'}
                     />
                 </div>
                 <div className='team-spymaster'>
                     <div className='team-card-title'>Spymaster</div>
                     <ul className='team-list'>
-                        {display_list_players(C.onst.positionSpymaster)}
+                        {display_players_list(C.onst.positionSpymaster)}
                     </ul>
                     <Button
-                        btnValue={C.onst.positionSpymaster}
-                        btnContainerClasses={display_button_spymaster()}
-                        btnClasses={'select-spymaster'}
-                        btnFunction={on_select_position}
-                        btnText={'Join as Spymaster'}
+                        btnValue          ={C.onst.positionSpymaster}
+                        btnDisplayClasses ={display_button_spymaster()}
+                        btnClasses        ={'select-spymaster'}
+                        btnFunction       ={on_select_position}
+                        btnText           ={'Join as Spymaster'}
                     />
                 </div>
             </div>

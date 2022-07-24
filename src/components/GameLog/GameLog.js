@@ -10,7 +10,7 @@ export default class GameLog extends Component
             RENDER FUNCTIONS - Displaying
         ========================================*/
 
-        const create_log_item = ( itemType, teamColor ) =>
+        const display_log_items = ( itemType, teamColor ) =>
         {
             const logItem = document.createElement('li');
             const logName = document.createElement('span');
@@ -55,14 +55,15 @@ export default class GameLog extends Component
                 </div>
                 <div className='game-log-list'>
                     <ul>
-                        {/* <li className='team-blue'><span>Spymaster</span> gives clue <span className='game-log-clue'>CLUE</span></li>
+                        {/* {display_log_items()} */}
+                        <li className='team-blue'><span>Spymaster</span> gives clue <span className='game-log-clue'>CLUE</span></li>
                         <li className='team-blue'><span>Operative</span> taps <span className='card-blue'>CARD</span></li>
                         <li className='team-blue'><span>Operative</span> taps <span className='card-blue'>CARD</span></li>
                         <li className='team-blue'><span>Operative</span> ends guessing</li>
                         <li className='team-red'><span>Spymaster</span> gives clue <span className='game-log-clue'>CLUE</span></li>
                         <li className='team-red'><span>Operative</span> taps <span className='card-red'>CARD</span></li>
                         <li className='team-red'><span>Operative</span> taps <span className='card-red'>CARD</span></li>
-                        <li className='team-red'><span>Operative</span> ends guessing</li> */}
+                        <li className='team-red'><span>Operative</span> ends guessing</li>
                     </ul>
                 </div>
             </div>

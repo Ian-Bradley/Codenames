@@ -1,43 +1,62 @@
 @import "../../styles/variables.scss";
 
 main.codenames .game-input {
+    position: relative;
     width: 100%;
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
 
-    & .guess-input-container {
-
-        & .clue-input,
-        .guess-select {
-            border-radius: 10px;
-            background-color: #fff;
-            height: $game-button-height;
-            margin-right: 6px;
-            font-size: 24px;
-            text-transform: uppercase;
-        }
-        
-        & .clue-input:focus,
-        .guess-select:focus {
-            outline: none;
-        }
-        
-        & .clue-input {
-            min-width: 200px
-        }
-        
-        & .guess-select {
-            width: $game-button-height;
-        }
-    }
-
-    & .guess-input-container, .guess-end-container {
+    & .clue-container,
+    .clue-end-container,
+    .clue-input-container {
         display: flex;
         flex-flow: row nowrap;
         justify-content: center;
         align-items: center;
+    }
+
+    & .clue-input-container {
+
+        & .clue-input,
+        .guess-select {
+            border-radius: $clue-border-radius;
+            background-color: #fff;
+            height: $clue-input-height;
+            margin-right: 6px;
+            font-size: 24px;
+            text-transform: uppercase;
+
+            &:focus {
+                outline: none;
+            }
+        }
+
+        & .clue-input {
+            min-width: $clue-width-min;
+
+            &::placeholder {
+                text-transform: none;
+            }
+        }
+
+        & .guess-select {
+            cursor: pointer;
+            width: $clue-input-height;
+        }
+    }
+
+    & .clue-container {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+
+        & .clue {
+            height: $clue-height;
+        }
     }
 
 }

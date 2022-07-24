@@ -36,17 +36,20 @@ export default class App extends Component
 {
 
     /*======================================
-        STATE
+        ANCHOR: STATE
     ========================================*/
 
     constructor(props)
     {
         super(props);
         this.state = {
-            // Game Settings
+            // Game states
             gameState: C.onst.gameState_setup,
             round: 0,
             cards: [],
+            clue: '',
+            guesses: '',
+            message: '',
             // Teams
             teamRed: {
                 cards: 0,
@@ -75,17 +78,19 @@ export default class App extends Component
         };
         
         /*======================================
-            METHOD BINDING
+            ANCHOR: METHOD BINDING
         ========================================*/
 
         // State methods - Connection
         this.socket                               = new WebSocket( 'ws://localhost:3001' );
 
-        // State methods - Game Settings
+        // State methods - Game states
         this.set_game_state                       = this.set_game_state.bind(this);
         this.set_round                            = this.set_round.bind(this);
         this.set_cards                            = this.set_cards.bind(this);
         this.set_players                          = this.set_players.bind(this);
+        this.set_clue                             = this.set_clue.bind(this);
+        this.set_message                          = this.set_message.bind(this);
 
         // State methods - Teams
         this.set_team__cards                      = this.set_team__cards.bind(this);
@@ -133,7 +138,7 @@ export default class App extends Component
     }
 
     /*======================================
-        STATE METHODS - Game Settings
+        ANCHOR: STATE METHODS - Game States
     ========================================*/
 
     set_game_state ( state )
@@ -174,8 +179,29 @@ export default class App extends Component
     /*======================================*/
     /*======================================*/
 
+    set_clue ( newClue )
+    { 
+        this.setState({ clue: newClue });
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    set_guesses ( guessAmount )
+    { 
+        this.setState({ guesses: guessAmount });
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    set_message ( newMessage )
+    { 
+        this.setState({ message: newMessage });
+    }
+
     /*======================================
-        STATE METHODS - Team Info
+        ANCHOR: STATE METHODS - Team Info
     ========================================*/
 
     set_team__cards ( team, amount )
@@ -222,7 +248,7 @@ export default class App extends Component
     }
 
     /*======================================
-        STATE METHODS - Players
+        ANCHOR: STATE METHODS - Players
     ========================================*/
 
     player_add ( player )
@@ -246,7 +272,7 @@ export default class App extends Component
     }
 
     /*======================================
-        STATE METHODS - Player Info
+        ANCHOR: STATE METHODS - Player Info
     ========================================*/
 
     set_current_player__ID ( playerID )
@@ -426,7 +452,7 @@ export default class App extends Component
     }
 
     /*======================================
-        STATE METHODS - Highlighting
+        ANCHOR: STATE METHODS - Highlighting
     ========================================*/
 
     highlight_add ( player, cardIndex )
@@ -547,7 +573,7 @@ export default class App extends Component
     }
 
     /*======================================
-        STATE METHODS - Game Log
+        ANCHOR: STATE METHODS - Game Log
     ========================================*/
 
     add_log_item ( logItem )
@@ -568,7 +594,7 @@ export default class App extends Component
     }
 
     /*======================================
-        STATE METHODS - Player Interactions
+        ANCHOR: STATE METHODS - Player Interactions
     ========================================*/
 
     // TODO: card_choose
@@ -637,7 +663,7 @@ export default class App extends Component
     }
 
     /*======================================
-        FUNCTIONAL METHODS
+        ANCHOR: FUNCTIONAL METHODS
     ========================================*/
 
     debounce ( func, wait, immediate )
@@ -684,7 +710,7 @@ export default class App extends Component
     }
 
     /*======================================
-        FUNCTIONAL METHODS - Cookies
+        ANCHOR: FUNCTIONAL METHODS - Cookies
     ========================================*/
 
     set_cookie ( name, value, days )
@@ -718,7 +744,7 @@ export default class App extends Component
     }
 
     /*======================================
-        COMPONENT ACTIONS
+        ANCHOR: COMPONENT ACTIONS
     ========================================*/
 
     componentDidMount()
@@ -734,7 +760,7 @@ export default class App extends Component
 
 
         /*======================================
-            WEBSOCKET COMMUNICATION
+            ANCHOR: WEBSOCKET COMMUNICATION
         ========================================*/
 
         const ws = this.socket;
@@ -758,7 +784,7 @@ export default class App extends Component
             {
 
                 /*======================================
-                    HANDLER - PLAYER CONNECTIONS
+                    ANCHOR: HANDLER - PLAYER CONNECTIONS
                 ========================================*/
 
                 case 'clientConnected':
@@ -811,7 +837,7 @@ export default class App extends Component
                 }
 
                 /*======================================
-                    HANDLER - PLAYERS INFO
+                    ANCHOR: HANDLER - PLAYERS INFO
                 ========================================*/
 
                 case 'updatePlayerName':
@@ -863,7 +889,7 @@ export default class App extends Component
                 }
 
                 /*======================================
-                    HANDLER - HIGHLIGHTS
+                    ANCHOR: HANDLER - HIGHLIGHTS
                 ========================================*/
 
                 case 'updateAddHighlight':
@@ -906,7 +932,7 @@ export default class App extends Component
                 // }
 
                 /*======================================
-                    HANDLER - CARD CHOOSING
+                    ANCHOR: HANDLER - CARD CHOOSING
                 ========================================*/
 
                 // case 'updateCardChoose':
@@ -922,7 +948,7 @@ export default class App extends Component
         };
 
         /*======================================
-            WINDOW LISTENER 
+            ANCHOR: WINDOW LISTENER 
         ========================================*/
 
         this.set_app_dimensions();
@@ -931,7 +957,7 @@ export default class App extends Component
     }
 
     /*======================================
-        COMPONENT ACTIONS - continued
+        ANCHOR: COMPONENT ACTIONS - continued
     ========================================*/
 
     componentWillUnmount() {
@@ -945,7 +971,7 @@ export default class App extends Component
     render()
     {
         /*======================================
-            RENDER FUNCTIONS - Dev Tools
+            ANCHOR: RENDER FUNCTIONS - Dev Tools
         ========================================*/
 
         const on_dev_button = ( state ) => { this.set_game_state( state ); }
@@ -966,7 +992,7 @@ export default class App extends Component
         }
 
         /*======================================
-            COMPONENTS
+            ANCHOR: COMPONENTS
         ========================================*/
 
         return (
@@ -991,6 +1017,7 @@ export default class App extends Component
                 <GameMessage
                     currentPlayer ={this.state.currentPlayer}
                     gameState     ={this.state.gameState}
+                    message       ={this.state.message}
                 />
 
                 <GameMenu
@@ -1015,17 +1042,21 @@ export default class App extends Component
                     </div>
                     <div className='board-container'>
                         <GameBoard
-                            cards                ={this.state.cards}
-                            currentPlayer        ={this.state.currentPlayer}
-                            gameState            ={this.state.gameState}
-                            players              ={this.state.players}
-                            card_highlight       ={this.card_highlight}
-                            card_choose          ={this.card_choose}
-                            debounce             ={this.debounce}
+                            cards          ={this.state.cards}
+                            currentPlayer  ={this.state.currentPlayer}
+                            gameState      ={this.state.gameState}
+                            players        ={this.state.players}
+                            card_highlight ={this.card_highlight}
+                            card_choose    ={this.card_choose}
+                            debounce       ={this.debounce}
                         />
                         <GameInputs
+                            teamRed       ={this.state.teamRed}
+                            teamBlue      ={this.state.teamBlue}
                             currentPlayer ={this.state.currentPlayer}
                             gameState     ={this.state.gameState}
+                            guesses       ={this.state.guesses}
+                            clue          ={this.state.clue}
                             clue_give     ={this.clue_give}
                         />
                     </div>

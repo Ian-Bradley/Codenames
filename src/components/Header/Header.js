@@ -65,6 +65,8 @@ export default class Header extends Component
 
         const display_button_reset = () =>
         {
+            // TODO: find new way to hide items without classes, ex: do not render at all
+            // suggestion ==> use list_function and check for position/host
             let displayClass = '';
             if ( !this.props.currentPlayer.isHost )
             { displayClass = C.onst.classHidden; }

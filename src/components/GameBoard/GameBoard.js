@@ -46,12 +46,14 @@ export default class GameBoard extends Component
     }
 
     /*======================================*/
+    /*======================================*/
 
     set_card_height ( height )
     {
         this.setState({ cardHeight: height });
     }
     
+    /*======================================*/
     /*======================================*/
 
     set_card_text_margin ( margin )
@@ -90,12 +92,14 @@ export default class GameBoard extends Component
         window.removeEventListener( 'resize', debounceResize );
     }
 
-    /*======================================
-        RENDER FUNCTIONS
-    ========================================*/
+    /*======================================*/
+    /*======================================*/
 
     render()
     {
+        /*======================================
+            RENDER FUNCTIONS - Displaying
+        ========================================*/
 
         const list_cards = () =>
         {
@@ -161,10 +165,10 @@ export default class GameBoard extends Component
                             card_highlight   ={this.props.card_highlight}
                         />
                     )
-                }
+                } // End - For loop
                 return cardArray;
-            }
-        }
+            } // End - If array empty check
+        } // End - list_cards
         
         /*======================================
             COMPONENTS

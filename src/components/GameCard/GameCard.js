@@ -28,14 +28,17 @@ export default class GameCard extends Component
         this.setState({ cardHighlight: stateClass }); 
     }
 
-    /*======================================
-        RENDER FUNCTIONS
-    ========================================*/
+    /*======================================*/
+    /*======================================*/
 
     render()
     {
 
-        const on_card_highlight = e =>
+        /*======================================
+            RENDER FUNCTIONS - Player Interactions
+        ========================================*/
+
+        const on_card_highlight = () =>
         {
             // console.log('===> on_card_highlight');
             if ( !this.props.cardChosen )
@@ -78,8 +81,9 @@ export default class GameCard extends Component
             console.log('===> END - on_card_choose');
         }
 
-        /*======================================*/
-        /*======================================*/
+        /*======================================
+            RENDER FUNCTIONS - Displaying
+        ========================================*/
 
         const list_highlighting_players = () =>
         {

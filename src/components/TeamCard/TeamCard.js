@@ -39,12 +39,15 @@ export default class TeamCard extends Component
         return count;
     }
 
-    /*======================================
-        RENDER FUNCTIONS
-    ========================================*/
+    /*======================================*/
+    /*======================================*/
 
     render()
     {
+
+        /*======================================
+            RENDER FUNCTIONS - Player Interactions
+        ========================================*/
 
         const on_select_position = ( buttonPosition ) =>
         {
@@ -96,8 +99,9 @@ export default class TeamCard extends Component
             { this.props.set_current_player__position( buttonPosition ); this.props.set_current_player__team( this.props.team ); }
         }
         
-        /*======================================*/
-        /*======================================*/
+        /*======================================
+            RENDER FUNCTIONS - Displaying
+        ========================================*/
 
         const display_list_players = ( position ) =>
         {

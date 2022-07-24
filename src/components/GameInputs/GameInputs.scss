@@ -3,30 +3,41 @@
 main.codenames .game-input {
     width: 100%;
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
 
-    & .word-input,
-    .guess-select {
-        border-radius: 10px;
-        background-color: #fff;
-        height: $game-button-height;
-        margin-right: 6px;
-        font-size: 24px;
-        text-transform: uppercase;
+    & .guess-input-container {
+
+        & .clue-input,
+        .guess-select {
+            border-radius: 10px;
+            background-color: #fff;
+            height: $game-button-height;
+            margin-right: 6px;
+            font-size: 24px;
+            text-transform: uppercase;
+        }
+        
+        & .clue-input:focus,
+        .guess-select:focus {
+            outline: none;
+        }
+        
+        & .clue-input {
+            min-width: 200px
+        }
+        
+        & .guess-select {
+            width: $game-button-height;
+        }
     }
-    
-    & .word-input:focus,
-    .guess-select:focus {
-        outline: none;
+
+    & .guess-input-container, .guess-end-container {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+        align-items: center;
     }
-    
-    & .word-input {
-        min-width: 200px
-    }
-    
-    & .guess-select {
-        width: $game-button-height;
-    }
+
 }

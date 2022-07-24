@@ -5,12 +5,12 @@ import './GameMenu.scss';
 
 export default class GameMenu extends Component
 {
-    /*======================================
-        RENDER FUNCTIONS
-    ========================================*/
 
     render()
     {
+        /*======================================
+            RENDER FUNCTIONS - Player Interactions
+        ========================================*/
 
         const on_randomize_teams = () =>
         {
@@ -34,8 +34,9 @@ export default class GameMenu extends Component
             // this.props_set_game_state( C.onst.gameState_deal );
         }
 
-        /*======================================*/
-        /*======================================*/
+        /*======================================
+            RENDER FUNCTIONS - Displaying
+        ========================================*/
 
         const display_button_menu = () =>
         {

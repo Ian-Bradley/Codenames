@@ -5,6 +5,16 @@ export default class GameMessage extends Component
 {
     render()
     {
+
+        /*======================================
+            RENDER FUNCTIONS - Displaying
+        ========================================*/
+
+
+        /*======================================
+            COMPONENTS
+        ========================================*/
+
         return (
             <div className='game-message'> 
                 <span>Turn Message</span>

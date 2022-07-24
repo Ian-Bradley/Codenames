@@ -10,12 +10,12 @@ import './Header.scss';
 export default class Header extends Component
 {
 
-    /*======================================
-        RENDER FUNCTIONS
-    ========================================*/
-
     render()
     {
+
+        /*======================================
+            RENDER FUNCTIONS - Player Interactions
+        ========================================*/
 
         const on_game_players = () =>
         {
@@ -59,8 +59,9 @@ export default class Header extends Component
             console.log('===> END - on_game_current_player');
         }
 
-        /*======================================*/
-        /*======================================*/
+        /*======================================
+            RENDER FUNCTIONS - Displaying
+        ========================================*/
 
         const display_button_reset = () =>
         {

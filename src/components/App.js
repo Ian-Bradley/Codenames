@@ -481,7 +481,7 @@ export default class App extends Component
         // console.log('this.state.currentPlayer.id: ', this.state.currentPlayer.id);
         if ( player.id === this.state.currentPlayer.id )
         {
-            console.log('> IS CURRENT PLAYER');
+            // console.log('> IS CURRENT PLAYER');
             // Current player - State
             this.setState( prevState => {
                 let currentPlayer = { ...prevState.currentPlayer };
@@ -525,15 +525,15 @@ export default class App extends Component
 
     highlight_clear_card ( cardIndex )
     {
-        // // TODO
-        // // State
+        // TODO: highlight_clear_card
+        // NOTE: may not need WS for this --> only activated by card choose
+        // State
         // this.setState( prevState => {
         //     let highlights = prevState.highlights.filter(
         //         highlightItem => ( highlightItem.index !== index )
         //     );
         //     return { highlights };
         // });
-        // // NOTE: may not need WS for this --> only activated by card choose
     }
 
     /*======================================*/
@@ -541,9 +541,9 @@ export default class App extends Component
 
     highlight_clear_all ()
     {
-        // // TODO
+        // TODO highlight_clear_all
+        // NOTE: may not need WS for this --> only activated by card choose/round change
         // this.setState({ highlights: [] });
-        // // NOTE: may not need WS for this --> only activated by card choose/round change
     }
 
     /*======================================
@@ -551,7 +551,8 @@ export default class App extends Component
     ========================================*/
 
     add_log_item ( logItem )
-    { // TODO: WS
+    {
+        // TODO: add_log_item - WS
         this.setState( prevState => ({
             gameLog: [ ...prevState.gameLog, logItem ]
         }));
@@ -561,7 +562,8 @@ export default class App extends Component
     /*======================================*/
 
     clear_log ()
-    { // TODO: WS
+    {
+        // TODO: clear_log - WS
         this.setState({ gameLog: [] });
     }
 
@@ -569,15 +571,17 @@ export default class App extends Component
         STATE METHODS - Player Interactions
     ========================================*/
 
-    // TODO
+    // TODO: card_choose
     card_choose ( cardIndex )
     { 
         // use currentPlayer --> updates from server will arrive as different commands, they will not use card_choose here
         // ==> update game log
         // ==> clear card highlights
-        // ==> if round change, clear all card highlights
+        // ==> send request to server
         // ==> begin animation on recieving response from ws server
         // ==> after animation --> change round || continue round
+        // ==> if round change, clear all card highlights
+
     }
 
     /*======================================*/
@@ -616,15 +620,19 @@ export default class App extends Component
     /*======================================*/
     /*======================================*/
 
-    // TODO
+    // TODO: clue_give
     clue_give ( clue )
     {
+        // ==> update game log
+        // ==> 
+        // ==> 
+        // ==> send
+
         // let newUpdate = {
         //     messageType: 'updateCardChoose',
         //     player: {},
         //     clue: clue,
         // };
-        // TODO: update game log
         // this.socket.send( JSON.stringify( newUpdate ));
     }
 
@@ -660,19 +668,19 @@ export default class App extends Component
     /*======================================*/
     /*======================================*/
 
-    // TODO
-    disable_interactions ()
+    // TODO: enable_interactions
+    enable_interactions ()
     {
-    //     document.querySelector('main').classList.add( C.onst.classDisabled );
+    //     document.querySelector('main').classList.remove( C.onst.classDisabled );
     }
 
     /*======================================*/
     /*======================================*/
 
-    // TODO
-    enable_interactions ()
+    // TODO: disable_interactions
+    disable_interactions ()
     {
-    //     document.querySelector('main').classList.remove( C.onst.classDisabled );
+    //     document.querySelector('main').classList.add( C.onst.classDisabled );
     }
 
     /*======================================
@@ -716,7 +724,7 @@ export default class App extends Component
     componentDidMount()
     {
 
-        // TODO:
+        // TODO: Cookies
         // Get current playerID from cookies
         // If ID is not present, auth page has failed to store cookie
         // ?? Also check for name/position/team
@@ -904,9 +912,8 @@ export default class App extends Component
                 // case 'updateCardChoose':
                 // {
                 //     console.log('==> updateCardChoose');
-                //     // TODO: card choose
                 //     // set game state if 'end guessing' or an incorrect card is chosen (black/neutreul/other team)
-                //     // this.set_game_state( updateData.state );
+                //     this.set_game_state( updateData.state );
                 //     break;
                 // }
 
@@ -932,12 +939,14 @@ export default class App extends Component
         window.removeEventListener( 'resize', debounceResize );
     }
 
-    /*======================================
-        RENDER FUNCTIONS
-    ========================================*/
+    /*======================================*/
+    /*======================================*/
 
     render()
     {
+        /*======================================
+            RENDER FUNCTIONS - Dev Tools
+        ========================================*/
 
         const on_dev_button = ( state ) => { this.set_game_state( state ); }
         const on_dev_input = e => { if (e.keyCode === 13) { this.set_current_player__name( e.target.value ); } }
@@ -1046,12 +1055,12 @@ export default class App extends Component
                                 <span>Players: </span>{dev_list_players(this.state.players)}
                             </li>
                             <li><span>Current Player: </span></li>
-                            <li><span>ID: </span>{this.state.currentPlayer.id}</li>
-                            <li><span>Name: </span>{this.state.currentPlayer.name}</li>
-                            <li><span>Team: </span>{this.state.currentPlayer.team}</li>
-                            <li><span>Posit: </span>{this.state.currentPlayer.position}</li>
-                            <li><span>Game State: </span>{this.state.gameState}</li>
-                            <li><span>Host: </span>{this.state.currentPlayer.isHost.toString()}</li>
+                            <li><span>ID: </span>{ this.state.currentPlayer.id}</li>
+                            <li><span>Name: </span> {this.state.currentPlayer.name}</li>
+                            <li><span>Team: </span>{ this.state.currentPlayer.team}</li>
+                            <li><span>Posit: </span> {this.state.currentPlayer.position}</li>
+                            <li><span>Game State: </span> {this.state.gameState}</li>
+                            <li><span>Host: </span> {this.state.currentPlayer.isHost.toString()}</li>
                         </ul>
                     </div>
                     <div>

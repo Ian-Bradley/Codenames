@@ -3,12 +3,12 @@ import './GameLog.scss';
 
 export default class GameLog extends Component
 {
-    /*======================================
-        RENDER FUNCTIONS
-    ========================================*/
 
     render()
     {
+        /*======================================
+            RENDER FUNCTIONS - Displaying
+        ========================================*/
 
         const create_log_item = ( itemType, teamColor ) =>
         {

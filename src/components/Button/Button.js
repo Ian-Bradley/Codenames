@@ -3,12 +3,13 @@ import './Button.scss';
 
 export default class Button extends Component
 {
-    /*======================================
-        RENDER FUNCTIONS
-    ========================================*/
-
+    
     render()
     {
+
+        /*======================================
+            RENDER FUNCTIONS - Player Interactions
+        ========================================*/
 
         const on_button_click = e =>
         {
@@ -23,7 +24,9 @@ export default class Button extends Component
             }
         }
 
-        /*======================================*/
+        /*======================================
+            RENDER FUNCTIONS - Displaying
+        ========================================*/
 
         const container_classes = () =>
         {
@@ -35,6 +38,7 @@ export default class Button extends Component
             return 'button-container' + additionalClasses;
         }
 
+        /*======================================*/
         /*======================================*/
 
         const button_classes = () =>
@@ -51,6 +55,7 @@ export default class Button extends Component
             return 'game-button' + additionalClasses;
         }
 
+        /*======================================*/
         /*======================================*/
 
         const button_icon = () =>

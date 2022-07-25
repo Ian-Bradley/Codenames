@@ -1,8 +1,7 @@
 @import "../../styles/variables.scss";
 
 main.codenames .team-card {
-    width: 90%;
-    max-width: 300px;
+    width: 100%;
     padding: $app-spacing;
     margin-bottom: $app-spacing;
     display: flex;
@@ -23,30 +22,35 @@ main.codenames .team-card {
         text-shadow: rgb(0 0 0 / 80%) 0px 0px $app-spacing;
     }
 
+    & .team-operatives {
+        margin-bottom: $team-card-component-spacing;
+    }
+
     & .team-list {
         display: flex;
         flex-flow: row wrap;
+        margin-bottom: $team-card-component-spacing;
 
         & li {
             margin-right: $list-spacing;
         }
     }
-
+    
     & .team-list,
     .remaining-guesses span {
-        margin-left: 5px;
+        margin-left: $team-card-list-spacing;
     }
 
     & .team-list,
     .remaining-cards,
     .remaining-guesses span {
-        color: #fff;
+        color: $team-card-font-color;
     }
 
     & .team-list,
     .team-card-title,
     .remaining-guesses {
-        font-size: $team-list-title;
+        font-size: $team-card-list-title;
     }
 
     & .team-list,
@@ -60,7 +64,7 @@ main.codenames .team-card {
 }
 
 main.codenames .team-red {
-    & .team-card {
+    &.team-card {
         background-color: $team-color-red;
     }
     & .remaining-cards {
@@ -73,7 +77,7 @@ main.codenames .team-red {
 }
 
 main.codenames .team-blue {
-    & .team-card {
+    &.team-card {
         background-color: $team-color-blue;
     }
     & .remaining-cards {

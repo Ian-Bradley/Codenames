@@ -11,11 +11,25 @@ $font-family-cards: 'Oswald', sans-serif;
 
 $app-spacing: 0.8rem;
 $app-spacing-mobile: 0.6rem;
+$border-radius: 1rem;
+$list-spacing: 6px;
 
-$game-log-height: 400px;
 $game-header-height: 70px;
 $game-message-height: 40px;
 $game-message-border-radius: 5px;
+
+$sidebar-width: 350px;
+
+$game-board-max-width: 1000px;
+$game-board-min-width: 600px;
+$game-board-margin-bottom: 10px;
+
+$team-card-component-spacing: 4px;
+$team-card-list-spacing: 5px;
+
+$game-log-item-padding: 4px 2px;
+$game-log-list-spacing: 1px;
+$game-log-clue-padding: 0 4px;
 
 $clue-width-min: 200px;
 $clue-height: 50px;
@@ -26,11 +40,7 @@ $card-margin-bottom: 6px;
 $card-margin-right: 6px;
 $card-border-size: 6px;
 $card-border-radius: 8px;
-
-$list-spacing: 6px;
-$list-spacing-card-highlighting: 1px;
-
-$border-radius: 1rem;
+$card-highlight-spacing: 1px;
 
 $box-shadow-border-width: 1px 1px 3px;
 $box-shadow-border-color: rgba(0,0,0,0.3);
@@ -51,7 +61,7 @@ $game-card-text: 1.2rem;
 $game-card-highlighted: 0.8rem;
 
 $team-remaining-cards: 3rem;
-$team-list-title: 0.9rem;
+$team-card-list-title: 0.9rem;
 
 $game-log-title: 0.9rem;
 $game-log-text: 1rem;
@@ -66,7 +76,18 @@ $game-button-height: 1.5rem;
 $game-button-weight: 500;
 
 /*======================================
-    COLORS
+    COLORS - General
+========================================*/
+
+$team-card-font-color: #fff; 
+
+$game-log-clue-color: #888;
+$game-log-bg-color: #fff;
+
+$game-input-bg-color: #fff;
+
+/*======================================
+    COLORS - Teams
 ========================================*/
 
 $team-color-red: rgb(143,43,28);

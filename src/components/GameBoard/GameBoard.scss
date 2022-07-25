@@ -6,5 +6,5 @@ main.codenames .game-board {
     flex-flow: row wrap;
     justify-content: center;
     align-content: baseline;
-    margin-bottom: 10px;
+    margin-bottom: $game-board-margin-bottom;
 }

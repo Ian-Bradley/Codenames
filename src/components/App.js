@@ -49,7 +49,7 @@ export default class App extends Component
             cards: [],
             clue: '',
             guesses: '',
-            message: '',
+            message: 'temp message',
             // Teams
             teamRed: {
                 cards: 0,
@@ -118,8 +118,9 @@ export default class App extends Component
         this.highlight_clear_all                  = this.highlight_clear_all.bind(this);
 
         // State methods - Game Log
-        this.add_log_item                         = this.add_log_item.bind(this);
-        this.clear_log                            = this.clear_log.bind(this);
+        this.log_set                              = this.log_set.bind(this);
+        this.log_add_item                         = this.log_add_item.bind(this);
+        this.log_clear                            = this.log_clear.bind(this);
 
         // State methods - Player Interactions
         this.card_choose                          = this.card_choose.bind(this);
@@ -576,8 +577,19 @@ export default class App extends Component
         ANCHOR: STATE METHODS - Game Log
     ========================================*/
 
-    add_log_item ( logItem )
+    log_set( logArray )
     {
+        console.log('===> log_set');
+        this.setState({ gameLog: logArray });
+        console.log('===> END - log_set');
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    log_add_item ( logItem )
+    {
+        // console.log('===> log_add_item');
         // State
         this.setState( prevState => ({
             gameLog: [ ...prevState.gameLog, logItem]
@@ -589,12 +601,13 @@ export default class App extends Component
         // };
         // this.socket.send( JSON.stringify( newUpdate ));
         // console.log('>>>>>>>>> Message Sent - updateAddLogItem >>>>>>>>>');
+        // console.log('===> END - log_add_item');
     }
 
     /*======================================*/
     /*======================================*/
 
-    clear_log ()
+    log_clear ()
     {
         this.setState({ gameLog: [] });
     }
@@ -979,34 +992,32 @@ export default class App extends Component
         /*======================================
             ANCHOR: RENDER FUNCTIONS - Dev Tools
         ========================================*/
-        const fakeLog = [
-            { player: {team: 'red', name: 'Chilled'}, itemType: 'choose', cardText: 'Penguin' },
-            { player: {team: 'blue', name: 'Platy'}, itemType: 'choose', cardText: 'Tower' },
-            { player: {team: 'red', name: 'Tom Fawkes'}, itemType: 'choose', cardText: 'Spring' },
-            { player: {team: 'blue', name: 'Courtilly'}, itemType: 'choose', cardText: 'Soldier' },
-            { player: {team: 'red', name: 'Junk'}, itemType: 'end' },
-            { player: {team: 'red', name: 'Raven'}, itemType: 'choose', cardText: 'Cheque' },
-            { player: {team: 'red', name: 'Kara'}, itemType: 'choose', cardText: 'Sorting' },
-            { player: {team: 'blue', name: 'Chibi'}, itemType: 'choose', cardText: 'Dragons' },
-            { player: {team: 'red', name: 'Cheesy'}, itemType: 'choose', cardText: 'I Want The Pipe' },
-            { player: {team: 'blue', name: 'Silver'}, itemType: 'choose', cardText: 'Baraka' },
-            { player: {team: 'red', name: 'Kat'}, itemType: 'choose', cardText: 'Cow' },
-            { player: {team: 'red', name: 'Jeremy'}, itemType: 'choose', cardText: 'Purple' },
-            { player: {team: 'blue', name: 'Alfredo'}, itemType: 'end' },
-            { player: {team: 'red', name: 'Jackie'}, itemType: 'choose', cardText: 'Nachos' },
-            { player: {team: 'red', name: 'Fooya'}, itemType: 'choose', cardText: 'Zepplin' },
-            { player: {team: 'blue', name: 'Knovis'}, itemType: 'choose', cardText: 'Plain' },
-            { player: {team: 'blue', name: 'Speedy'}, itemType: 'choose', cardText: 'Mucho' },
-            { player: {team: 'blue', name: 'SideArms'}, itemType: 'choose', cardText: 'Taco' },
-            { player: {team: 'red', name: 'ZeRoyalViking'}, itemType: 'choose', cardText: 'Salad' },
-            { player: {team: 'red', name: 'Tay'}, itemType: 'victory' },
-        ]
         let countLog = 0;
         const on_dev_state = ( state ) => { this.set_game_state( state ); }
         const on_dev_log = () => {
-            this.add_log_item( fakeLog[countLog] );
-            countLog++
-            if ( countLog > 20 ) { countLog = 0 }
+            const fakeLog = [
+                { player: {team: 'red', name: 'Chilled'}, itemType: 'clue', clue: 'Food' },
+                { player: {team: 'blue', name: 'Platy'}, itemType: 'choose', cardText: 'Tower' },
+                { player: {team: 'red', name: 'Tom Fawkes'}, itemType: 'choose', cardText: 'Spring' },
+                { player: {team: 'blue', name: 'Courtilly'}, itemType: 'choose', cardText: 'Soldier' },
+                { player: {team: 'red', name: 'Junk'}, itemType: 'end' },
+                { player: {team: 'red', name: 'Raven'}, itemType: 'choose', cardText: 'Cheque' },
+                { player: {team: 'red', name: 'Kara'}, itemType: 'choose', cardText: 'Sorting' },
+                { player: {team: 'blue', name: 'Chibi'}, itemType: 'choose', cardText: 'Dragons' },
+                { player: {team: 'red', name: 'Cheesy'}, itemType: 'choose', cardText: 'I Want The Pipe' },
+                { player: {team: 'blue', name: 'Silver'}, itemType: 'choose', cardText: 'Baraka' },
+                { player: {team: 'red', name: 'Kat'}, itemType: 'choose', cardText: 'Cow' },
+                { player: {team: 'red', name: 'Jeremy'}, itemType: 'choose', cardText: 'Purple' },
+                { player: {team: 'blue', name: 'Alfredo'}, itemType: 'end' },
+                { player: {team: 'red', name: 'Jackie'}, itemType: 'choose', cardText: 'Nachos' },
+                { player: {team: 'red', name: 'Fooya'}, itemType: 'choose', cardText: 'Zepplin' },
+                { player: {team: 'blue', name: 'Knovis'}, itemType: 'choose', cardText: 'Plain' },
+                { player: {team: 'blue', name: 'Speedy'}, itemType: 'choose', cardText: 'Mucho' },
+                { player: {team: 'blue', name: 'SideArms'}, itemType: 'choose', cardText: 'Taco' },
+                { player: {team: 'red', name: 'ZeRoyalViking'}, itemType: 'choose', cardText: 'Salad' },
+                { player: {team: 'red', name: 'Tay'}, itemType: 'victory' },
+            ];
+            this.log_set( fakeLog );
         }
         const on_dev_input = e => { if (e.keyCode === 13) { this.set_current_player__name( e.target.value ); } }
         const dev_list_players = ( arr ) => {
@@ -1060,7 +1071,7 @@ export default class App extends Component
                 />
 
                 <div className='game-container'>
-                    <div className='team-container team-red'>
+                    <div className='sidebar-container sidebar-left'>
                         <TeamCard
                             currentPlayer                ={this.state.currentPlayer}
                             team                         ={C.onst.teamRed}
@@ -1093,7 +1104,7 @@ export default class App extends Component
                             clue_give     ={this.clue_give}
                         />
                     </div>
-                    <div className='team-container team-blue'>
+                    <div className='sidebar-container sidebar-right'>
                         <TeamCard
                             currentPlayer                ={this.state.currentPlayer}
                             team                         ={C.onst.teamBlue}

@@ -22,7 +22,7 @@ main.codenames .game-input {
         & .clue-input,
         .guess-select {
             border-radius: $clue-border-radius;
-            background-color: #fff;
+            background-color: $game-input-bg-color;
             height: $clue-input-height;
             margin-right: 6px;
             font-size: 24px;

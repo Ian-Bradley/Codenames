@@ -17,7 +17,7 @@ export default class GameMessage extends Component
 
         return (
             <div className='game-message'> 
-                <span>Turn Message</span>
+                <span>{this.props.message}</span>
             </div>
         );
     }

@@ -1,12 +1,12 @@
 @import "../../styles/variables.scss";
 
 main.codenames .game-log {
-    width: 90%;
-    height: $game-log-height;
-    max-width: 300px;
+    height: 100%;
+    width: 100%;
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
+    overflow: hidden;
     background-color: rgba(255,255,255,0.4);
     border-style: solid;
     border-image: initial;
@@ -33,13 +33,15 @@ main.codenames .game-log {
     }
     
     & .game-log-list {
-        max-height: 358px;
-        overflow: hidden;
+        height: 100%;
+        overflow-y: scroll;
+        overflow-x: hidden;
     }
     
     & .game-log-list li {
-        padding: 4px 2px;
-        margin-bottom: 1px;
+        padding: $game-log-item-padding;
+        margin-bottom: $game-log-list-spacing;
+        font-size: $game-log-text;
     
         & span {
             font-weight: $game-log-text-bold;
@@ -50,9 +52,9 @@ main.codenames .game-log {
         }
     
         & span.game-log-clue {
-            color: #888;
-            background-color: #fff;
-            padding: 0 4px;
+            color: $game-log-clue-color;
+            background-color: $game-log-bg-color;
+            padding: $game-log-clue-padding;
         }
     
         &.team-red  { background-color: $team-color-red-log-bg;  }

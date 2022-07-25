@@ -103,6 +103,15 @@ export default class TeamCard extends Component
             RENDER FUNCTIONS - Displaying
         ========================================*/
 
+        const display_team_card_class = () =>
+        {
+            return 'team-card team-' + this.props.team;
+        }
+
+        /*======================================*/
+        /*======================================*/
+
+
         const display_players_list = ( position ) =>
         {
             let players = [];
@@ -194,9 +203,9 @@ export default class TeamCard extends Component
         /*======================================
             COMPONENTS
         ========================================*/
-
+        //this.props.team
         return (
-            <div className='team-card'>
+            <div className={display_team_card_class()}>
                 <div className='remaining-cards'>
                     <span>{display_remaining_cards()}</span>
                 </div>

@@ -56,15 +56,6 @@ main.codenames {
     flex-flow: column nowrap;
     align-items: center;
 
-    & .board-container {
-        // min-width: 600px;
-        width: 60%;
-        height: 100%;
-        max-width: 1000px;
-        display: flex;
-        flex-flow: column nowrap;
-    }
-    
     & .game-container {
         position: relative;
         width: 100%;
@@ -73,16 +64,25 @@ main.codenames {
         justify-content: center;
         align-items: center;
     }
+
+    & .board-container {
+        min-width: $game-board-min-width;
+        max-width: $game-board-max-width;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-flow: column nowrap;
+    }
     
-    & .team-container {
-        width: 20%;
+    & .sidebar-container {
+        width: $sidebar-width;
         height: 100%;
         display: flex;
         flex-flow: column nowrap;
         margin: 0 $app-spacing;
     
-        &.team-red  { align-items: flex-end;   }
-        &.team-blue { align-items: flex-start; }
+        // &.sidebar-left  { align-items: flex-end;   }
+        // &.sidebar-right { align-items: flex-start; }
     }
 }
 

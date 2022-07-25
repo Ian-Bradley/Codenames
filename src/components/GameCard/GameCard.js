@@ -105,7 +105,6 @@ export default class GameCard extends Component
                 // console.log('===> END - display_highlighting');
                 return highlights;
             }
-            return [];
         }
 
         /*======================================*/
@@ -114,6 +113,8 @@ export default class GameCard extends Component
         const display_classes = () =>
         {
             // Class for displaying card type to spymasters
+            // TODO: change to server-only storage of card colors
+            // only send to spymasters during non-set-up game states
             let cardClass = '';
             if ( this.props.currentPlayer.position === C.onst.positionSpymaster )
             {
@@ -157,8 +158,8 @@ export default class GameCard extends Component
                     </ul>
                 </div>
                 <Button
-                    btnClasses        ={'card-choose'}
                     btnDisplayClasses ={'game-card-button'}
+                    btnClasses        ={'card-choose'}
                     btnFunction       ={on_card_choose}
                     btnIcon           ={IconHand}
                 />

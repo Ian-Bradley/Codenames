@@ -29,7 +29,7 @@ main.codenames .game-card {
     &.card-black    { background-image: url("./images/card-black.png") }
 
     /*======================================
-        HIGHTLIGHTING
+        HIGHTLIGHTING - SPYMASTERS
     ========================================*/
 
     & .game-card-clickable {
@@ -58,7 +58,7 @@ main.codenames .game-card {
     }
 
     /*======================================
-        HIGHTLIGHTING LIST
+        HIGHTLIGHTING - OPERATIVES
     ========================================*/
 
     & .game-card-highlighted {
@@ -87,7 +87,7 @@ main.codenames .game-card {
     }
 
     /*======================================
-        TEXT
+        CARD TEXT
     ========================================*/
     
     & .game-card-text {
@@ -108,7 +108,7 @@ main.codenames .game-card {
     }
 
     /*======================================
-        CHOOSE BUTTON
+        CHOOSE CARD BUTTON
     ========================================*/
     
     & .game-card-button {

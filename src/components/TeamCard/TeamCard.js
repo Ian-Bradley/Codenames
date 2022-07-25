@@ -108,7 +108,7 @@ export default class TeamCard extends Component
             let players = [];
 
             // Connected players
-            if ( this.props.players.length )
+            if ( !( this.props.players === undefined ) && ( this.props.players.length ) )
             {
                 for ( let i = 0; i < this.props.players.length; i++ )
                 {
@@ -159,10 +159,17 @@ export default class TeamCard extends Component
         const display_button_operative = () =>
         {
             let operativesTotal = this.count_positions( this.props.currentPlayer, this.props.players, this.props.team, C.onst.positionOperative );
-            let displayClass = '';
-            if ( ( operativesTotal >= C.onst.maxOperatives ) || ( this.props.gameState !== C.onst.gameState_setup ) )
-            { displayClass = C.onst.classHidden; }
-            return displayClass;
+            if ( ( operativesTotal <= C.onst.maxOperatives ) || ( this.props.gameState === C.onst.gameState_setup ) )
+            {
+                return (
+                    <Button
+                        btnValue    ={C.onst.positionOperative}
+                        btnClasses  ={'select-operative'}
+                        btnFunction ={on_select_position}
+                        btnText     ={'Join as Operative'}
+                    />
+                )
+            }
         }
 
         /*======================================*/
@@ -171,10 +178,17 @@ export default class TeamCard extends Component
         const display_button_spymaster = () =>
         {
             let spymastersTotal = this.count_positions( this.props.currentPlayer, this.props.players, this.props.team, C.onst.positionSpymaster );
-            let displayClass = '';
-            if ( ( spymastersTotal >= C.onst.maxSpymasters ) || ( this.props.gameState !== C.onst.gameState_setup ) )
-            { displayClass = C.onst.classHidden; }
-            return displayClass;
+            if ( ( spymastersTotal <= C.onst.maxSpymasters ) || ( this.props.gameState === C.onst.gameState_setup ) )
+            {
+                return (
+                    <Button
+                        btnValue    ={C.onst.positionSpymaster}
+                        btnClasses  ={'select-spymaster'}
+                        btnFunction ={on_select_position}
+                        btnText     ={'Join as Spymaster'}
+                    />
+                )
+            }
         }
 
         /*======================================
@@ -195,26 +209,14 @@ export default class TeamCard extends Component
                     <ul className='team-list'>
                         {display_players_list(C.onst.positionOperative)}
                     </ul>
-                    <Button
-                        btnValue          ={C.onst.positionOperative}
-                        btnDisplayClasses ={display_button_operative()}
-                        btnClasses        ={'select-operative'}
-                        btnFunction       ={on_select_position}
-                        btnText           ={'Join as Operative'}
-                    />
+                    {display_button_operative()}
                 </div>
                 <div className='team-spymaster'>
                     <div className='team-card-title'>Spymaster</div>
                     <ul className='team-list'>
                         {display_players_list(C.onst.positionSpymaster)}
                     </ul>
-                    <Button
-                        btnValue          ={C.onst.positionSpymaster}
-                        btnDisplayClasses ={display_button_spymaster()}
-                        btnClasses        ={'select-spymaster'}
-                        btnFunction       ={on_select_position}
-                        btnText           ={'Join as Spymaster'}
-                    />
+                    {display_button_spymaster()}
                 </div>
             </div>
         );

@@ -42,7 +42,7 @@ main.codenames .game-log {
         margin-bottom: 1px;
     
         & span {
-            font-weight: 600;
+            font-weight: $game-log-text-bold;
         }
     
         & span:nth-child(2) {
@@ -57,7 +57,10 @@ main.codenames .game-log {
     
         &.team-red  { background-color: $team-color-red-log-bg;  }
         &.team-blue { background-color: $team-color-blue-log-bg; }
-        
+
+        &.team-red.victory  { text-transform: uppercase; }
+        &.team-blue.victory { text-transform: uppercase; }
+
         &.team-red span:nth-child(1), span.card-red { color: $team-color-red-log-name;  }
         &.team-blue span:nth-child(1), span.card-blue { color: $team-color-blue-log-name; }
     }

@@ -67,14 +67,13 @@ export default class Header extends Component
         {
             if ( this.props.currentPlayer.isHost )
             {
-                let button = (
+                return (
                     <Button
                         btnClasses  ={'game-reset'}
                         btnFunction ={on_game_reset}
                         btnText     ={'Reset Game'}
                     />
                 )
-                return button;
             }   
         }
 

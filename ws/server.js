@@ -592,7 +592,7 @@ wss.on('connection', ( wsClient ) =>
     {
         console.log('>>>>>>>>> Message Recieved >>>>>>>>>');
         let updateData = JSON.parse( data );
-        console.log('updateData: ', updateData);
+        console.log('messageType: ', updateData.messageType);
 
         switch ( updateData.messageType )
         {

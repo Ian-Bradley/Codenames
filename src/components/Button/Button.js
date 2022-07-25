@@ -13,7 +13,7 @@ export default class Button extends Component
 
         const on_button_click = e =>
         {
-            e.preventDefault();
+            // e.preventDefault();
             if( e.target.getAttribute('data-value') )
             {
                 this.props.btnFunction( e.target.getAttribute('data-value') );
@@ -30,12 +30,12 @@ export default class Button extends Component
 
         const display_classes = () =>
         {
-            let additionalClasses = '';
+            let displayClasses = 'button-container';
             if ( this.props.btnDisplayClasses )
             {
-                additionalClasses += ' ' + this.props.btnDisplayClasses;
+                displayClasses += ' ' + this.props.btnDisplayClasses;
             }
-            return 'button-container' + additionalClasses;
+            return displayClasses;
         }
 
         /*======================================*/
@@ -43,16 +43,16 @@ export default class Button extends Component
 
         const display_button_classes = () =>
         {
-            let additionalClasses = '';
+            let buttonClasses = 'game-button';
             if ( this.props.btnIcon && ( !this.props.btnText && !this.props.btnData ) )
             {
-                additionalClasses += ' btn-icon-only';
+                buttonClasses += ' btn-icon-only';
             }
             if ( this.props.btnClasses )
             {
-                additionalClasses += ' ' + this.props.btnClasses;
+                buttonClasses += ' ' + this.props.btnClasses;
             }
-            return 'game-button' + additionalClasses;
+            return buttonClasses;
         }
 
         /*======================================*/

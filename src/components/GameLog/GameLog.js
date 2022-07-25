@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as C from '../../constants.js'
 import './GameLog.scss';
 
 export default class GameLog extends Component
@@ -10,38 +11,70 @@ export default class GameLog extends Component
             RENDER FUNCTIONS - Displaying
         ========================================*/
 
-        const display_log_items = ( itemType, teamColor ) =>
+        const display_log_items = () =>
         {
-            const logItem = document.createElement('li');
-            const logName = document.createElement('span');
-            const logClueOrCard = document.createElement('span');
-
-            switch(itemType)
+            const gameLog = this.props.gameLog;
+            if ( !( gameLog === undefined ) && ( gameLog.length ) )
             {
-                case 'clue':
+                let log = [];
+                for ( let i = 0; i < gameLog; i++ )
                 {
-                    // const codename = document.createTextNode('give clue');
-                    break;
-                }
+                    switch( gamelog[i].itemType )
+                    {
+                        case 'clue':
+                        {
+                            log.push(
+                                <li className={'team-' + gameLog[i].player.team}>
+                                    <span>{gameLog[i].player.name}</span> gives clue <span className='game-log-clue'>{gamelog[i].clue}</span>
+                                </li>
+                            );
+                        }
 
-                case 'select':
-                {
-                    
-                    break;
+                        case 'choose':
+                        {
+                            log.push(
+                                <li className={'team-' + gameLog[i].player.team}>
+                                    <span>{gameLog[i].player.name}</span> taps <span className={'card-' + gameLog[i].player.team}>{gamelog[i].cardText}</span>
+                                </li>
+                            );
+                        }
+            
+                        case 'end':
+                        {
+                            log.push(
+                                <li className={'team-' + gameLog[i].player.team}>
+                                    <span>{gameLog[i].player.name}</span> ends guessing
+                                </li>
+                            );
+                        }
+            
+                        case 'victory':
+                        {
+                            log.push(
+                                <li className={'team-' + gameLog[i].player.team + ' victory'}>
+                                    <span>{gameLog[i].player.team} team</span> <span>wins</span>
+                                </li>
+                            );
+                        }
+                        default:
+                    }
                 }
-
-                case 'end':
-                {
-                    
-                    break;
-                }
-
-                default:
+                return log;
             }
+        }
 
-            logItem.className = `team-${teamColor}`;
-            logItem.appendChild(codename);
-            document.querySelector('.game-log-list ul').appendChild(logItem);
+        /*======================================*/
+        /*======================================*/
+
+
+        const display_log_classes = (  ) =>
+        {
+            let logClasses = 'game-log';
+            if ( this.props.gameState !== C.onst.gameState_setup )
+            {
+                logClasses += ' ' + C.onst.classActive;
+            }
+            return logClasses;
         }
 
         /*======================================
@@ -49,21 +82,13 @@ export default class GameLog extends Component
         ========================================*/
 
         return (
-            <div className='game-log'>
+            <div className={display_log_classes()}>
                 <div className='game-log-title'>
                     Game Log
                 </div>
                 <div className='game-log-list'>
                     <ul>
-                        {/* {display_log_items()} */}
-                        <li className='team-blue'><span>Spymaster</span> gives clue <span className='game-log-clue'>CLUE</span></li>
-                        <li className='team-blue'><span>Operative</span> taps <span className='card-blue'>CARD</span></li>
-                        <li className='team-blue'><span>Operative</span> taps <span className='card-blue'>CARD</span></li>
-                        <li className='team-blue'><span>Operative</span> ends guessing</li>
-                        <li className='team-red'><span>Spymaster</span> gives clue <span className='game-log-clue'>CLUE</span></li>
-                        <li className='team-red'><span>Operative</span> taps <span className='card-red'>CARD</span></li>
-                        <li className='team-red'><span>Operative</span> taps <span className='card-red'>CARD</span></li>
-                        <li className='team-red'><span>Operative</span> ends guessing</li>
+                        {display_log_items()}
                     </ul>
                 </div>
             </div>

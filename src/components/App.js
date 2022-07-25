@@ -578,10 +578,17 @@ export default class App extends Component
 
     add_log_item ( logItem )
     {
-        // TODO: add_log_item - WS
+        // State
         this.setState( prevState => ({
-            gameLog: [ ...prevState.gameLog, logItem ]
+            gameLog: [ ...prevState.gameLog, logItem]
         }));
+        // WS
+        // let newUpdate = {
+        //     messageType: 'updateAddLogItem',
+        //     index: logItem,
+        // };
+        // this.socket.send( JSON.stringify( newUpdate ));
+        // console.log('>>>>>>>>> Message Sent - updateAddLogItem >>>>>>>>>');
     }
 
     /*======================================*/
@@ -589,7 +596,6 @@ export default class App extends Component
 
     clear_log ()
     {
-        // TODO: clear_log - WS
         this.setState({ gameLog: [] });
     }
 
@@ -973,8 +979,35 @@ export default class App extends Component
         /*======================================
             ANCHOR: RENDER FUNCTIONS - Dev Tools
         ========================================*/
-
-        const on_dev_button = ( state ) => { this.set_game_state( state ); }
+        const fakeLog = [
+            { player: {team: 'red', name: 'Chilled'}, itemType: 'choose', cardText: 'Penguin' },
+            { player: {team: 'blue', name: 'Platy'}, itemType: 'choose', cardText: 'Tower' },
+            { player: {team: 'red', name: 'Tom Fawkes'}, itemType: 'choose', cardText: 'Spring' },
+            { player: {team: 'blue', name: 'Courtilly'}, itemType: 'choose', cardText: 'Soldier' },
+            { player: {team: 'red', name: 'Junk'}, itemType: 'end' },
+            { player: {team: 'red', name: 'Raven'}, itemType: 'choose', cardText: 'Cheque' },
+            { player: {team: 'red', name: 'Kara'}, itemType: 'choose', cardText: 'Sorting' },
+            { player: {team: 'blue', name: 'Chibi'}, itemType: 'choose', cardText: 'Dragons' },
+            { player: {team: 'red', name: 'Cheesy'}, itemType: 'choose', cardText: 'I Want The Pipe' },
+            { player: {team: 'blue', name: 'Silver'}, itemType: 'choose', cardText: 'Baraka' },
+            { player: {team: 'red', name: 'Kat'}, itemType: 'choose', cardText: 'Cow' },
+            { player: {team: 'red', name: 'Jeremy'}, itemType: 'choose', cardText: 'Purple' },
+            { player: {team: 'blue', name: 'Alfredo'}, itemType: 'end' },
+            { player: {team: 'red', name: 'Jackie'}, itemType: 'choose', cardText: 'Nachos' },
+            { player: {team: 'red', name: 'Fooya'}, itemType: 'choose', cardText: 'Zepplin' },
+            { player: {team: 'blue', name: 'Knovis'}, itemType: 'choose', cardText: 'Plain' },
+            { player: {team: 'blue', name: 'Speedy'}, itemType: 'choose', cardText: 'Mucho' },
+            { player: {team: 'blue', name: 'SideArms'}, itemType: 'choose', cardText: 'Taco' },
+            { player: {team: 'red', name: 'ZeRoyalViking'}, itemType: 'choose', cardText: 'Salad' },
+            { player: {team: 'red', name: 'Tay'}, itemType: 'victory' },
+        ]
+        let countLog = 0;
+        const on_dev_state = ( state ) => { this.set_game_state( state ); }
+        const on_dev_log = () => {
+            this.add_log_item( fakeLog[countLog] );
+            countLog++
+            if ( countLog > 20 ) { countLog = 0 }
+        }
         const on_dev_input = e => { if (e.keyCode === 13) { this.set_current_player__name( e.target.value ); } }
         const dev_list_players = ( arr ) => {
             let str = '';
@@ -1095,18 +1128,19 @@ export default class App extends Component
                         </ul>
                     </div>
                     <div>
+                        <Button btnFunction={on_dev_log} btnText={'Log'} />
                         <input
                             type='text'
                             className='name-input'
                             placeholder='Name'
                             defaultValue=''
                             onKeyDown={on_dev_input} />
-                        <Button btnClasses={'button-green'} btnFunction={on_dev_button} btnText={'Setup'} btnValue={'setup'} />
-                        <Button btnClasses={'button-red'} btnFunction={on_dev_button} btnText={'RedSpy'} btnValue={'red-spymaster'} />
-                        <Button btnClasses={'button-red'} btnFunction={on_dev_button} btnText={'RedOp'} btnValue={'red-operatives'} />
-                        <Button btnClasses={'button-blue'} btnFunction={on_dev_button} btnText={'BlueSpy'} btnValue={'blue-spymaster'} />
-                        <Button btnClasses={'button-blue'} btnFunction={on_dev_button} btnText={'BlueOp'} btnValue={'blue-operatives'} />
-                        <Button btnClasses={'button-green'} btnFunction={on_dev_button} btnText={'End'} btnValue={'end'} />
+                        <Button btnClasses={'button-green'} btnFunction={on_dev_state} btnText={'Setup'} btnValue={'setup'} />
+                        <Button btnClasses={'button-red'} btnFunction={on_dev_state} btnText={'RedSpy'} btnValue={'red-spymaster'} />
+                        <Button btnClasses={'button-red'} btnFunction={on_dev_state} btnText={'RedOp'} btnValue={'red-operatives'} />
+                        <Button btnClasses={'button-blue'} btnFunction={on_dev_state} btnText={'BlueSpy'} btnValue={'blue-spymaster'} />
+                        <Button btnClasses={'button-blue'} btnFunction={on_dev_state} btnText={'BlueOp'} btnValue={'blue-operatives'} />
+                        <Button btnClasses={'button-green'} btnFunction={on_dev_state} btnText={'End'} btnValue={'end'} />
                     </div>
                 </div>
 

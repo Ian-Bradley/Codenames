@@ -1,24 +1,21 @@
 import React, { Component } from 'react';
 import './GameMessage.scss';
 
-export default class GameMessage extends Component
-{
-    render()
-    {
+function GameMessage (props) {
+    return (
+        <div className='game-message'> 
+            <span>{props.message}</span>
+        </div>
+    );
+  }
 
-        /*======================================
-            RENDER FUNCTIONS - Displaying
-        ========================================*/
 
 
-        /*======================================
-            COMPONENTS
-        ========================================*/
+// export default class GameMessage extends Component
+// {
+//     render()
+//     {
 
-        return (
-            <div className='game-message'> 
-                <span>{this.props.message}</span>
-            </div>
-        );
-    }
-}
+
+//     }
+// }

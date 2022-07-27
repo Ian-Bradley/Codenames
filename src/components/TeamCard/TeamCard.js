@@ -57,13 +57,13 @@ export default class TeamCard extends Component
             let playerPosition  = this.props.currentPlayer.position;
             // Flags
             let isOnTeam          = playerTeamColor;
-            let isTeamCardRed     = ( cardTeamColor === C.onst.teamRed );
-            let isTeamCardBlue    = ( cardTeamColor === C.onst.teamBlue );
+            let isTeamCardRed     = ( cardTeamColor === C.onst.red );
+            let isTeamCardBlue    = ( cardTeamColor === C.onst.blue );
             let isSameTeam        = ( cardTeamColor === playerTeamColor );
-            let isPlayerOperative = ( playerPosition === C.onst.positionOperative );
-            let isPlayerSpymaster = ( playerPosition === C.onst.positionSpymaster );
-            let isButtonOperative = ( buttonPosition === C.onst.positionOperative );
-            let isButtonSpymaster = ( buttonPosition === C.onst.positionSpymaster );
+            let isPlayerOperative = ( playerPosition === C.onst.operative );
+            let isPlayerSpymaster = ( playerPosition === C.onst.spymaster );
+            let isButtonOperative = ( buttonPosition === C.onst.operative );
+            let isButtonSpymaster = ( buttonPosition === C.onst.spymaster );
             // Team Swapping Logic
             if ( isOnTeam && isTeamCardRed && isSameTeam && isPlayerOperative && isButtonSpymaster )
             { this.props.set_current_player__position( buttonPosition ); }
@@ -167,12 +167,12 @@ export default class TeamCard extends Component
 
         const display_button_operative = () =>
         {
-            let operativesTotal = this.count_positions( this.props.currentPlayer, this.props.players, this.props.team, C.onst.positionOperative );
+            let operativesTotal = this.count_positions( this.props.currentPlayer, this.props.players, this.props.team, C.onst.operative );
             if ( ( operativesTotal <= C.onst.maxOperatives ) || ( this.props.gameState === C.onst.gameState_setup ) )
             {
                 return (
                     <Button
-                        btnValue    ={C.onst.positionOperative}
+                        btnValue    ={C.onst.operative}
                         btnClasses  ={'select-operative'}
                         btnFunction ={on_select_position}
                         btnText     ={'Join as Operative'}
@@ -186,12 +186,12 @@ export default class TeamCard extends Component
 
         const display_button_spymaster = () =>
         {
-            let spymastersTotal = this.count_positions( this.props.currentPlayer, this.props.players, this.props.team, C.onst.positionSpymaster );
+            let spymastersTotal = this.count_positions( this.props.currentPlayer, this.props.players, this.props.team, C.onst.spymaster );
             if ( ( spymastersTotal <= C.onst.maxSpymasters ) || ( this.props.gameState === C.onst.gameState_setup ) )
             {
                 return (
                     <Button
-                        btnValue    ={C.onst.positionSpymaster}
+                        btnValue    ={C.onst.spymaster}
                         btnClasses  ={'select-spymaster'}
                         btnFunction ={on_select_position}
                         btnText     ={'Join as Spymaster'}
@@ -216,14 +216,14 @@ export default class TeamCard extends Component
                 <div className='team-operatives'>
                     <div className='team-card-title'>Operative(s)</div>
                     <ul className='team-list'>
-                        {display_players_list(C.onst.positionOperative)}
+                        {display_players_list(C.onst.operative)}
                     </ul>
                     {display_button_operative()}
                 </div>
                 <div className='team-spymaster'>
                     <div className='team-card-title'>Spymaster</div>
                     <ul className='team-list'>
-                        {display_players_list(C.onst.positionSpymaster)}
+                        {display_players_list(C.onst.spymaster)}
                     </ul>
                     {display_button_spymaster()}
                 </div>

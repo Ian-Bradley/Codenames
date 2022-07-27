@@ -49,6 +49,7 @@ main.codenames .game-log {
     
         & span:nth-child(2) {
             text-transform: uppercase;
+            font-weight: $game-log-text-extra-bold;
         }
     
         & span.game-log-clue {
@@ -60,8 +61,7 @@ main.codenames .game-log {
         &.team-red  { background-color: $team-color-red-log-bg;  }
         &.team-blue { background-color: $team-color-blue-log-bg; }
 
-        &.team-red.victory  { text-transform: uppercase; }
-        &.team-blue.victory { text-transform: uppercase; }
+        &.victory  { text-transform: uppercase; }
 
         &.team-red span:nth-child(1), span.card-red { color: $team-color-red-log-name;  }
         &.team-blue span:nth-child(1), span.card-blue { color: $team-color-blue-log-name; }

@@ -478,7 +478,9 @@ class Codenames
     log_add_item ( logItem )
     {
         console.log('===> log_add_item: ', logItem);
+        console.log('> BEFORE: ', this.state.gameLog);
         this.state.gameLog.push( logItem );
+        console.log('> AFTER: ', this.state.gameLog);
         console.log('===> END - log_add_item');
     }
 
@@ -574,6 +576,7 @@ wss.on('connection', ( wsClient ) =>
         messageType: 'clientConnected',
         cards:       game.state.cards,
         players:     game.state.players,
+        gameLog:     game.state.gameLog,
     };
     
     // TODO: Send team guesses/cards remaining as well (returning players)
@@ -682,12 +685,12 @@ wss.on('connection', ( wsClient ) =>
 
             case 'updateAddHighlight':
             {
-                console.log('======= HANDLER - updateAddHighlight =======');
+                // console.log('======= HANDLER - updateAddHighlight =======');
                 updateData.id = uuidv4(); // message id
                 game.highlight_add( updateData.player, updateData.index );
                 wss.broadcast( JSON.stringify( updateData ), wsClient );
-                console.log('>>>>>>>>> Message Sent - updateAddHighlight >>>>>>>>>');
-                console.log('======= END HANDLER - updateAddHighlight =======');
+                // console.log('>>>>>>>>> Message Sent - updateAddHighlight >>>>>>>>>');
+                // console.log('======= END HANDLER - updateAddHighlight =======');
                 break;
             }
             
@@ -696,12 +699,12 @@ wss.on('connection', ( wsClient ) =>
 
             case 'updateRemoveHighlight':
             {
-                console.log('======= HANDLER - updateRemoveHighlight =======');
+                // console.log('======= HANDLER - updateRemoveHighlight =======');
                 updateData.id = uuidv4(); // message id
                 game.highlight_remove( updateData.player, updateData.index );
                 wss.broadcast( JSON.stringify( updateData ), wsClient );
-                console.log('>>>>>>>>> Message Sent - updateRemoveHighlight >>>>>>>>>');
-                console.log('======= END HANDLER - updateRemoveHighlight =======');
+                // console.log('>>>>>>>>> Message Sent - updateRemoveHighlight >>>>>>>>>');
+                // console.log('======= END HANDLER - updateRemoveHighlight =======');
                 break;
             }
             

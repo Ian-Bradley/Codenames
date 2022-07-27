@@ -44,7 +44,7 @@ export default class GameCard extends Component
             if ( !this.props.cardChosen )
             {
                 // Operative action
-                if ( this.props.currentPlayer.position === C.onst.positionOperative )
+                if ( this.props.currentPlayer.position === C.onst.operative )
                 {
                     // console.log('> Operative - Highlight');
                     this.props.card_highlight( this.props.cardIndex );
@@ -52,7 +52,7 @@ export default class GameCard extends Component
                 }
 
                 // Spymaster action
-                if ( this.props.currentPlayer.position === C.onst.positionSpymaster )
+                if ( this.props.currentPlayer.position === C.onst.spymaster )
                 {
                     // console.log('> Spymaster - Highlight');
                     // console.log('> Spymaster - Adding border highlight');
@@ -116,12 +116,12 @@ export default class GameCard extends Component
             // TODO: change to server-only storage of card colors
             // only send to spymasters during non-set-up game states
             let cardClass = '';
-            if ( this.props.currentPlayer.position === C.onst.positionSpymaster )
+            if ( this.props.currentPlayer.position === C.onst.spymaster )
             {
-                if ( this.props.cardType === C.onst.teamRed   ) { cardClass += C.onst.cardRed;   }
-                if ( this.props.cardType === C.onst.teamBlue  ) { cardClass += C.onst.cardBlue;  }
-                if ( this.props.cardType === C.onst.teamBlack ) { cardClass += C.onst.cardBlack; }
-                if ( this.props.cardType === C.onst.teamGreen ) { cardClass += C.onst.cardGreen; }
+                if ( this.props.cardType === C.onst.red   ) { cardClass += C.onst.cardRed;   }
+                if ( this.props.cardType === C.onst.blue  ) { cardClass += C.onst.cardBlue;  }
+                if ( this.props.cardType === C.onst.black ) { cardClass += C.onst.cardBlack; }
+                if ( this.props.cardType === C.onst.green ) { cardClass += C.onst.cardGreen; }
             }
             // Class for chosen cards to disable interaction
             if ( this.props.cardChosen ) { cardClass += ' ' + C.onst.classChosen }
@@ -165,7 +165,7 @@ export default class GameCard extends Component
                 />
                 <div
                     className='game-card-text'
-                    style={{marginBottom: this.props.cardTextMargin + 'px'}}
+                    style={{marginBottom: this.props.cardMargin + 'px'}}
                 >
                     {this.props.cardText}
                 </div>

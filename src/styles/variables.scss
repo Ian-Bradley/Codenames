@@ -9,16 +9,19 @@ $font-family-cards: 'Oswald', sans-serif;
     SPACING / SIZING
 ========================================*/
 
-$app-spacing: 0.8rem;
+$app-spacing: 0.6rem;
 $app-spacing-mobile: 0.6rem;
+
+$app-max-width: 1920px;
+$app-max-height: 1080px;
+
 $border-radius: 1rem;
 $list-spacing: 6px;
+$sidebar-width: 275px;
 
 $game-header-height: 70px;
 $game-message-height: 40px;
 $game-message-border-radius: 5px;
-
-$sidebar-width: 350px;
 
 $game-board-max-width: 1000px;
 $game-board-min-width: 600px;
@@ -66,6 +69,7 @@ $team-card-list-title: 0.9rem;
 $game-log-title: 0.9rem;
 $game-log-text: 1rem;
 $game-log-text-bold: 800;
+$game-log-text-extra-bold: 900;
 
 $game-message: 1.2rem;
 $game-message-height: 2rem;

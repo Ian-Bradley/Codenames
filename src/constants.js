@@ -16,14 +16,14 @@ export const onst = {
     transitionTime__fade:        200,
     transitionTime__stateChange: 2000,
 
-    positionSpymaster: 'spymaster',
-    positionOperative: 'operative',
+    spymaster: 'spymaster',
+    operative: 'operative',
 
-    teamTan:   'tan',
-    teamRed:   'red',
-    teamBlue:  'blue',
-    teamBlack: 'black',
-    teamGreen: 'green',
+    tan:   'tan',
+    red:   'red',
+    blue:  'blue',
+    black: 'black',
+    green: 'green',
 
     cardNeutral: 'card-neutral',
     cardRed:     'card-red',

@@ -1,23 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useRef } from 'react';
 import GameCard from '../GameCard/GameCard.js';
 import * as C from '../../constants.js'
 import './GameBoard.scss';
 
 export default class GameBoard extends Component
 {
-
-    // cards               ={this.state.cards}
-    // currentPlayer       ={this.state.currentPlayer}
-    // gameState           ={this.state.gameState}
-    // players             ={this.state.players}
-    // highlight_add       ={this.highlight_add}
-    // highlight_remove    ={this.highlight_remove}
-    // highlight_clear_card={this.highlight_clear_card}
-    // highlight_clear_all ={this.highlight_clear_all}
-    // card_choose         ={this.card_choose}
-    // debounce            ={this.debounce}
-
-
     /*======================================
         STATE + FUNCTION BINDINGS
     ========================================*/
@@ -26,54 +13,22 @@ export default class GameBoard extends Component
     {
         super(props);
         this.state = {
-            cardWidth: 0,
-            cardHeight: 0,
-            cardTextMargin: 0,
+            boardWidth: 0,
         };
-        this.set_card_width       = this.set_card_width.bind(this);
-        this.set_card_height      = this.set_card_height.bind(this);
-        this.set_card_text_margin = this.set_card_text_margin.bind(this);
-        this.cards_resize         = this.cards_resize.bind(this);
+        this.set_board_width = this.set_board_width.bind(this);
     }
 
     /*======================================
         STATE METHODS
     ========================================*/
 
-    set_card_width ( width )
+    set_board_width ()
     {
-        this.setState({ cardWidth: width });
-    }
-
-    /*======================================*/
-    /*======================================*/
-
-    set_card_height ( height )
-    {
-        this.setState({ cardHeight: height });
-    }
-    
-    /*======================================*/
-    /*======================================*/
-
-    set_card_text_margin ( margin )
-    {
-        this.setState({ cardTextMargin: margin });
-    }
-
-    /*======================================
-        FUNCTIONAL METHODS
-    ========================================*/
-
-    cards_resize ()
-    {
-        console.log('===> cards_resize');
-        let cardWidth      = ( ( document.querySelector('.game-board').offsetWidth - C.onst.cardMarginWidth - 1 ) * 0.2 ); // -1 for safety | 0.2 for 1/5 (5x5)
-        let cardHeight     = ( cardWidth * C.onst.cardSizeRatio );
-        let cardTextMargin = ( cardHeight * C.onst.cardTextRatio ); // refine
-        this.set_card_width( cardWidth );
-        this.set_card_height( cardHeight );
-        this.set_card_text_margin( cardTextMargin );
+        console.log('===> set_board_width');
+        console.log('document.querySelector(.game-board).offsetWidth : ', document.querySelector('.game-board').offsetWidth );
+        console.log('ref.offsetWidth : ', ref.offsetWidth );
+        this.setState({ boardWidth: ref.offsetWidth });
+        console.log('===> END - set_board_width');
     }
 
     /*======================================
@@ -82,13 +37,16 @@ export default class GameBoard extends Component
 
     componentDidMount()
     {
-        this.cards_resize();
-        let debounceResize = this.props.debounce( this.cards_resize, C.onst.debounceDelay, false );
+        console.log('> Setting board width');
+        this.set_board_width();
+        console.log('> Setting even listener');
+        let debounceResize = this.props.debounce( this.set_board_width, C.onst.debounceDelay, false );
         window.addEventListener( 'resize', debounceResize );
     }
 
     componentWillUnmount() {
-        let debounceResize = this.props.debounce( this.cards_resize, C.onst.debounceDelay, false );
+        console.log('> Unsetting even listener');
+        let debounceResize = this.props.debounce( this.set_board_width, C.onst.debounceDelay, false );
         window.removeEventListener( 'resize', debounceResize );
     }
 
@@ -103,8 +61,23 @@ export default class GameBoard extends Component
 
         const display_cards = () =>
         {
-            if ( this.props.cards.length )
+            
+            if
+            (
+                ( !( this.props.cards.length === undefined ) && ( this.props.cards.length ) )
+                &&
+                ( this.state.boardWidth !== 0 )
+            )
             {
+                // Cards - Sizing
+                // let cardWidth  = ( ( document.querySelector('.game-board').offsetWidth - C.onst.cardMarginWidth - 1 ) * 0.2 ); // -1 for safety | 0.2 for 1/5 (5x5)
+                console.log('this.state.boardWidth: ', this.state.boardWidth);
+                let cardWidth  = ( ( this.state.boardWidth - C.onst.cardMarginWidth - 1 ) * 0.2 ); // -1 for safety | 0.2 for 1/5 (5x5)
+                let cardHeight = ( cardWidth * C.onst.cardSizeRatio );
+                let cardMargin = ( cardHeight * C.onst.cardTextRatio ); // amount to space text properly // TODO: refine
+
+
+                // Cards - Building
                 let cardArray  = [];
                 for ( let i = 0; i < this.props.cards.length; i++ )
                 {
@@ -149,14 +122,15 @@ export default class GameBoard extends Component
                     //     console.log('==> display_cards > highlights: ', highlights);
                     // }
 
-                    // Create component array
+                    // Add to component array
                     cardArray.push(
                         <GameCard
                             key={i}
                             highlights       ={highlights}
+                            cardWidth        ={cardWidth}
+                            cardHeight       ={cardHeight}
+                            cardMargin       ={cardMargin}
                             currentPlayer    ={this.props.currentPlayer}
-                            cardWidth        ={this.state.cardWidth}
-                            cardHeight       ={this.state.cardHeight}
                             cardType         ={this.props.cards[i].type}
                             cardIndex        ={this.props.cards[i].index}
                             cardText         ={this.props.cards[i].text}
@@ -174,8 +148,14 @@ export default class GameBoard extends Component
             COMPONENTS
         ========================================*/
 
+        const ref = useRef(null);
+
+        useEffect(() => {
+            console.log("width", ref.current.offsetWidth);
+        }, []);
+
         return (
-            <div className='game-board'>
+            <div className='game-board' ref={ref}>
                 {display_cards()}
             </div>
         );

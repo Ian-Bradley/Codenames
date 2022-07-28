@@ -1,21 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './GameMessage.scss';
 
-function GameMessage (props) {
+/**
+ * @props message (string) Turn-message to be displayed to instruct players
+ */
+
+export default function GameMessage ( props ) {
     return (
         <div className='game-message'> 
             <span>{props.message}</span>
         </div>
     );
-  }
-
-
-
-// export default class GameMessage extends Component
-// {
-//     render()
-//     {
-
-
-//     }
-// }
+}

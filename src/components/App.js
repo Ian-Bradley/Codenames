@@ -1086,9 +1086,9 @@ export default class App extends Component
                     />
 
                     <GameMenu
-                        currentPlayer  ={this.state.currentPlayer}
-                        gameState      ={this.state.gameState}
-                        set_game_state ={this.set_game_state}
+                        isHost      ={this.state.currentPlayer.isHost}
+                        gameState   ={this.state.gameState}
+                        // menu_action ={this.menu_action}
                     />
 
                     <div className='game-container'>
@@ -1101,8 +1101,6 @@ export default class App extends Component
                                 gameState                    ={this.state.gameState}
                                 set_current_player__team     ={this.set_current_player__team}
                                 set_current_player__position ={this.set_current_player__position}
-                                set_team__cards              ={this.set_team__cards}
-                                set_team__guesses            ={this.set_team__guesses}
                             />
                         </div>
                         <div className='board-container'>

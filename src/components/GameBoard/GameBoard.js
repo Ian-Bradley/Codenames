@@ -26,8 +26,8 @@ export default class GameBoard extends Component
     {
         console.log('===> set_board_width');
         console.log('document.querySelector(.game-board).offsetWidth : ', document.querySelector('.game-board').offsetWidth );
-        console.log('ref.offsetWidth : ', ref.offsetWidth );
-        this.setState({ boardWidth: ref.offsetWidth });
+        // console.log('ref.offsetWidth : ', ref.offsetWidth );
+        // this.setState({ boardWidth: ref.offsetWidth });
         console.log('===> END - set_board_width');
     }
 
@@ -148,14 +148,16 @@ export default class GameBoard extends Component
             COMPONENTS
         ========================================*/
 
-        const ref = useRef(null);
+        // const ref = useRef(null);
 
-        useEffect(() => {
-            console.log("width", ref.current.offsetWidth);
-        }, []);
+        // useEffect(() => {
+        //     console.log("width", ref.current.offsetWidth);
+        // }, []);
+
+        // ref={ref}
 
         return (
-            <div className='game-board' ref={ref}>
+            <div className='game-board' >
                 {display_cards()}
             </div>
         );

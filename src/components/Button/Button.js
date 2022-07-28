@@ -1,88 +1,93 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './Button.scss';
 
-export default class Button extends Component
-{
-    
-    render()
+/**
+ * @props btnIcon (string)           File destinaton to find image
+ * @props btnData (string || number) Data to be displayed on button (ex: total players)
+ * @props btnText (string)           Text to be displayed on button
+ * @props btnValue (string)          Value to be inserted into "data-value" attribute
+ * @props btnClasses (string)        Main class for button and optional color class (ex: "reset-button button-green")
+ * @props btnFunction (function)     Callback function
+ * @props btnDisplayClasses (string) Classes for modifying button display (ex: hide/show or disable interactions)
+ */
+
+export default function Button ( props ) {
+
+    /*======================================
+        RENDER FUNCTIONS - Interactions
+    ========================================*/
+
+    const on_button_click = e =>
     {
-
-        /*======================================
-            RENDER FUNCTIONS - Interactions
-        ========================================*/
-
-        const on_button_click = e =>
+        // e.preventDefault();
+        if( e.target.getAttribute('data-value') )
         {
-            // e.preventDefault();
-            if( e.target.getAttribute('data-value') )
-            {
-                this.props.btnFunction( e.target.getAttribute('data-value') );
-            }
-            else
-            {
-                this.props.btnFunction();
-            }
+            props.btnFunction( e.target.getAttribute('data-value') );
         }
-
-        /*======================================
-            RENDER FUNCTIONS - Displaying
-        ========================================*/
-
-        const display_classes = () =>
+        else
         {
-            let displayClasses = 'button-container';
-            if ( this.props.btnDisplayClasses )
-            {
-                displayClasses += ' ' + this.props.btnDisplayClasses;
-            }
-            return displayClasses;
+            props.btnFunction();
         }
-
-        /*======================================*/
-        /*======================================*/
-
-        const display_button_classes = () =>
-        {
-            let buttonClasses = 'game-button';
-            if ( this.props.btnIcon && ( !this.props.btnText && !this.props.btnData ) )
-            {
-                buttonClasses += ' btn-icon-only';
-            }
-            if ( this.props.btnClasses )
-            {
-                buttonClasses += ' ' + this.props.btnClasses;
-            }
-            return buttonClasses;
-        }
-
-        /*======================================*/
-        /*======================================*/
-
-        const display_button_icon = () =>
-        {
-            if ( this.props.btnIcon )
-            {
-                let iconClasses = 'btn-icon';
-                if ( this.props.btnText ) { iconClasses += ' btn-m-left'; }
-                if ( this.props.btnData ) { iconClasses += ' btn-m-right'; }
-                return <img src={this.props.btnIcon} className={iconClasses}/>
-            }
-        }
-
-        /*======================================
-            COMPONENTS
-        ========================================*/
-
-        return (
-            <div className={display_classes()}>
-                <button
-                    type       ='button'
-                    data-value ={this.props.btnValue}
-                    className  ={display_button_classes()}
-                    onClick    ={on_button_click}>
-                    {this.props.btnText} {display_button_icon()} {this.props.btnData}
-                </button>
-            </div>
-        );
     }
+
+    /*======================================
+        RENDER FUNCTIONS - Displaying
+    ========================================*/
+
+    const display_classes = () =>
+    {
+        let displayClasses = 'button-container';
+        if ( props.btnDisplayClasses )
+        {
+            displayClasses += ' ' + props.btnDisplayClasses;
+        }
+        return displayClasses;
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    const display_button_classes = () =>
+    {
+        let buttonClasses = 'game-button';
+        if ( props.btnIcon && ( !props.btnText && !props.btnData ) )
+        {
+            buttonClasses += ' btn-icon-only';
+        }
+        if ( props.btnClasses )
+        {
+            buttonClasses += ' ' + props.btnClasses;
+        }
+        return buttonClasses;
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    const display_button_icon = () =>
+    {
+        if ( props.btnIcon )
+        {
+            let iconClasses = 'btn-icon';
+            if ( props.btnText ) { iconClasses += ' btn-m-left'; }
+            if ( props.btnData ) { iconClasses += ' btn-m-right'; }
+            return <img src={props.btnIcon} className={iconClasses}/>
+        }
+    }
+
+    /*======================================
+        COMPONENTS
+    ========================================*/
+
+    return (
+        <div className={display_classes()}>
+            <button
+                type       ='button'
+                data-value ={props.btnValue}
+                className  ={display_button_classes()}
+                onClick    ={on_button_click}>
+                {props.btnText} {display_button_icon()} {props.btnData}
+            </button>
+        </div>
+    );
 }

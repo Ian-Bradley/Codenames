@@ -133,5 +133,9 @@ main.codenames {
 
     & .app-container {
         z-index: 20;
+
+        & div {
+            z-index: inherit;
+        }
     }
 }

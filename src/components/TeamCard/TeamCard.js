@@ -6,9 +6,10 @@ import './TeamCard.scss';
 /**
  * @props team (string)          Team name/color
  * @props teamData (onject)      Team data for remaining guesses and cards
- * @props players (array)        Current connect players list
+ * @props players (array)        Current connected players list
  * @props gameState (string)     Current state of the game
  * @props currentPlayer (object) Current player information
+ * @props team_select (function) Callback function for team selecting buttons
  */
 
 export default function TeamCard ( props ) {

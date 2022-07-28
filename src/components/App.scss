@@ -41,48 +41,80 @@
     CONTAINERS
 ========================================*/
 
-html, body, #root,
-main.codenames {
+/*======================================
+#root
+    main.codenames
+        .bg-texture-layer
+            .container-app
+                .container-header
+                .container-board
+                    .container-sidebar .sidebar-left
+                    .container-game
+                    .container-sidebar .sidebar-right
+========================================*/
+
+html,
+body,
+#root,
+main.codenames,
+.bg-texture-layer {
     position: relative;
-    height: 100%;
-    width: 100%;
     overflow: hidden;
+
+    width: 100%;
+    height: 100%;
 }
 
-.app-container {
-    max-width: $app-max-width;
-    max-height: $app-max-height;
+.container-app {
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
 
-    & .game-container {
-        position: relative;
-        width: 100%;
+    max-width: $app-max-width;
+    max-height: $app-max-height;
+
+    padding: $app-spacing;
+
+    & .container-header {
         display: flex;
-        flex-flow: row nowrap;
-        justify-content: center;
-        align-items: flex-start;
+        flex-flow: column nowrap;
+        align-items: center;
+        justify-content: center; 
+
+        width: 100%;
+        height: auto;
     }
 
-    & .board-container {
-        // min-width: $game-board-min-width;
-        max-width: $game-board-max-width;
+    & .container-board {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: flex-start;
+        justify-content: center; 
+
         width: 100%;
-        height: 100%;
-        display: flex;
-        flex-flow: column nowrap;
-        align-self: flex-start;
-    }
-    
-    & .sidebar-container {
-        min-width: $sidebar-width;
-        max-width: $sidebar-width;
-        height: 100%;
-        display: flex;
-        flex-flow: column nowrap;
-        align-self: flex-start;
-        margin: 0 $app-spacing;
+        height: auto;
+
+        & .container-game {
+            display: flex;
+            flex-flow: column nowrap;
+            align-items: flex-start;
+            justify-content: center;
+
+            // min-width: $game-board-min-width;
+            width: 100%;
+            height: 100%;
+        }
+
+        & .container-sidebar {
+            display: flex;
+            flex-flow: column nowrap;
+            align-self: flex-start;
+            justify-content: center;
+
+            min-width: $sidebar-width;
+            max-width: $sidebar-width;
+            height: 100%;
+        }
     }
 }
 
@@ -90,51 +122,66 @@ main.codenames {
     BACKGROUNDS
 ========================================*/
 
-main.codenames .bg-color,
-main.codenames .bg-texture {
-    position: absolute;
-    width: 100%;
-    height: 100%;
+/*======================================
+#root
+    main.codenames
+        .bg-texture-layer
+            .container-app
+                .container-header
+                .container-board
+                    .container-sidebar .sidebar-left
+                    .container-game
+                    .container-sidebar .sidebar-right
+========================================*/
+
+main.codenames {
+    background: radial-gradient(circle at 50% 50%, $bg-green-light 0%, $bg-green-dark 100%);
 }
 
-main.codenames .bg-texture {
+main.codenames.red-spymaster,
+main.codenames.red-operatives {
+    background: radial-gradient(circle at 50% 50%, $bg-red-light 0%, $bg-red-dark 100%);
+}
+
+main.codenames.blue-spymaster,
+main.codenames.blue-operatives {
+    background: radial-gradient(circle at 50% 50%, $bg-blue-light 0%, $bg-blue-dark 100%);
+}
+
+main.codenames .bg-texture-layer {
     background-image: url("../images/codename-bg.svg");
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
-    mix-blend-mode: overlay;
-}
-
-main.codenames .bg-color {
-    background: radial-gradient(circle at 50% 50%, $bg-green-light 0%, $bg-green-dark 100%);
-}
-
-main.codenames.red-spymaster .bg-color,
-main.codenames.red-operatives .bg-color {
-    background: radial-gradient(circle at 50% 50%, $bg-red-light 0%, $bg-red-dark 100%);
-}
-
-main.codenames.blue-spymaster .bg-color,
-main.codenames.blue-operatives .bg-color {
-    background: radial-gradient(circle at 50% 50%, $bg-blue-light 0%, $bg-blue-dark 100%);
 }
 
 /*======================================
     LAYERING
 ========================================*/
 
+/*======================================
+#root
+    main.codenames
+        .bg-texture-layer
+            .container-app
+                .container-header
+                .container-board
+                    .container-sidebar .sidebar-left
+                    .container-game
+                    .container-sidebar .sidebar-right
+========================================*/
+
 main.codenames {
     z-index: 10;
 
-    & .bg-texture,
-     .bg-color {
-        z-index: 0;
+    & .bg-texture-layer {
+        z-index: 20;
     }
 
-    & .app-container {
-        z-index: 20;
+    & .container-app {
+        z-index: 30;
 
-        & div {
+        & div, span, input, button {
             z-index: inherit;
         }
     }

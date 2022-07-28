@@ -7,7 +7,7 @@ import './Button.scss';
  * @props btnText (string)           Text to be displayed on button
  * @props btnValue (string)          Value to be inserted into "data-value" attribute
  * @props btnClasses (string)        Main class for button and optional color class (ex: "reset-button button-green")
- * @props btnFunction (function)     Callback function
+ * @props btnFunction (function)     Callback function for button action
  * @props btnDisplayClasses (string) Classes for modifying button display (ex: hide/show or disable interactions)
  */
 

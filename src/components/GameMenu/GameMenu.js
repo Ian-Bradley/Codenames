@@ -3,9 +3,9 @@ import Button from '../Button/Button.js';
 import './GameMenu.scss';
 
 /**
- * @props isHost (boolean)     Flag for game host
- * @props gameState (string)   Current state of the game
- * @props menu_action (string) Handler function for menu buttons
+ * @props isHost (boolean)       Flag for game host
+ * @props gameState (string)     Current state of the game
+ * @props menu_action (function) Handler function for menu buttons
  */
 
 export default function GameMenu ( props ) {
@@ -47,7 +47,7 @@ export default function GameMenu ( props ) {
 
     const display_button_classes = () =>
     {
-        if ( props.currentPlayer.isHost )
+        if ( props.isHost )
         {
             return [
                 (<Button

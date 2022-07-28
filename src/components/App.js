@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import Header from './Header/Header.js';
 import Button from './Button/Button.js';
 import GameLog from './GameLog/GameLog.js';
 import GameMenu from './GameMenu/GameMenu.js';
 import TeamCard from './TeamCard/TeamCard.js';
 import GameBoard from './GameBoard/GameBoard.js';
 import GameInputs from './GameInputs/GameInputs.js';
+import GameHeader from './GameHeader/GameHeader.js';
 import GameMessage from './GameMessage/GameMessage.js';
 import * as C from '../constants.js'
 import './App.scss';
@@ -589,9 +589,9 @@ export default class App extends Component
 
     log_set( logArray )
     {
-        console.log('===> log_set');
+        // console.log('===> log_set');
         this.setState({ gameLog: logArray });
-        console.log('===> END - log_set');
+        // console.log('===> END - log_set');
     }
 
     /*======================================*/
@@ -599,7 +599,7 @@ export default class App extends Component
 
     log_add_item ( logItem )
     {
-        // console.log('===> log_add_item');
+        console.log('===> log_add_item');
         // State
         this.setState( prevState => ({
             gameLog: [ ...prevState.gameLog, logItem]
@@ -611,7 +611,7 @@ export default class App extends Component
         // };
         // this.socket.send( JSON.stringify( newUpdate ));
         // console.log('>>>>>>>>> Message Sent - updateAddLogItem >>>>>>>>>');
-        // console.log('===> END - log_add_item');
+        console.log('===> END - log_add_item');
     }
 
     /*======================================*/
@@ -1044,11 +1044,8 @@ export default class App extends Component
             {
                 str += arr[i].name;
                 if( arr[i].isHost )
-                {
-                    str += '[host]';
-                }
+                { str += '[host]'; }
                 str += ', ';
-
             }
             return str;
         }
@@ -1068,110 +1065,111 @@ export default class App extends Component
                     height: this.state.appHeight + 'px'
                 }}
             >
-                <div className='bg-color'></div>
-                <div className='bg-texture'></div>
+                <div className='bg-texture-layer'>
+                    <div className='container-app'>
 
-                <div className='app-container'>
+                        <GameMenu
+                            isHost      ={this.state.currentPlayer.isHost}
+                            gameState   ={this.state.gameState}
+                            // menu_action ={this.menu_action}
+                        />
 
-                    <Header
-                        currentPlayer ={this.state.currentPlayer}
-                        players       ={this.state.players}
-                        playersTotal  ={this.state.playersTotal}
-                    />
-
-                    <GameMessage
-                        currentPlayer ={this.state.currentPlayer}
-                        gameState     ={this.state.gameState}
-                        message       ={this.state.message}
-                    />
-
-                    <GameMenu
-                        isHost      ={this.state.currentPlayer.isHost}
-                        gameState   ={this.state.gameState}
-                        // menu_action ={this.menu_action}
-                    />
-
-                    <div className='game-container'>
-                        <div className='sidebar-container sidebar-left'>
-                            <TeamCard
-                                currentPlayer                ={this.state.currentPlayer}
-                                team                         ={C.onst.red}
-                                teamData                     ={this.state.teamRed}
-                                players                      ={this.state.players}
-                                gameState                    ={this.state.gameState}
-                                set_current_player__team     ={this.set_current_player__team}
-                                set_current_player__position ={this.set_current_player__position}
+                        <div className='container-header'>
+                            <GameHeader
+                                currentPlayer ={this.state.currentPlayer}
+                                players       ={this.state.players}
+                                playersTotal  ={this.state.playersTotal}
                             />
-                        </div>
-                        <div className='board-container'>
-                            <GameBoard
-                                cards          ={this.state.cards}
-                                cardSize       ={this.state.cardSize}
-                                currentPlayer  ={this.state.currentPlayer}
-                                gameState      ={this.state.gameState}
-                                players        ={this.state.players}
-                                card_highlight ={this.card_highlight}
-                                card_choose    ={this.card_choose}
-                                debounce       ={this.debounce}
-                            />
-                            <GameInputs
-                                teamRed       ={this.state.teamRed}
-                                teamBlue      ={this.state.teamBlue}
+
+                            <GameMessage
                                 currentPlayer ={this.state.currentPlayer}
                                 gameState     ={this.state.gameState}
-                                guesses       ={this.state.guesses}
-                                clue          ={this.state.clue}
-                                clue_give     ={this.clue_give}
+                                message       ={this.state.message}
                             />
                         </div>
-                        <div className='sidebar-container sidebar-right'>
-                            <TeamCard
-                                currentPlayer                ={this.state.currentPlayer}
-                                team                         ={C.onst.blue}
-                                teamData                     ={this.state.teamBlue}
-                                players                      ={this.state.players}
-                                gameState                    ={this.state.gameState}
-                                set_current_player__team     ={this.set_current_player__team}
-                                set_current_player__position ={this.set_current_player__position}
-                                set_team__cards              ={this.set_team__cards}
-                                set_team__guesses            ={this.set_team__guesses}
-                            />
-                            <GameLog
-                                gameLog={this.state.gameLog}
-                            />
+                        
+                        <div className='container-board'>
+                            <div className='container-sidebar sidebar-left'>
+                                <TeamCard
+                                    currentPlayer                ={this.state.currentPlayer}
+                                    team                         ={C.onst.red}
+                                    teamData                     ={this.state.teamRed}
+                                    players                      ={this.state.players}
+                                    gameState                    ={this.state.gameState}
+                                    set_current_player__team     ={this.set_current_player__team}
+                                    set_current_player__position ={this.set_current_player__position}
+                                />
+                            </div>
+                            <div className='container-game'>
+                                <GameBoard
+                                    cards          ={this.state.cards}
+                                    cardSize       ={this.state.cardSize}
+                                    currentPlayer  ={this.state.currentPlayer}
+                                    gameState      ={this.state.gameState}
+                                    players        ={this.state.players}
+                                    card_highlight ={this.card_highlight}
+                                    card_choose    ={this.card_choose}
+                                    debounce       ={this.debounce}
+                                />
+                                <GameInputs
+                                    teamRed       ={this.state.teamRed}
+                                    teamBlue      ={this.state.teamBlue}
+                                    currentPlayer ={this.state.currentPlayer}
+                                    gameState     ={this.state.gameState}
+                                    guesses       ={this.state.guesses}
+                                    clue          ={this.state.clue}
+                                    clue_give     ={this.clue_give}
+                                />
+                            </div>
+                            <div className='container-sidebar sidebar-right'>
+                                <TeamCard
+                                    currentPlayer                ={this.state.currentPlayer}
+                                    team                         ={C.onst.blue}
+                                    teamData                     ={this.state.teamBlue}
+                                    players                      ={this.state.players}
+                                    gameState                    ={this.state.gameState}
+                                    set_current_player__team     ={this.set_current_player__team}
+                                    set_current_player__position ={this.set_current_player__position}
+                                    set_team__cards              ={this.set_team__cards}
+                                    set_team__guesses            ={this.set_team__guesses}
+                                />
+                                <GameLog
+                                    gameLog   ={this.state.gameLog}
+                                    gameState ={this.state.gameState}
+                                />
+                            </div>
                         </div>
-                    </div>
 
-
-                    <div id='dev-tools'>
-                        <div>
-                            <ul>
-                                <li>
-                                    <span>Players: </span>{dev_list_players(this.state.players)}
-                                </li>
-                                <li><span>Current Player: </span></li>
-                                <li><span>ID: </span>{ this.state.currentPlayer.id}</li>
-                                <li><span>Name: </span> {this.state.currentPlayer.name}</li>
-                                <li><span>Team: </span>{ this.state.currentPlayer.team}</li>
-                                <li><span>Posit: </span> {this.state.currentPlayer.position}</li>
-                                <li><span>Game State: </span> {this.state.gameState}</li>
-                                <li><span>Host: </span> {this.state.currentPlayer.isHost.toString()}</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <Button btnFunction={on_dev_log} btnText={'Log'} />
-                            <input
-                                type='text'
-                                className='name-input'
-                                placeholder='Name'
-                                defaultValue=''
-                                onKeyDown={on_dev_input} />
-                            <Button btnClasses={'button-green'} btnFunction={on_dev_state} btnText={'Setup'} btnValue={'setup'} />
-                            <Button btnClasses={'button-red'} btnFunction={on_dev_state} btnText={'RedSpy'} btnValue={'red-spymaster'} />
-                            <Button btnClasses={'button-red'} btnFunction={on_dev_state} btnText={'RedOp'} btnValue={'red-operatives'} />
-                            <Button btnClasses={'button-blue'} btnFunction={on_dev_state} btnText={'BlueSpy'} btnValue={'blue-spymaster'} />
-                            <Button btnClasses={'button-blue'} btnFunction={on_dev_state} btnText={'BlueOp'} btnValue={'blue-operatives'} />
-                            <Button btnClasses={'button-green'} btnFunction={on_dev_state} btnText={'End'} btnValue={'end'} />
+                        <div id='dev-tools'>
+                            <div>
+                                <ul>
+                                    <li>
+                                        <span>Players: </span>{dev_list_players(this.state.players)}
+                                    </li>
+                                    <li><span>Current Player: </span></li>
+                                    <li><span>ID: </span>{ this.state.currentPlayer.id}</li>
+                                    <li><span>Name: </span> {this.state.currentPlayer.name}</li>
+                                    <li><span>Team: </span>{ this.state.currentPlayer.team}</li>
+                                    <li><span>Posit: </span> {this.state.currentPlayer.position}</li>
+                                    <li><span>Game State: </span> {this.state.gameState}</li>
+                                    <li><span>Host: </span> {this.state.currentPlayer.isHost.toString()}</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <Button btnFunction={on_dev_log} btnText={'Log'} />
+                                <input
+                                    type='text'
+                                    className='name-input'
+                                    placeholder='Name'
+                                    defaultValue=''
+                                    onKeyDown={on_dev_input} />
+                                <Button btnClasses={'button-green'} btnFunction={on_dev_state} btnText={'Setup'} btnValue={'setup'} />
+                                <Button btnClasses={'button-red'} btnFunction={on_dev_state} btnText={'RedSpy'} btnValue={'red-spymaster'} />
+                                <Button btnClasses={'button-red'} btnFunction={on_dev_state} btnText={'RedOp'} btnValue={'red-operatives'} />
+                                <Button btnClasses={'button-blue'} btnFunction={on_dev_state} btnText={'BlueSpy'} btnValue={'blue-spymaster'} />
+                                <Button btnClasses={'button-blue'} btnFunction={on_dev_state} btnText={'BlueOp'} btnValue={'blue-operatives'} />
+                                <Button btnClasses={'button-green'} btnFunction={on_dev_state} btnText={'End'} btnValue={'end'} />
+                            </div>
                         </div>
                     </div>
                 </div>

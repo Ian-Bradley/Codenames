@@ -570,10 +570,11 @@ wss.on('connection', ( wsClient ) =>
     
     // console.log('======= Client Connected =======');
  
-    // Set initial client data
+    // > Set initial client data
     let clientData = {
-        id:          '', // id for disconnecting player removal
-        messageType: 'clientConnected',
+        id:          uuidv4(), // message id
+        playerID:    '', // id for disconnecting player removal and determining host
+        type:        'clientConnected',
         cards:       game.state.cards,
         players:     game.state.players,
         gameLog:     game.state.gameLog,
@@ -581,7 +582,7 @@ wss.on('connection', ( wsClient ) =>
     
     // TODO: Send team guesses/cards remaining as well (returning players)
     
-    // Send cards, players on connection for current client
+    // > Send cards, players on connection for current client
     wss.broadcast_client( JSON.stringify( clientData ), wsClient );
     // console.log('>>>>>>>>> Message Sent - Client Data >>>>>>>>>');
     // console.log('======= END - Client Connected =======');
@@ -595,26 +596,26 @@ wss.on('connection', ( wsClient ) =>
     {
         console.log('>>>>>>>>> Message Recieved >>>>>>>>>');
         let updateData = JSON.parse( data );
-        console.log('messageType: ', updateData.messageType);
+        console.log('type: ', updateData.type);
 
-        switch ( updateData.messageType )
+        switch ( updateData.type )
         {
 
             /*======================================
-                HANDLER - PLAYER CONNECTIONS
+                HANDLER - PLAYER CONNECTION
             ========================================*/
 
             case 'newPlayer':
             {
-                // Send new player data to all other players
+                // > Send new player data to all other players
                 // console.log('======= HANDLER - newPlayer =======');
-                updateData.id = uuidv4(); // message id
-                clientData.id = updateData.player.id // set id for disconnecting player removal
+                updateData.id = uuidv4();
+                clientData.playerID = updateData.player.id // set id for disconnecting player removal
                 game.player_add( updateData.player );
                 wss.broadcast( JSON.stringify( updateData ), wsClient );
                 // console.log('>>>>>>>>> Message Sent - newPlayer >>>>>>>>>');
 
-                // Determine/set/send host
+                // > Determine/set/send host
                 if ( !game.state.originalHost )
                 {
                     // console.log('> Original Host');
@@ -626,8 +627,8 @@ wss.on('connection', ( wsClient ) =>
                     updateData.player.isHost = game.set_player_host( updateData.player );
 
                     // Send host data to all
-                    updateData.id = uuidv4(); // message id
-                    updateData.messageType = 'updatePlayerIsHost';
+                    updateData.id = uuidv4();
+                    updateData.type = 'updatePlayerIsHost';
                     wss.broadcast_all( JSON.stringify( updateData ), wsClient );
                     // console.log('>>>>>>>>> Message Sent - updatePlayerIsHost >>>>>>>>>');
                 }
@@ -637,13 +638,13 @@ wss.on('connection', ( wsClient ) =>
             }
 
             /*======================================
-                HANDLER - PLAYERS INFO
+                HANDLER - PLAYER INFO
             ========================================*/
 
             case 'updatePlayerName':
             {
                 // console.log('======= HANDLER - updatePlayerName =======');
-                updateData.id = uuidv4(); // message id
+                updateData.id = uuidv4();
                 game.set_player_name( updateData.player, updateData.newName );
                 wss.broadcast( JSON.stringify( updateData ), wsClient );
                 // console.log('>>>>>>>>> Message Sent - updatePlayerName >>>>>>>>>');
@@ -657,7 +658,7 @@ wss.on('connection', ( wsClient ) =>
             case 'updatePlayerTeam':
             {
                 // console.log('======= HANDLER - updatePlayerTeam =======');
-                updateData.id = uuidv4(); // message id
+                updateData.id = uuidv4();
                 game.set_player_team( updateData.player, updateData.newTeam );
                 wss.broadcast( JSON.stringify( updateData ), wsClient );
                 // console.log('>>>>>>>>> Message Sent - updatePlayerTeam >>>>>>>>>');
@@ -671,7 +672,7 @@ wss.on('connection', ( wsClient ) =>
             case 'updatePlayerPosition':
             {
                 // console.log('======= HANDLER - updatePlayerPosition =======');
-                updateData.id = uuidv4(); // message id
+                updateData.id = uuidv4();
                 game.set_player_position( updateData.player, updateData.newPosition );
                 wss.broadcast( JSON.stringify( updateData ), wsClient );
                 // console.log('>>>>>>>>> Message Sent - updatePlayerPosition >>>>>>>>>');
@@ -686,7 +687,7 @@ wss.on('connection', ( wsClient ) =>
             case 'updateAddHighlight':
             {
                 // console.log('======= HANDLER - updateAddHighlight =======');
-                updateData.id = uuidv4(); // message id
+                updateData.id = uuidv4();
                 game.highlight_add( updateData.player, updateData.index );
                 wss.broadcast( JSON.stringify( updateData ), wsClient );
                 // console.log('>>>>>>>>> Message Sent - updateAddHighlight >>>>>>>>>');
@@ -700,7 +701,7 @@ wss.on('connection', ( wsClient ) =>
             case 'updateRemoveHighlight':
             {
                 // console.log('======= HANDLER - updateRemoveHighlight =======');
-                updateData.id = uuidv4(); // message id
+                updateData.id = uuidv4();
                 game.highlight_remove( updateData.player, updateData.index );
                 wss.broadcast( JSON.stringify( updateData ), wsClient );
                 // console.log('>>>>>>>>> Message Sent - updateRemoveHighlight >>>>>>>>>');
@@ -713,7 +714,7 @@ wss.on('connection', ( wsClient ) =>
 
             // case 'updateClearCardHighlights':
             // {
-            //     updateData.id = uuidv4(); // message id
+            //     updateData.id = uuidv4();
             //     game.clear_card_highlights( updateData.index );
             //     wss.broadcast( JSON.stringify( updateData ), wsClient );
             //     break;
@@ -724,7 +725,7 @@ wss.on('connection', ( wsClient ) =>
 
             // case 'updateClearHighlights':
             // {
-            //     updateData.id = uuidv4(); // message id
+            //     updateData.id = uuidv4();
             //     game.clear_highlights();
             //     wss.broadcast( JSON.stringify( updateData ), wsClient );
             //     break;
@@ -736,7 +737,7 @@ wss.on('connection', ( wsClient ) =>
 
             // case 'updateCardChoose':
             // {
-            //     updateData.id = uuidv4(); // message id
+            //     updateData.id = uuidv4();
             //     wss.broadcast( JSON.stringify( updateData ), wsClient );
             //     break;
             // }
@@ -753,43 +754,44 @@ wss.on('connection', ( wsClient ) =>
     {
         // console.log('======= Client Disonnected =======');
 
-        // Determine if host
-        // console.log('game.is_host( clientData.id ): ', game.is_host( clientData.id ));
-        let isHost = game.is_host( clientData.id );
+        // > Determine if host
+        // console.log('game.is_host( clientData.playerID ): ', game.is_host( clientData.playerID ));
+        let isHost = game.is_host( clientData.playerID );
 
         // TODO: Log players who have left in playersRemoved state array
 
-        // Remove disconnecting player
-        game.player_remove( clientData.id );  
+        // > Remove disconnecting player
+        game.player_remove( clientData.playerID );  
 
-        // Set host to next player in line if disconnecting player is host
+        // > Set host to next player in line if disconnecting player is host
         if ( ( isHost ) && ( game.state.players.length > 0 ) )
         {
             game.set_player_host( game.state.players[0] );
 
             // Send new host data to all
             let updateData = {
-                id: uuidv4(), // message id
-                messageType: 'updatePlayerIsHost',
-                player: game.state.players[0]
+                id:     uuidv4(),
+                player: game.state.players[0],
+                type:   'updatePlayerIsHost',
             };
             wss.broadcast_all( JSON.stringify( updateData ), wsClient );
             // console.log('>>>>>>>>> Message Sent - updatePlayerIsHost >>>>>>>>>');
         }
 
-        // If all players have left, begin session closing countdown
+        // > If all players have left, begin session closing countdown
         if ( game.state.players.length === 0 )
         {
             // TODO: start timer for 5-10 minutes then close session
         }
 
-        // Set data for disconnect message
+        // > Set data for disconnect message
         let updateData = {
-            id: clientData.id, // player removal id
-            messageType: 'clientDisconnected'
+            id:       uuidv4(), // message id
+            playerID: clientData.playerID, // player removal id
+            type:     'clientDisconnected',
         };
         wss.broadcast( JSON.stringify( updateData ), wsClient );
-            // console.log('>>>>>>>>> Message Sent - clientDisconnected >>>>>>>>>');
-            // console.log('======= END - Client Disonnected =======');
+        // console.log('>>>>>>>>> Message Sent - clientDisconnected >>>>>>>>>');
+        // console.log('======= END - Client Disonnected =======');
     });
 });

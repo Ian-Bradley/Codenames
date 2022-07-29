@@ -304,7 +304,7 @@ export default class App extends Component
         });
         // WS
         let newUpdate = {
-            messageType: 'updatePlayerName',
+            type: 'updatePlayerName',
             player: this.state.currentPlayer,
             newName: playerName,
         };
@@ -324,7 +324,7 @@ export default class App extends Component
         });
         // WS
         let newUpdate = {
-            messageType: 'updatePlayerTeam',
+            type: 'updatePlayerTeam',
             player: this.state.currentPlayer,
             newTeam: teamColor,
         };
@@ -344,7 +344,7 @@ export default class App extends Component
         });
         // WS
         let newUpdate = {
-            messageType: 'updatePlayerPosition',
+            type: 'updatePlayerPosition',
             player: this.state.currentPlayer,
             newPosition: teamPosition,
         };
@@ -478,7 +478,7 @@ export default class App extends Component
             });
             // Current player - WS
             let newUpdate = {
-                messageType: 'updateAddHighlight',
+                type: 'updateAddHighlight',
                 player: this.state.currentPlayer,
                 index: cardIndex,
             };
@@ -525,7 +525,7 @@ export default class App extends Component
             });
             // Current player - WS
             let newUpdate = {
-                messageType: 'updateRemoveHighlight',
+                type: 'updateRemoveHighlight',
                 player: this.state.currentPlayer,
                 index: cardIndex,
             };
@@ -602,7 +602,7 @@ export default class App extends Component
         }));
         // WS
         // let newUpdate = {
-        //     messageType: 'updateAddLogItem',
+        //     type: 'updateAddLogItem',
         //     index: logItem,
         // };
         // this.socket.send( JSON.stringify( newUpdate ));
@@ -684,7 +684,7 @@ export default class App extends Component
         // ==> send
 
         // let newUpdate = {
-        //     messageType: 'updateCardChoose',
+        //     type: 'updateCardChoose',
         //     player: {},
         //     clue: clue,
         // };
@@ -808,13 +808,13 @@ export default class App extends Component
         {
             console.log('>>>>>>>>> Message Recieved >>>>>>>>>');
             let updateData = JSON.parse( messageData.data );
-            console.log('> ', updateData.messageType);
+            console.log('> ', updateData.type);
 
             /*================================================
                 HANDLERS
             ==================================================*/
 
-            switch( updateData.messageType )
+            switch( updateData.type )
             {
 
                 /*================================================
@@ -845,7 +845,7 @@ export default class App extends Component
                     // Send current player information to server
                     // console.log('> Send newPlayer');
                     let newUpdate = {
-                        messageType: 'newPlayer',
+                        type: 'newPlayer',
                         player: this.state.currentPlayer,
                     };
                     ws.send( JSON.stringify( newUpdate ) );
@@ -873,7 +873,7 @@ export default class App extends Component
                 {
                     // This handler is only fired when OTHER players leave
                     // console.log('======= HANDLER - clientDisconnected =======');
-                    this.player_remove( updateData.id );
+                    this.player_remove( updateData.playerID );
                     // console.log('======= END - HANDLER - clientDisconnected =======');
                     break;
                 }

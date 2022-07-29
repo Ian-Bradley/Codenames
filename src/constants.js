@@ -6,6 +6,7 @@ export const onst = {
     maxOperatives: 5,
     maxSpymasters: 2,
     maxPlayers:    12,
+    maxHeight:     1080,
 
     classActive:      'active',
     classDisabled:    'disabled',

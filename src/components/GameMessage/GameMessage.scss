@@ -1,9 +1,15 @@
 @import "../../styles/variables.scss";
 
 main.codenames .game-message {
+    display: flex;
+    flex-direction: column nowrap;
+    justify-content: center;
+    align-items: center;
+
+    height: 100%;
 
     & div {
-        padding: 0.25rem 0.5rem;
+        padding: $game-message-padding;
 
         border: none;
         border-radius: $game-message-border-radius;
@@ -13,7 +19,7 @@ main.codenames .game-message {
     & span {
         font-size: $game-message;
         font-weight: $game-message-weight;
-        line-height: $game-message-height;
+        line-height: $game-message-line-height;
 
         pointer-events: none;
         -webkit-user-select: none;

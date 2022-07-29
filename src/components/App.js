@@ -50,7 +50,6 @@ export default class App extends Component
             clue: '',
             guesses: '',
             message: 'temp message',
-            cardSize: 0,
             // Teams
             teamRed: {
                 cards: 0,
@@ -73,9 +72,11 @@ export default class App extends Component
             },
             // Game Log
             gameLog: [],
-            // App
+            // Sizing
             appWidth: window.innerWidth,
             appHeight: window.innerHeight,
+            cardSize: 0,
+            viewScale: 1,
         };
         
         /*======================================
@@ -92,7 +93,6 @@ export default class App extends Component
         this.set_players                          = this.set_players.bind(this);
         this.set_clue                             = this.set_clue.bind(this);
         this.set_message                          = this.set_message.bind(this);
-        this.set_card_size                        = this.set_card_size.bind(this);
 
         // State methods - Teams
         this.set_team__cards                      = this.set_team__cards.bind(this);
@@ -131,18 +131,22 @@ export default class App extends Component
 
         // Functional methods
         this.debounce                             = this.debounce.bind(this);
-        this.set_app_dimensions                   = this.set_app_dimensions.bind(this);
         this.enable_interactions                  = this.enable_interactions.bind(this);
         this.disable_interactions                 = this.disable_interactions.bind(this);
+
+        // Functional methods - Sizing
+        this.set_app_dimensions                   = this.set_app_dimensions.bind(this);
+        // this.set_card_size                        = this.set_card_size.bind(this);
+        // this.set_view_scale                       = this.set_view_scale.bind(this);
 
         // Functional methods - Cookies
         this.set_cookie                           = this.set_cookie.bind(this);
         this.get_cookie                           = this.get_cookie.bind(this);
     }
 
-    /*======================================
+    /*================================================
         ANCHOR: STATE METHODS - Game States
-    ========================================*/
+    ==================================================*/
 
     set_game_state ( state )
     {
@@ -203,17 +207,9 @@ export default class App extends Component
         this.setState({ message: newMessage });
     }
 
-    /*======================================*/
-    /*======================================*/
-
-    set_card_size ( size )
-    { 
-        this.setState({ cardSize: size });
-    }
-
-    /*======================================
+    /*================================================
         ANCHOR: STATE METHODS - Team Info
-    ========================================*/
+    ==================================================*/
 
     set_team__cards ( team, amount )
     {
@@ -258,9 +254,9 @@ export default class App extends Component
         }
     }
 
-    /*======================================
+    /*================================================
         ANCHOR: STATE METHODS - Players
-    ========================================*/
+    ==================================================*/
 
     player_add ( player )
     { 
@@ -282,9 +278,9 @@ export default class App extends Component
         this.setState({ playersTotal: this.state.playersTotal - 1 });
     }
 
-    /*======================================
+    /*================================================
         ANCHOR: STATE METHODS - Player Info
-    ========================================*/
+    ==================================================*/
 
     set_current_player__ID ( playerID )
     {
@@ -462,9 +458,9 @@ export default class App extends Component
         });
     }
 
-    /*======================================
+    /*================================================
         ANCHOR: STATE METHODS - Highlighting
-    ========================================*/
+    ==================================================*/
 
     highlight_add ( player, cardIndex )
     {
@@ -583,9 +579,9 @@ export default class App extends Component
         // this.setState({ highlights: [] });
     }
 
-    /*======================================
+    /*================================================
         ANCHOR: STATE METHODS - Game Log
-    ========================================*/
+    ==================================================*/
 
     log_set( logArray )
     {
@@ -622,11 +618,14 @@ export default class App extends Component
         this.setState({ gameLog: [] });
     }
 
-    /*======================================
+    /*================================================
         ANCHOR: STATE METHODS - Player Interactions
-    ========================================*/
+    ==================================================*/
 
-    // TODO: card_choose
+    /*======================================*/
+    /*======================================*/
+    // ANCHOR: ==> card_choose
+
     card_choose ( cardIndex )
     { 
         // use currentPlayer --> updates from server will arrive as different commands, they will not use card_choose here
@@ -641,6 +640,7 @@ export default class App extends Component
 
     /*======================================*/
     /*======================================*/
+    // ANCHOR: ==> card_highlight
 
     // NOTE: check if card index is already in highlight --> prevent duplicates
 
@@ -674,8 +674,8 @@ export default class App extends Component
 
     /*======================================*/
     /*======================================*/
+    // ANCHOR: ==> clue_give
 
-    // TODO: clue_give
     clue_give ( clue )
     {
         // ==> update game log
@@ -691,9 +691,9 @@ export default class App extends Component
         // this.socket.send( JSON.stringify( newUpdate ));
     }
 
-    /*======================================
+    /*================================================
         ANCHOR: FUNCTIONAL METHODS
-    ========================================*/
+    ==================================================*/
 
     debounce ( func, wait, immediate )
     {
@@ -713,17 +713,20 @@ export default class App extends Component
 
     /*======================================*/
     /*======================================*/
+    // ANCHOR: ==> set_app_dimensions
 
     set_app_dimensions ()
     {
         this.setState({ appWidth: window.innerWidth });
         this.setState({ appHeight: window.innerHeight });
+        let scaler = ( window.innerHeight / C.onst.maxHeight )
+        this.setState({ viewScale: scaler });
     }
 
     /*======================================*/
     /*======================================*/
+    // ANCHOR: ==> enable_interactions
 
-    // TODO: enable_interactions
     enable_interactions ()
     {
     //     document.querySelector('main').classList.remove( C.onst.classDisabled );
@@ -731,16 +734,16 @@ export default class App extends Component
 
     /*======================================*/
     /*======================================*/
+    // ANCHOR: ==> disable_interactions
 
-    // TODO: disable_interactions
     disable_interactions ()
     {
     //     document.querySelector('main').classList.add( C.onst.classDisabled );
     }
 
-    /*======================================
+    /*================================================
         ANCHOR: FUNCTIONAL METHODS - Cookies
-    ========================================*/
+    ==================================================*/
 
     set_cookie ( name, value, days )
     {
@@ -772,12 +775,14 @@ export default class App extends Component
         return null;
     }
 
-    /*======================================
+    /*================================================
         ANCHOR: COMPONENT ACTIONS
-    ========================================*/
+    ==================================================*/
 
     componentDidMount()
     {
+        // Initial sizing
+        this.set_app_dimensions();
 
         // TODO: Cookies
         // Get current playerID from cookies
@@ -788,9 +793,9 @@ export default class App extends Component
         // this.set_current_player__ID( playerID );
 
 
-        /*======================================
+        /*================================================
             ANCHOR: WEBSOCKET COMMUNICATION
-        ========================================*/
+        ==================================================*/
 
         const ws = this.socket;
 
@@ -805,16 +810,16 @@ export default class App extends Component
             let updateData = JSON.parse( messageData.data );
             console.log('> ', updateData.messageType);
 
-            /*======================================
+            /*================================================
                 HANDLERS
-            ========================================*/
+            ==================================================*/
 
             switch( updateData.messageType )
             {
 
-                /*======================================
+                /*================================================
                     ANCHOR: HANDLER - PLAYER CONNECTIONS
-                ========================================*/
+                ==================================================*/
 
                 case 'clientConnected':
                 {
@@ -873,9 +878,9 @@ export default class App extends Component
                     break;
                 }
 
-                /*======================================
+                /*================================================
                     ANCHOR: HANDLER - PLAYERS INFO
-                ========================================*/
+                ==================================================*/
 
                 case 'updatePlayerName':
                 {
@@ -925,9 +930,9 @@ export default class App extends Component
                     break;
                 }
 
-                /*======================================
+                /*================================================
                     ANCHOR: HANDLER - HIGHLIGHTS
-                ========================================*/
+                ==================================================*/
 
                 case 'updateAddHighlight':
                 {
@@ -968,9 +973,9 @@ export default class App extends Component
                 //     break;
                 // }
 
-                /*======================================
+                /*================================================
                     ANCHOR: HANDLER - CARD CHOOSING
-                ========================================*/
+                ==================================================*/
 
                 // case 'updateCardChoose':
                 // {
@@ -984,18 +989,18 @@ export default class App extends Component
             }
         };
 
-        /*======================================
+        /*================================================
             ANCHOR: WINDOW LISTENER 
-        ========================================*/
+        ==================================================*/
 
         // this.set_app_dimensions();
         let debounceResize = this.debounce( this.set_app_dimensions, C.onst.debounceDelay, false );
         window.addEventListener( 'resize', debounceResize );
     }
 
-    /*======================================
+    /*================================================
         ANCHOR: COMPONENT ACTIONS - continued
-    ========================================*/
+    ==================================================*/
 
     componentWillUnmount() {
         let debounceResize = this.debounce( this.set_app_dimensions, C.onst.debounceDelay, false );
@@ -1007,9 +1012,9 @@ export default class App extends Component
 
     render()
     {
-        /*======================================
+        /*================================================
             ANCHOR: RENDER FUNCTIONS - Dev Tools
-        ========================================*/
+        ==================================================*/
         let countLog = 0;
         const on_dev_state = ( state ) => { this.set_game_state( state ); }
         const on_dev_log = () => {
@@ -1050,9 +1055,9 @@ export default class App extends Component
             return str;
         }
 
-        /*======================================
+        /*================================================
             ANCHOR: COMPONENTS
-        ========================================*/
+        ==================================================*/
 
         return (
             <main className={
@@ -1066,29 +1071,33 @@ export default class App extends Component
                 }}
             >
                 <div className='bg-texture-layer'>
-                    <div className='container-app'>
+                    <div className='scaler'
+                        style={{
+                            transform: 'scale(' + this.state.viewScale + ')'
+                        }}
+                    >
+                        <div className='container-app'>
 
-                        <GameMenu
-                            isHost      ={this.state.currentPlayer.isHost}
-                            gameState   ={this.state.gameState}
-                            // menu_action ={this.menu_action}
-                        />
-
-                        <div className='container-header'>
-                            <GameHeader
-                                currentPlayer ={this.state.currentPlayer}
-                                players       ={this.state.players}
-                                playersTotal  ={this.state.playersTotal}
+                            <GameMenu
+                                isHost      ={this.state.currentPlayer.isHost}
+                                gameState   ={this.state.gameState}
+                                // menu_action ={this.menu_action}
                             />
 
-                            <GameMessage
-                                currentPlayer ={this.state.currentPlayer}
-                                gameState     ={this.state.gameState}
-                                message       ={this.state.message}
-                            />
-                        </div>
-                        
-                        <div className='container-board'>
+                            <div className='container-header'>
+                                <GameHeader
+                                    currentPlayer ={this.state.currentPlayer}
+                                    players       ={this.state.players}
+                                    playersTotal  ={this.state.playersTotal}
+                                />
+
+                                <GameMessage
+                                    currentPlayer ={this.state.currentPlayer}
+                                    gameState     ={this.state.gameState}
+                                    message       ={this.state.message}
+                                />
+                            </div>
+
                             <div className='container-sidebar sidebar-left'>
                                 <TeamCard
                                     currentPlayer                ={this.state.currentPlayer}
@@ -1099,28 +1108,32 @@ export default class App extends Component
                                     set_current_player__team     ={this.set_current_player__team}
                                     set_current_player__position ={this.set_current_player__position}
                                 />
+                            </div>    
+                                                    
+                            <div className='container-board'>
+                                <div className='container-game'>
+                                    <GameBoard
+                                        cards          ={this.state.cards}
+                                        cardSize       ={this.state.cardSize}
+                                        currentPlayer  ={this.state.currentPlayer}
+                                        gameState      ={this.state.gameState}
+                                        players        ={this.state.players}
+                                        card_highlight ={this.card_highlight}
+                                        card_choose    ={this.card_choose}
+                                        debounce       ={this.debounce}
+                                    />
+                                    <GameInputs
+                                        teamRed       ={this.state.teamRed}
+                                        teamBlue      ={this.state.teamBlue}
+                                        currentPlayer ={this.state.currentPlayer}
+                                        gameState     ={this.state.gameState}
+                                        guesses       ={this.state.guesses}
+                                        clue          ={this.state.clue}
+                                        clue_give     ={this.clue_give}
+                                    />
+                                </div>
                             </div>
-                            <div className='container-game'>
-                                <GameBoard
-                                    cards          ={this.state.cards}
-                                    cardSize       ={this.state.cardSize}
-                                    currentPlayer  ={this.state.currentPlayer}
-                                    gameState      ={this.state.gameState}
-                                    players        ={this.state.players}
-                                    card_highlight ={this.card_highlight}
-                                    card_choose    ={this.card_choose}
-                                    debounce       ={this.debounce}
-                                />
-                                <GameInputs
-                                    teamRed       ={this.state.teamRed}
-                                    teamBlue      ={this.state.teamBlue}
-                                    currentPlayer ={this.state.currentPlayer}
-                                    gameState     ={this.state.gameState}
-                                    guesses       ={this.state.guesses}
-                                    clue          ={this.state.clue}
-                                    clue_give     ={this.clue_give}
-                                />
-                            </div>
+
                             <div className='container-sidebar sidebar-right'>
                                 <TeamCard
                                     currentPlayer                ={this.state.currentPlayer}
@@ -1138,37 +1151,37 @@ export default class App extends Component
                                     gameState ={this.state.gameState}
                                 />
                             </div>
-                        </div>
 
-                        <div id='dev-tools'>
-                            <div>
-                                <ul>
-                                    <li>
-                                        <span>Players: </span>{dev_list_players(this.state.players)}
-                                    </li>
-                                    <li><span>Current Player: </span></li>
-                                    <li><span>ID: </span>{ this.state.currentPlayer.id}</li>
-                                    <li><span>Name: </span> {this.state.currentPlayer.name}</li>
-                                    <li><span>Team: </span>{ this.state.currentPlayer.team}</li>
-                                    <li><span>Posit: </span> {this.state.currentPlayer.position}</li>
-                                    <li><span>Game State: </span> {this.state.gameState}</li>
-                                    <li><span>Host: </span> {this.state.currentPlayer.isHost.toString()}</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <Button btnFunction={on_dev_log} btnText={'Log'} />
-                                <input
-                                    type='text'
-                                    className='name-input'
-                                    placeholder='Name'
-                                    defaultValue=''
-                                    onKeyDown={on_dev_input} />
-                                <Button btnClasses={'button-green'} btnFunction={on_dev_state} btnText={'Setup'} btnValue={'setup'} />
-                                <Button btnClasses={'button-red'} btnFunction={on_dev_state} btnText={'RedSpy'} btnValue={'red-spymaster'} />
-                                <Button btnClasses={'button-red'} btnFunction={on_dev_state} btnText={'RedOp'} btnValue={'red-operatives'} />
-                                <Button btnClasses={'button-blue'} btnFunction={on_dev_state} btnText={'BlueSpy'} btnValue={'blue-spymaster'} />
-                                <Button btnClasses={'button-blue'} btnFunction={on_dev_state} btnText={'BlueOp'} btnValue={'blue-operatives'} />
-                                <Button btnClasses={'button-green'} btnFunction={on_dev_state} btnText={'End'} btnValue={'end'} />
+                            <div id='dev-tools'>
+                                <div>
+                                    <ul>
+                                        <li>
+                                            <span>Players: </span>{dev_list_players(this.state.players)}
+                                        </li>
+                                        <li><span>Current Player: </span></li>
+                                        <li><span>ID: </span>{ this.state.currentPlayer.id}</li>
+                                        <li><span>Name: </span> {this.state.currentPlayer.name}</li>
+                                        <li><span>Team: </span>{ this.state.currentPlayer.team}</li>
+                                        <li><span>Posit: </span> {this.state.currentPlayer.position}</li>
+                                        <li><span>Game State: </span> {this.state.gameState}</li>
+                                        <li><span>Host: </span> {this.state.currentPlayer.isHost.toString()}</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <Button btnFunction={on_dev_log} btnText={'Log'} />
+                                    <input
+                                        type='text'
+                                        className='name-input'
+                                        placeholder='Name'
+                                        defaultValue=''
+                                        onKeyDown={on_dev_input} />
+                                    <Button btnClasses={'button-green'} btnFunction={on_dev_state} btnText={'Setup'} btnValue={'setup'} />
+                                    <Button btnClasses={'button-red'} btnFunction={on_dev_state} btnText={'RedSpy'} btnValue={'red-spymaster'} />
+                                    <Button btnClasses={'button-red'} btnFunction={on_dev_state} btnText={'RedOp'} btnValue={'red-operatives'} />
+                                    <Button btnClasses={'button-blue'} btnFunction={on_dev_state} btnText={'BlueSpy'} btnValue={'blue-spymaster'} />
+                                    <Button btnClasses={'button-blue'} btnFunction={on_dev_state} btnText={'BlueOp'} btnValue={'blue-operatives'} />
+                                    <Button btnClasses={'button-green'} btnFunction={on_dev_state} btnText={'End'} btnValue={'end'} />
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -29,7 +29,7 @@
         display: flex;
         flex-flow: row nowrap;
         max-height: 38px;
-        margin-left: auto;
+        margin-left: 150px;
     }
 
     &>div>div,>div>input {
@@ -45,11 +45,12 @@
 #root
     main.codenames
         .bg-texture-layer
-            .container-app
-                .container-header
-                .container-board
+            .scaler
+                .container-app
+                    .container-header
                     .container-sidebar .sidebar-left
-                    .container-game
+                    .container-board
+                        .container-game
                     .container-sidebar .sidebar-right
 ========================================*/
 
@@ -66,26 +67,38 @@ main.codenames,
 }
 
 .container-app {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
 
-    max-width: $app-max-width;
-    max-height: $app-max-height;
+    width: $app-width;
+    height: $app-height;
 
-    padding: $app-spacing;
+    // padding: $app-spacing;
 
     & .container-header {
+        position: absolute;
+        top: 0;
+        left: 0;
+
         display: flex;
         flex-flow: column nowrap;
         align-items: center;
         justify-content: center; 
 
         width: 100%;
-        height: auto;
+        height: $game-header-height
     }
 
     & .container-board {
+        position: absolute;
+        top: $sidebar-width;
+
         display: flex;
         flex-flow: row nowrap;
         align-items: flex-start;
@@ -95,6 +108,10 @@ main.codenames,
         height: auto;
 
         & .container-game {
+            position: absolute;
+            top: $game-header-height;
+            left: calc($sidebar-width + 40px);
+            
             display: flex;
             flex-flow: column nowrap;
             align-items: flex-start;
@@ -104,16 +121,24 @@ main.codenames,
             width: 100%;
             height: 100%;
         }
+    }
 
-        & .container-sidebar {
-            display: flex;
-            flex-flow: column nowrap;
-            align-self: flex-start;
-            justify-content: center;
+    & .container-sidebar {
+        position: absolute;
+        top: $game-header-height;
+        
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: flex-start;
 
-            min-width: $sidebar-width;
-            max-width: $sidebar-width;
-            height: 100%;
+        width: $sidebar-width;
+        height: $sidebar-height;
+
+        &.sidebar-left {
+            left: 20px;
+        }
+        &.sidebar-right {
+            right: 20px;
         }
     }
 }
@@ -126,11 +151,12 @@ main.codenames,
 #root
     main.codenames
         .bg-texture-layer
-            .container-app
-                .container-header
-                .container-board
+            .scaler
+                .container-app
+                    .container-header
                     .container-sidebar .sidebar-left
-                    .container-game
+                    .container-board
+                        .container-game
                     .container-sidebar .sidebar-right
 ========================================*/
 
@@ -163,11 +189,12 @@ main.codenames .bg-texture-layer {
 #root
     main.codenames
         .bg-texture-layer
-            .container-app
-                .container-header
-                .container-board
+            .scaler
+                .container-app
+                    .container-header
                     .container-sidebar .sidebar-left
-                    .container-game
+                    .container-board
+                        .container-game
                     .container-sidebar .sidebar-right
 ========================================*/
 
@@ -176,13 +203,15 @@ main.codenames {
 
     & .bg-texture-layer {
         z-index: 20;
-    }
 
-    & .container-app {
-        z-index: 30;
+        & > div {
+            z-index :30;
 
-        & div, span, input, button {
-            z-index: inherit;
+            & div, span, input, button {
+                z-index: inherit
+            }
+
         }
+
     }
 }

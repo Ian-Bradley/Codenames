@@ -5,7 +5,6 @@ main.codenames .game-header {
     flex-flow: row nowrap;
     justify-content: space-between;
     align-items: flex-start;
-    height: $game-header-height;
     width: 100%;
 
     & .game-controls-left,

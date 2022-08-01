@@ -605,15 +605,15 @@ wss.on('connection', ( wsClient ) =>
                 HANDLER - PLAYER CONNECTION
             ========================================*/
 
-            case 'newPlayer':
+            case 'userConnected':
             {
                 // > Send new player data to all other players
-                // console.log('======= HANDLER - newPlayer =======');
+                // console.log('======= HANDLER - userConnected =======');
                 updateData.id = uuidv4();
                 clientData.playerID = updateData.player.id // set id for disconnecting player removal
                 game.player_add( updateData.player );
                 wss.broadcast( JSON.stringify( updateData ), wsClient );
-                // console.log('>>>>>>>>> Message Sent - newPlayer >>>>>>>>>');
+                // console.log('>>>>>>>>> Message Sent - userConnected >>>>>>>>>');
 
                 // > Determine/set/send host
                 if ( !game.state.originalHost )
@@ -633,7 +633,7 @@ wss.on('connection', ( wsClient ) =>
                     // console.log('>>>>>>>>> Message Sent - updatePlayerIsHost >>>>>>>>>');
                 }
         
-                // console.log('======= END HANDLER - newPlayer =======');
+                // console.log('======= END HANDLER - userConnected =======');
                 break;
             }
 

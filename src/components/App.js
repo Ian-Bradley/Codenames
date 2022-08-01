@@ -10,6 +10,10 @@ import GameMessage from './GameMessage/GameMessage.js';
 import * as C from '../constants.js'
 import './App.scss';
 
+/*======================================
+    ANCHOR: HELPER FUNCTIONS
+========================================*/
+
 const random_name = () =>
 {
     let name = 'test';
@@ -22,15 +26,22 @@ const random_name = () =>
     return name;
 }
 
+/*======================================*/
+/*======================================*/
+
 const random_ID = () =>
 {
     let randomID = '';
     let characters = '0123456789abcdefghijklmnopqrstuvwxyz';
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 10; i++)
+    {
         randomID += characters.charAt(Math.floor(Math.random() * characters.length));
     }
     return randomID;
 }
+
+/*======================================*/
+/*======================================*/
 
 export default class App extends Component
 {
@@ -843,13 +854,13 @@ export default class App extends Component
                     { this.set_players( updateData.gameLog ); }
 
                     // Send current player information to server
-                    // console.log('> Send newPlayer');
+                    // console.log('> Send userConnected');
                     let newUpdate = {
-                        type: 'newPlayer',
+                        type: 'userConnected',
                         player: this.state.currentPlayer,
                     };
                     ws.send( JSON.stringify( newUpdate ) );
-                    console.log('>>>>>>>>> Message Sent - newPlayer >>>>>>>>>');
+                    console.log('>>>>>>>>> Message Sent - userConnected >>>>>>>>>');
                     // console.log('======= END - HANDLER - clientConnected =======');
                     break;
                 }
@@ -857,12 +868,12 @@ export default class App extends Component
                 /*======================================*/
                 /*======================================*/
 
-                case 'newPlayer':
+                case 'userConnected':
                 {
                     // This handler is only fired when OTHER players join
-                    // console.log('======= HANDLER - newPlayer =======');
+                    // console.log('======= HANDLER - userConnected =======');
                     this.player_add( updateData.player );
-                    // console.log('======= END - HANDLER - newPlayer =======');
+                    // console.log('======= END - HANDLER - userConnected =======');
                     break;
                 }
 

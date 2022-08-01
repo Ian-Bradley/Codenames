@@ -1,5 +1,5 @@
 /*======================================
-    SERVER CONFIGURATION
+    ANCHOR: SERVER CONFIGURATION
 ========================================*/
 
 const express = require('express');
@@ -13,7 +13,7 @@ const server = express()
 const wss = new SocketServer.Server({ server });
 
 /*======================================
-    FUNCTIONAL METHODS
+    ANCHOR: FUNCTIONAL METHODS
 ========================================*/
 
 // const isEmpty = ( object ) =>
@@ -104,10 +104,10 @@ const build_cards = () =>
 }
 
 /*======================================
-    GAME CLASS - CODENAMES
+    ANCHOR: GAME CLASS
 ========================================*/
 
-class Codenames
+class Game
 {
     constructor()
     {
@@ -138,19 +138,19 @@ class Codenames
         /*======================================*/
 
         // State methods - Host
-        this.is_host                  = this.is_host.bind(this);
+        this.is_host = this.is_host.bind(this);
 
         // State methods - Game Settings
-        this.set_game_state           = this.set_game_state.bind(this);
-        this.next_round               = this.next_round.bind(this);
+        this.set_game_state = this.set_game_state.bind(this);
+        this.next_round     = this.next_round.bind(this);
 
         // State methods - Teams
-        this.set_team__cards          = this.set_team__cards.bind(this);
-        this.set_team__guesses        = this.set_team__guesses.bind(this);
+        this.set_team_cards   = this.set_team_cards.bind(this);
+        this.set_team_guesses = this.set_team_guesses.bind(this);
 
         // State methods - Players
-        this.player_add               = this.player_add.bind(this);
-        this.player_remove            = this.player_remove.bind(this);
+        this.player_add    = this.player_add.bind(this);
+        this.player_remove = this.player_remove.bind(this);
 
         // State methods - Player Info
         this.set_player_name          = this.set_player_name.bind(this);
@@ -160,22 +160,22 @@ class Codenames
         this.set_player_original_host = this.set_player_original_host.bind(this);
 
         // State methods - Highlighting
-        this.highlight_add            = this.highlight_add.bind(this);
-        this.highlight_remove         = this.highlight_remove.bind(this);
-        this.highlight_clear_card     = this.highlight_clear_card.bind(this);
-        this.highlight_clear_all      = this.highlight_clear_all.bind(this);
+        this.highlight_add        = this.highlight_add.bind(this);
+        this.highlight_remove     = this.highlight_remove.bind(this);
+        this.highlight_clear_card = this.highlight_clear_card.bind(this);
+        this.highlight_clear_all  = this.highlight_clear_all.bind(this);
 
         // State methods - Game Log
-        this.log_add_item             = this.log_add_item.bind(this);
-        this.log_clear                = this.log_clear.bind(this);
+        this.log_add_item = this.log_add_item.bind(this);
+        this.log_clear    = this.log_clear.bind(this);
 
         // State methods - Player Interactions
-        // this.card_choose              = this.card_choose.bind(this);
-        // this.clue_give                = this.clue_give.bind(this);
+        // this.card_choose = this.card_choose.bind(this);
+        // this.clue_give   = this.clue_give.bind(this);
     }
 
     /*======================================
-        STATE METHODS - Host
+        ANCHOR: STATE METHODS - Host
     ========================================*/
 
     is_host ( playerID )
@@ -190,7 +190,7 @@ class Codenames
     }
 
     /*======================================
-        STATE METHODS - Game Settings
+        ANCHOR: STATE METHODS - Game Settings
     ========================================*/
 
     set_game_state ( state )
@@ -215,12 +215,12 @@ class Codenames
     }
 
     /*======================================
-        STATE METHODS - Team Info
+        ANCHOR: STATE METHODS - Team Info
     ========================================*/
 
-    set_team__cards ( team, cards )
+    set_team_cards ( team, cards )
     {
-        console.log('===> set_team__cards: ', team, ' ', cards);
+        console.log('===> set_team_cards: ', team, ' ', cards);
         if ( team === 'red' )
         {
             console.log('> BEFORE: ', this.state.teamRed.cards);
@@ -233,15 +233,15 @@ class Codenames
             this.state.teamBlue.cards = cards;
             console.log('> AFTER: ', this.state.teamBlue.cards);
         }
-        console.log('===> END - set_team__cards');
+        console.log('===> END - set_team_cards');
     }
 
     /*======================================*/
     /*======================================*/
 
-    set_team__guesses ( team, guesses )
+    set_team_guesses ( team, guesses )
     {
-        console.log('===> set_team__guesses: ', team, ' ', guesses);
+        console.log('===> set_team_guesses: ', team, ' ', guesses);
         if ( team === 'red' )
         {
             console.log('> BEFORE: ', this.state.teamRed.guesses);
@@ -254,11 +254,11 @@ class Codenames
             this.state.teamBlue.guesses = guesses;
             console.log('> AFTER: ', this.state.teamBlue.guesses);
         }
-        console.log('===> END - set_team__guesses');
+        console.log('===> END - set_team_guesses');
     }
 
     /*======================================
-        STATE METHODS - Players
+        ANCHOR: STATE METHODS - Players
     ========================================*/
 
     player_add ( player )
@@ -283,7 +283,7 @@ class Codenames
     }
 
     /*======================================
-        STATE METHODS - Player Info
+        ANCHOR: STATE METHODS - Player Info
     ========================================*/
 
     set_player_name ( player, newName )
@@ -404,7 +404,7 @@ class Codenames
     }
 
     /*======================================
-        STATE METHODS - Highlighting
+        ANCHOR: STATE METHODS - Highlighting
     ========================================*/
 
     highlight_add ( player, cardIndex )
@@ -471,7 +471,7 @@ class Codenames
     }
 
     /*======================================
-        STATE METHODS - Game Log
+        ANCHOR: STATE METHODS - Game Log
     ========================================*/
 
     // TODO
@@ -496,7 +496,7 @@ class Codenames
     }
 
     /*======================================
-        STATE METHODS - Player Interactions
+        ANCHOR: STATE METHODS - Player Interactions
     ========================================*/
 
     // // TODO
@@ -517,13 +517,13 @@ class Codenames
 }
 
 /*======================================
-    CLASS INITIATION
+    ANCHOR: CLASS INITIATION
 ========================================*/
 
-let game = new Codenames();
+let game = new Game();
 
 /*======================================
-    WS SERVER FUNCTIONS
+    ANCHOR: WS SERVER FUNCTIONS
 ========================================*/
 
 wss.broadcast = ( data, wsClient ) =>
@@ -558,14 +558,14 @@ wss.broadcast_all = ( data ) =>
 };
 
 /*======================================
-    WS SERVER
+    ANCHOR: WS SERVER
 ========================================*/
 
 wss.on('connection', ( wsClient ) =>
 {
 
     /*======================================
-        INITIAL CONNECTION TO CLIENT
+        ANCHOR: INITIAL CONNECTION TO CLIENT
     ========================================*/
     
     // console.log('======= Client Connected =======');
@@ -589,7 +589,7 @@ wss.on('connection', ( wsClient ) =>
 
 
     /*======================================
-        HANDLERS
+        ANCHOR: HANDLERS
     ========================================*/
 
     wsClient.on('message', function incoming( data )
@@ -602,7 +602,7 @@ wss.on('connection', ( wsClient ) =>
         {
 
             /*======================================
-                HANDLER - PLAYER CONNECTION
+                ANCHOR: HANDLER - PLAYER CONNECTION
             ========================================*/
 
             case 'userConnected':
@@ -629,7 +629,7 @@ wss.on('connection', ( wsClient ) =>
                     // Send host data to all
                     updateData.id = uuidv4();
                     updateData.type = 'updatePlayerIsHost';
-                    wss.broadcast_all( JSON.stringify( updateData ), wsClient );
+                    wss.broadcast_all( JSON.stringify( updateData ) );
                     // console.log('>>>>>>>>> Message Sent - updatePlayerIsHost >>>>>>>>>');
                 }
         
@@ -638,7 +638,7 @@ wss.on('connection', ( wsClient ) =>
             }
 
             /*======================================
-                HANDLER - PLAYER INFO
+                ANCHOR: HANDLER - PLAYER INFO
             ========================================*/
 
             case 'updatePlayerName':
@@ -646,7 +646,7 @@ wss.on('connection', ( wsClient ) =>
                 // console.log('======= HANDLER - updatePlayerName =======');
                 updateData.id = uuidv4();
                 game.set_player_name( updateData.player, updateData.newName );
-                wss.broadcast( JSON.stringify( updateData ), wsClient );
+                wss.broadcast_all( JSON.stringify( updateData ) );
                 // console.log('>>>>>>>>> Message Sent - updatePlayerName >>>>>>>>>');
                 // console.log('======= END HANDLER - updatePlayerName =======');
                 break;
@@ -660,7 +660,7 @@ wss.on('connection', ( wsClient ) =>
                 // console.log('======= HANDLER - updatePlayerTeam =======');
                 updateData.id = uuidv4();
                 game.set_player_team( updateData.player, updateData.newTeam );
-                wss.broadcast( JSON.stringify( updateData ), wsClient );
+                wss.broadcast_all( JSON.stringify( updateData ) );
                 // console.log('>>>>>>>>> Message Sent - updatePlayerTeam >>>>>>>>>');
                 // console.log('======= END HANDLER - updatePlayerTeam =======');
                 break;
@@ -674,14 +674,14 @@ wss.on('connection', ( wsClient ) =>
                 // console.log('======= HANDLER - updatePlayerPosition =======');
                 updateData.id = uuidv4();
                 game.set_player_position( updateData.player, updateData.newPosition );
-                wss.broadcast( JSON.stringify( updateData ), wsClient );
+                wss.broadcast_all( JSON.stringify( updateData ) );
                 // console.log('>>>>>>>>> Message Sent - updatePlayerPosition >>>>>>>>>');
                 // console.log('======= END HANDLER - updatePlayerPosition =======');
                 break;
             }
 
             /*======================================
-                HANDLER - HIGHLIGHTS
+                ANCHOR: HANDLER - HIGHLIGHTS
             ========================================*/
 
             case 'updateAddHighlight':
@@ -732,7 +732,7 @@ wss.on('connection', ( wsClient ) =>
             // }
 
             /*======================================
-                HANDLER - CARD CHOOSING
+                ANCHOR: HANDLER - CARD CHOOSING
             ========================================*/
 
             // case 'updateCardChoose':
@@ -747,7 +747,7 @@ wss.on('connection', ( wsClient ) =>
     });
 
     /*======================================
-        CLOSING CONNECTION
+        ANCHOR: CLOSING CONNECTION
     ========================================*/
 
     wsClient.on('close', ( wsClient ) =>

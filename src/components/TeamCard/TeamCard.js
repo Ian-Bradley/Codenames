@@ -8,8 +8,8 @@ import './TeamCard.scss';
  * @props teamData (onject)      Team data for remaining guesses and cards
  * @props players (array)        Current connected players list
  * @props gameState (string)     Current state of the game
- * @props currentPlayer (object) Current player information
  * @props team_select (function) Callback function for team selecting buttons
+ * @props currentPlayer (object) Current player information
  */
 
 export default function TeamCard ( props ) {
@@ -37,59 +37,13 @@ export default function TeamCard ( props ) {
         return count;
     }
 
-
     /*======================================
         RENDER FUNCTIONS - Interactions
     ========================================*/
 
-    const on_select_position = ( buttonPosition ) =>
+    const on_select_position = ( positionButton ) =>
     {
-        // Prop assignment
-        let cardTeamColor   = props.team;
-        let playerTeamColor = props.currentPlayer.team;
-        let playerPosition  = props.currentPlayer.position;
-        // Flags
-        let isOnTeam          = playerTeamColor;
-        let isTeamCardRed     = ( cardTeamColor === C.onst.red );
-        let isTeamCardBlue    = ( cardTeamColor === C.onst.blue );
-        let isSameTeam        = ( cardTeamColor === playerTeamColor );
-        let isPlayerOperative = ( playerPosition === C.onst.operative );
-        let isPlayerSpymaster = ( playerPosition === C.onst.spymaster );
-        let isButtonOperative = ( buttonPosition === C.onst.operative );
-        let isButtonSpymaster = ( buttonPosition === C.onst.spymaster );
-        // Team Swapping Logic
-        if ( isOnTeam && isTeamCardRed && isSameTeam && isPlayerOperative && isButtonSpymaster )
-        { props.set_current_player__position( buttonPosition ); }
-        if ( isOnTeam && isTeamCardRed && isSameTeam && isPlayerSpymaster && isButtonOperative )
-        { props.set_current_player__position( buttonPosition ); }
-        if ( isOnTeam && isTeamCardRed && !isSameTeam && isPlayerOperative && isButtonOperative )
-        { props.set_current_player__team( props.team ); }
-        if ( isOnTeam && isTeamCardRed && !isSameTeam && isPlayerOperative && isButtonSpymaster )
-        { props.set_current_player__team( props.team ); props.set_current_player__position( buttonPosition ); }
-        if ( isOnTeam && isTeamCardRed && !isSameTeam && isPlayerSpymaster && isButtonOperative )
-        { props.set_current_player__team( props.team ); props.set_current_player__position( buttonPosition ); }
-        if ( isOnTeam && isTeamCardRed && !isSameTeam && isPlayerSpymaster && isButtonSpymaster )
-        { props.set_current_player__team( props.team ); }
-        if ( isOnTeam && isTeamCardBlue && isSameTeam && isPlayerOperative && isButtonSpymaster )
-        { props.set_current_player__position( buttonPosition ); }
-        if ( isOnTeam && isTeamCardBlue && isSameTeam && isPlayerSpymaster && isButtonOperative )
-        { props.set_current_player__position( buttonPosition ); }
-        if ( isOnTeam && isTeamCardBlue && !isSameTeam && isPlayerOperative && isButtonOperative )
-        { props.set_current_player__team( props.team ); }
-        if ( isOnTeam && isTeamCardBlue && !isSameTeam && isPlayerOperative && isButtonSpymaster )
-        { props.set_current_player__team( props.team ); props.set_current_player__position( buttonPosition ); }
-        if ( isOnTeam && isTeamCardBlue && !isSameTeam && isPlayerSpymaster && isButtonOperative )
-        { props.set_current_player__team( props.team ); props.set_current_player__position( buttonPosition ); }
-        if ( isOnTeam && isTeamCardBlue && !isSameTeam && isPlayerSpymaster && isButtonSpymaster )
-        { props.set_current_player__team( props.team ); }
-        if ( !isOnTeam && isTeamCardRed && isButtonOperative )
-        { props.set_current_player__position( buttonPosition ); props.set_current_player__team( props.team ); }
-        if ( !isOnTeam && isTeamCardRed && isButtonSpymaster )
-        { props.set_current_player__position( buttonPosition ); props.set_current_player__team( props.team ); }
-        if ( !isOnTeam && isTeamCardBlue && isButtonOperative )
-        { props.set_current_player__position( buttonPosition ); props.set_current_player__team( props.team ); }
-        if ( !isOnTeam && isTeamCardBlue && isButtonSpymaster )
-        { props.set_current_player__position( buttonPosition ); props.set_current_player__team( props.team ); }
+        props.team_select( positionButton, props.team );
     }
     
     /*======================================
@@ -114,7 +68,7 @@ export default function TeamCard ( props ) {
         {
             for ( let i = 0; i < props.players.length; i++ )
             {
-                if ( ( props.players[i].team === props.team )&& ( props.players[i].position === position ))
+                if ( ( props.players[i].team === props.team ) && ( props.players[i].position === position ))
                 {
                     players.push( <li key={i}>{props.players[i].name}</li> );
                 }
@@ -161,7 +115,7 @@ export default function TeamCard ( props ) {
     const display_button_operative = () =>
     {
         let operativesTotal = count_positions( props.currentPlayer, props.players, props.team, C.onst.operative );
-        if ( ( operativesTotal <= C.onst.maxOperatives ) || ( props.gameState === C.onst.gameState_setup ) )
+        if ( ( operativesTotal <= C.onst.maxOperatives ) && ( props.gameState === C.onst.gameState_setup ) )
         {
             return (
                 <Button
@@ -180,7 +134,7 @@ export default function TeamCard ( props ) {
     const display_button_spymaster = () =>
     {
         let spymastersTotal = count_positions( props.currentPlayer, props.players, props.team, C.onst.spymaster );
-        if ( ( spymastersTotal <= C.onst.maxSpymasters ) || ( props.gameState === C.onst.gameState_setup ) )
+        if ( ( spymastersTotal <= C.onst.maxSpymasters ) && ( props.gameState === C.onst.gameState_setup ) )
         {
             return (
                 <Button

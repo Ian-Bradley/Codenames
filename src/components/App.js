@@ -10,9 +10,11 @@ import GameMessage from './GameMessage/GameMessage.js';
 import * as C from '../constants.js'
 import './App.scss';
 
-/*======================================
+// TODO: currentPlayer to player
+
+/*================================================
     ANCHOR: HELPER FUNCTIONS
-========================================*/
+==================================================*/
 
 const random_name = () =>
 {
@@ -46,9 +48,9 @@ const random_ID = () =>
 export default class App extends Component
 {
 
-    /*======================================
+    /*================================================
         ANCHOR: STATE
-    ========================================*/
+    ==================================================*/
 
     constructor(props)
     {
@@ -90,69 +92,73 @@ export default class App extends Component
             viewScale: 1,
         };
         
-        /*======================================
+        /*================================================
             ANCHOR: METHOD BINDING
-        ========================================*/
+        ==================================================*/
 
         // State methods - Connection
-        this.socket                               = new WebSocket( 'ws://localhost:3001' );
+        this.socket = new WebSocket( 'ws://localhost:3001' );
 
         // State methods - Game states
-        this.set_game_state                       = this.set_game_state.bind(this);
-        this.set_round                            = this.set_round.bind(this);
-        this.set_cards                            = this.set_cards.bind(this);
-        this.set_players                          = this.set_players.bind(this);
-        this.set_clue                             = this.set_clue.bind(this);
-        this.set_message                          = this.set_message.bind(this);
+        this.set_game_state = this.set_game_state.bind(this);
+        this.set_round      = this.set_round.bind(this);
+        this.set_cards      = this.set_cards.bind(this);
+        this.set_players    = this.set_players.bind(this);
+        this.set_clue       = this.set_clue.bind(this);
+        this.set_message    = this.set_message.bind(this);
+        this.set_log        = this.set_log.bind(this);
 
         // State methods - Teams
-        this.set_team__cards                      = this.set_team__cards.bind(this);
-        this.set_team__guesses                    = this.set_team__guesses.bind(this);
+        this.set_team_cards   = this.set_team_cards.bind(this);
+        this.set_team_guesses = this.set_team_guesses.bind(this);
 
         // State methods - Players
-        this.player_add                           = this.player_add.bind(this);
-        this.player_remove                        = this.player_remove.bind(this);
+        this.player_add    = this.player_add.bind(this);
+        this.player_remove = this.player_remove.bind(this);
 
         // State methods - Player Info
-        this.set_current_player__ID               = this.set_current_player__ID.bind(this);
-        this.set_current_player__name             = this.set_current_player__name.bind(this);
-        this.set_current_player__team             = this.set_current_player__team.bind(this);
-        this.set_current_player__position         = this.set_current_player__position.bind(this);
-        this.set_current_player__isHost           = this.set_current_player__isHost.bind(this);
-        this.set_player__name                     = this.set_player__name.bind(this);
-        this.set_player__team                     = this.set_player__team.bind(this);
-        this.set_player__position                 = this.set_player__position.bind(this);
-        this.set_player__isHost                   = this.set_player__isHost.bind(this);
+        this.set_player_ID       = this.set_player_ID.bind(this);
+        this.set_player_name     = this.set_player_name.bind(this);
+        this.set_player_team     = this.set_player_team.bind(this);
+        this.set_player_position = this.set_player_position.bind(this);
+        this.set_player_isHost   = this.set_player_isHost.bind(this);
 
         // State methods - Highlighting
-        this.highlight_add                        = this.highlight_add.bind(this);
-        this.highlight_remove                     = this.highlight_remove.bind(this);
-        this.highlight_clear_card                 = this.highlight_clear_card.bind(this);
-        this.highlight_clear_all                  = this.highlight_clear_all.bind(this);
+        this.highlight_add        = this.highlight_add.bind(this);
+        this.highlight_remove     = this.highlight_remove.bind(this);
+        this.highlight_clear_card = this.highlight_clear_card.bind(this);
+        this.highlight_clear_all  = this.highlight_clear_all.bind(this);
 
         // State methods - Game Log
-        this.log_set                              = this.log_set.bind(this);
-        this.log_add_item                         = this.log_add_item.bind(this);
-        this.log_clear                            = this.log_clear.bind(this);
+        this.log_add_item = this.log_add_item.bind(this);
+        this.log_clear    = this.log_clear.bind(this);
 
-        // State methods - Player Interactions
-        this.card_choose                          = this.card_choose.bind(this);
-        this.card_highlight                       = this.card_highlight.bind(this);
-        this.clue_give                            = this.clue_give.bind(this);
+        // WS Methods - Player Info
+        this.send_player_name     = this.send_player_name.bind(this);
+        this.send_player_team     = this.send_player_team.bind(this);
+        this.send_player_position = this.send_player_position.bind(this);
 
-        // Functional methods
-        this.debounce                             = this.debounce.bind(this);
-        this.enable_interactions                  = this.enable_interactions.bind(this);
-        this.disable_interactions                 = this.disable_interactions.bind(this);
+        // WS Methods - Player Interactions
+        this.send_clue      = this.send_clue.bind(this);
+        this.send_card      = this.send_card.bind(this);
+        this.send_highlight = this.send_highlight.bind(this);
+
+        // Interaction Methods
+        this.team_select = this.team_select.bind(this);
+
+        // Functional methods - General
+        this.debounce             = this.debounce.bind(this);
+        this.enable_interactions  = this.enable_interactions.bind(this);
+        this.disable_interactions = this.disable_interactions.bind(this);
 
         // Functional methods - Sizing
-        this.set_app_dimensions                   = this.set_app_dimensions.bind(this);
-        // this.set_card_size                        = this.set_card_size.bind(this);
-        // this.set_view_scale                       = this.set_view_scale.bind(this);
+        this.set_app_dimensions = this.set_app_dimensions.bind(this);
+        // this.set_card_size      = this.set_card_size.bind(this);
+        // this.set_view_scale     = this.set_view_scale.bind(this);
 
         // Functional methods - Cookies
-        this.set_cookie                           = this.set_cookie.bind(this);
-        this.get_cookie                           = this.get_cookie.bind(this);
+        this.set_cookie = this.set_cookie.bind(this);
+        this.get_cookie = this.get_cookie.bind(this);
     }
 
     /*================================================
@@ -162,7 +168,7 @@ export default class App extends Component
     set_game_state ( state )
     {
         this.setState({ gameState: state });
-        // TODO: disable/enable interactions
+        // NOTE: disable/enable interactions
         // this.disable_interactions();
         // setTimeout(function() {
         //     this.enable_interactions();
@@ -222,7 +228,7 @@ export default class App extends Component
         ANCHOR: STATE METHODS - Team Info
     ==================================================*/
 
-    set_team__cards ( team, amount )
+    set_team_cards ( team, amount )
     {
         if ( team === C.onst.red )
         {
@@ -245,7 +251,7 @@ export default class App extends Component
     /*======================================*/
     /*======================================*/
 
-    set_team__guesses ( team, amount )
+    set_team_guesses ( team, amount )
     {
         if ( team === C.onst.red )
         {
@@ -293,7 +299,8 @@ export default class App extends Component
         ANCHOR: STATE METHODS - Player Info
     ==================================================*/
 
-    set_current_player__ID ( playerID )
+    // > This function is ONLY for the current player
+    set_player_ID ( playerID )
     {
         this.setState(prevState => {
             let currentPlayer = { ...prevState.currentPlayer };
@@ -301,172 +308,154 @@ export default class App extends Component
             return { currentPlayer };
         });
     }
-    
+
     /*======================================*/
     /*======================================*/
-    
-    set_current_player__name ( playerName )
+
+    set_player_name ( player, newName )
     {
-        // State
-        this.setState(prevState => {
-            let currentPlayer = { ...prevState.currentPlayer };
-            currentPlayer.name = playerName;
-            return { currentPlayer };
-        });
-        // WS
-        let newUpdate = {
-            type: 'updatePlayerName',
-            player: this.state.currentPlayer,
-            newName: playerName,
-        };
-        this.socket.send( JSON.stringify( newUpdate ));
-    }
-
-    /*======================================*/
-    /*======================================*/
-
-    set_current_player__team ( teamColor )
-    {
-        // State
-        this.setState(prevState => {
-            let currentPlayer = { ...prevState.currentPlayer };
-            currentPlayer.team = teamColor;
-            return { currentPlayer };
-        });
-        // WS
-        let newUpdate = {
-            type: 'updatePlayerTeam',
-            player: this.state.currentPlayer,
-            newTeam: teamColor,
-        };
-        this.socket.send( JSON.stringify( newUpdate ));
-    }
-
-    /*======================================*/
-    /*======================================*/
-
-    set_current_player__position ( teamPosition )
-    {
-        // State
-        this.setState( prevState => {
-            let currentPlayer = { ...prevState.currentPlayer };
-            currentPlayer.position = teamPosition;
-            return { currentPlayer };
-        });
-        // WS
-        let newUpdate = {
-            type: 'updatePlayerPosition',
-            player: this.state.currentPlayer,
-            newPosition: teamPosition,
-        };
-        this.socket.send( JSON.stringify( newUpdate ));
-    }
-
-    /*======================================*/
-    /*======================================*/
-
-    set_current_player__isHost ()
-    {
-        // Remove host from other players
-        this.setState( prevState => {
-            let players = prevState.players;
-            for ( let i = 0; i < players.length; i++ )
-            {
-                players[i].isHost = false;
-            }
-            return { players };
-        });
-
-        // Set current player to host
-        this.setState( prevState => {
-            let currentPlayer = { ...prevState.currentPlayer };
-            currentPlayer.isHost = true;
-            return { currentPlayer };
-        });
-    }
-
-    /*======================================*/
-    /*======================================*/
-
-    set_player__name ( player, newName )
-    {
-        this.setState( prevState => {
-            let players = prevState.players;
-            for ( let i = 0; i < players.length; i++ )
-            {
-                if ( players[i].id === player.id )
+        console.log('===> set_player_name');
+        if ( player.id === this.state.currentPlayer.id )
+        {
+            // > Current player
+            this.setState(prevState => {
+                let currentPlayer = { ...prevState.currentPlayer };
+                currentPlayer.name = newName;
+                return { currentPlayer };
+            });
+        }
+        else
+        {
+            // > Other player
+            this.setState( prevState => {
+                let players = prevState.players;
+                for ( let i = 0; i < players.length; i++ )
                 {
-                    players[i].name = newName;
+                    if ( players[i].id === player.id )
+                    {
+                        players[i].name = newName;
+                    }
                 }
-            }
-            return { players };
-        });
+                return { players };
+            });
+        }
+        console.log('===> END - set_player_name');
     }
 
     /*======================================*/
     /*======================================*/
 
-    set_player__team ( player, newTeam )
+    set_player_team ( player, newTeam )
     {
-        this.setState( prevState => {
-            let players = prevState.players;
-            for ( let i = 0; i < players.length; i++ )
-            {
-                if ( players[i].id === player.id )
+        console.log('===> set_player_team');
+        if ( player.id === this.state.currentPlayer.id )
+        {
+            // > Current player
+            this.setState(prevState => {
+                let currentPlayer = { ...prevState.currentPlayer };
+                currentPlayer.team = newTeam;
+                return { currentPlayer };
+            });
+        }
+        else
+        {
+            // > Other player
+            this.setState( prevState => {
+                let players = prevState.players;
+                for ( let i = 0; i < players.length; i++ )
                 {
-                    players[i].team = newTeam;
+                    if ( players[i].id === player.id )
+                    {
+                        players[i].team = newTeam;
+                    }
                 }
-            }
-            return { players };
-        });
+                return { players };
+            });
+        }
+        console.log('===> END - set_player_team');
     }
 
     /*======================================*/
     /*======================================*/
 
-    set_player__position ( player, newPosition )
+    set_player_position ( player, newPosition )
     {
-        this.setState( prevState => {
-            let players = prevState.players;
-            for ( let i = 0; i < players.length; i++ )
-            {
-                if ( players[i].id === player.id )
+        console.log('===> set_player_position');
+        if ( player.id === this.state.currentPlayer.id )
+        {
+            // > Current player
+            this.setState( prevState => {
+                let currentPlayer = { ...prevState.currentPlayer };
+                currentPlayer.position = newPosition;
+                return { currentPlayer };
+            });
+        }
+        else
+        {
+            // > Other player
+            this.setState( prevState => {
+                let players = prevState.players;
+                for ( let i = 0; i < players.length; i++ )
                 {
-                    players[i].position = newPosition;
+                    if ( players[i].id === player.id )
+                    {
+                        players[i].position = newPosition;
+                    }
                 }
-            }
-            return { players };
-        });
+                return { players };
+            });
+        }
+        console.log('===> END - set_player_position');
     }
 
     /*======================================*/
     /*======================================*/
 
-    set_player__isHost ( player )
+    set_player_isHost ( player )
     {
-        // Remove current player as host
-        this.setState( prevState => {
-            let currentPlayer = { ...prevState.currentPlayer };
-            currentPlayer.isHost = false;
-            return { currentPlayer };
-        });
-
-        // Remove host from other players and set specified player as host
-        this.setState( prevState => {
-            let players = prevState.players;
-            for ( let i = 0; i < players.length; i++ )
-            {
-                if ( players[i].id === player.id )
-                {
-                    players[i].isHost = true;
-                }
-                else
+        console.log('===> set_player_isHost');
+        if ( player.id === this.state.currentPlayer.id )
+        {
+            // > Current player
+            // > Set current player to host
+            this.setState( prevState => {
+                let currentPlayer = { ...prevState.currentPlayer };
+                currentPlayer.isHost = true;
+                return { currentPlayer };
+            });
+            // > Remove host from other players
+            this.setState( prevState => {
+                let players = prevState.players;
+                for ( let i = 0; i < players.length; i++ )
                 {
                     players[i].isHost = false;
                 }
-            }
-            return { players };
-        });
+                return { players };
+            });
+        }
+        else
+        {
+            // > Other player
+            // > Remove current player as host
+            this.setState( prevState => {
+                let currentPlayer = { ...prevState.currentPlayer };
+                currentPlayer.isHost = false;
+                return { currentPlayer };
+            });
+            // > Remove host from other players and set specified player as host
+            this.setState( prevState => {
+                let players = prevState.players;
+                for ( let i = 0; i < players.length; i++ )
+                {
+                    if ( players[i].id === player.id )
+                    { players[i].isHost = true; }
+                    else
+                    { players[i].isHost = false; }
+                }
+                return { players };
+            });
+        }
+        console.log('===> END - set_player_isHost');
     }
 
     /*================================================
@@ -475,30 +464,20 @@ export default class App extends Component
 
     highlight_add ( player, cardIndex )
     {
-        // console.log('===> highlight_add: ', player, ' ', cardIndex);
-        // console.log('player.id: ', player.id);
-        // console.log('this.state.currentPlayer.id: ', this.state.currentPlayer.id);
+        console.log('===> highlight_add: ', player, ' ', cardIndex);
         if ( player.id === this.state.currentPlayer.id )
         {
-            // console.log('> IS CURRENT PLAYER');
+            console.log('> IS CURRENT PLAYER');
             // Current player - State
             this.setState( prevState => {
                 let currentPlayer = { ...prevState.currentPlayer };
                 currentPlayer.highlights.push( cardIndex );
                 return { currentPlayer };
             });
-            // Current player - WS
-            let newUpdate = {
-                type: 'updateAddHighlight',
-                player: this.state.currentPlayer,
-                index: cardIndex,
-            };
-            this.socket.send( JSON.stringify( newUpdate ));
-            // console.log('>>>>>>>>> Message Sent - updateAddHighlight >>>>>>>>>');
         }
         else
         {
-            // console.log('> IS OTHER PLAYER');
+            console.log('> IS OTHER PLAYER');
             // Other player - State
             this.setState( prevState => {
                 let players = prevState.players;
@@ -512,7 +491,7 @@ export default class App extends Component
                 return { players };
             });
         }
-        // console.log('===> END - highlight_add');
+        console.log('===> END - highlight_add');
     }
 
     /*======================================*/
@@ -520,12 +499,10 @@ export default class App extends Component
 
     highlight_remove ( player, cardIndex )
     {
-        // console.log('===> highlight_remove: ', player, ' ', cardIndex);
-        // console.log('player.id: ', player.id);
-        // console.log('this.state.currentPlayer.id: ', this.state.currentPlayer.id);
+        console.log('===> highlight_remove: ', player, ' ', cardIndex);
         if ( player.id === this.state.currentPlayer.id )
         {
-            // console.log('> IS CURRENT PLAYER');
+            console.log('> IS CURRENT PLAYER');
             // Current player - State
             this.setState( prevState => {
                 let currentPlayer = { ...prevState.currentPlayer };
@@ -534,18 +511,10 @@ export default class App extends Component
                 );
                 return { currentPlayer };
             });
-            // Current player - WS
-            let newUpdate = {
-                type: 'updateRemoveHighlight',
-                player: this.state.currentPlayer,
-                index: cardIndex,
-            };
-            this.socket.send( JSON.stringify( newUpdate ));
-            // console.log('>>>>>>>>> Message Sent - updateRemoveHighlight >>>>>>>>>');
         }
         else
         {
-            // console.log('> IS OTHER PLAYER');
+            console.log('> IS OTHER PLAYER');
             // Other player - State
             this.setState( prevState => {
                 let players = prevState.players;
@@ -561,16 +530,16 @@ export default class App extends Component
                 return { players };
             });
         }
-        // console.log('===> END - highlight_remove');
+        console.log('===> END - highlight_remove');
     }
 
     /*======================================*/
     /*======================================*/
 
+    // TODO: ==> highlight_clear_card
+    // NOTE: may not need WS for this --> only activated by card choose
     highlight_clear_card ( cardIndex )
     {
-        // TODO: highlight_clear_card
-        // NOTE: may not need WS for this --> only activated by card choose
         // State
         // this.setState( prevState => {
         //     let highlights = prevState.highlights.filter(
@@ -583,10 +552,10 @@ export default class App extends Component
     /*======================================*/
     /*======================================*/
 
+    // TODO: ==> highlight_clear_all
+    // NOTE: may not need WS for this --> only activated by card choose/round change
     highlight_clear_all ()
     {
-        // TODO highlight_clear_all
-        // NOTE: may not need WS for this --> only activated by card choose/round change
         // this.setState({ highlights: [] });
     }
 
@@ -594,11 +563,11 @@ export default class App extends Component
         ANCHOR: STATE METHODS - Game Log
     ==================================================*/
 
-    log_set( logArray )
+    set_log( logArray )
     {
-        // console.log('===> log_set');
+        console.log('===> set_log');
         this.setState({ gameLog: logArray });
-        // console.log('===> END - log_set');
+        console.log('===> END - set_log');
     }
 
     /*======================================*/
@@ -626,68 +595,69 @@ export default class App extends Component
 
     log_clear ()
     {
+        console.log('===> log_clear');
         this.setState({ gameLog: [] });
+        console.log('===> END - log_clear');
     }
 
     /*================================================
-        ANCHOR: STATE METHODS - Player Interactions
+        ANCHOR: WS METHODS - Player Info
     ==================================================*/
 
-    /*======================================*/
-    /*======================================*/
-    // ANCHOR: ==> card_choose
-
-    card_choose ( cardIndex )
-    { 
-        // use currentPlayer --> updates from server will arrive as different commands, they will not use card_choose here
-        // ==> update game log
-        // ==> clear card highlights
-        // ==> send request to server
-        // ==> begin animation on recieving response from ws server
-        // ==> after animation --> change round || continue round
-        // ==> if round change, clear all card highlights
-
-    }
-
-    /*======================================*/
-    /*======================================*/
-    // ANCHOR: ==> card_highlight
-
-    // NOTE: check if card index is already in highlight --> prevent duplicates
-
-    card_highlight ( cardIndex )
+    // TODO: ==> send_player_name
+    send_player_name ( newName )
     {
-        // console.log('===> card_highlight: ', cardIndex);
-        for ( let i = 0; i < this.state.cards.length; i++ )
-        {
-            // console.log('this.state.cards[i]: ', this.state.cards[i]);
-            if ( this.state.cards[i].index === cardIndex )
-            {
-                // console.log('this.state.currentPlayer.highlights.includes( this.state.cards[i].index ): ', this.state.currentPlayer.highlights.includes( this.state.cards[i].index ));
-                if ( this.state.currentPlayer.highlights.includes( this.state.cards[i].index ) )
-                {
-                    // console.log('> removing');
-                    // console.log('> BEFORE: currentPlayer.highlights', this.state.currentPlayer.highlights);
-                    this.highlight_remove( this.state.currentPlayer, cardIndex );
-                    // console.log('> AFTER: currentPlayer.highlights', this.state.currentPlayer.highlights);
-                }
-                else
-                {
-                    // console.log('> add');
-                    // console.log('> BEFORE: currentPlayer.highlights', this.state.currentPlayer.highlights);
-                    this.highlight_add( this.state.currentPlayer, cardIndex );
-                    // console.log('> AFTER: currentPlayer.highlights', this.state.currentPlayer.highlights);
-                }
-            }
-        }
-        // console.log('===> END - card_highlight');
+        console.log('===> send_player_name');
+        let newUpdate = {
+            type: 'updatePlayerName',
+            player: this.state.currentPlayer,
+            newName: newName,
+        };
+        this.socket.send( JSON.stringify( newUpdate ));
+        console.log('>>>>>>>>> Message Sent - updatePlayerName >>>>>>>>>');
+        console.log('===> END - send_player_name');
     }
 
     /*======================================*/
     /*======================================*/
-    // ANCHOR: ==> clue_give
 
-    clue_give ( clue )
+    // TODO: ==> send_player_team
+    send_player_team ( newTeam )
+    {
+        console.log('===> send_player_team');
+        let newUpdate = {
+            type: 'updatePlayerTeam',
+            player: this.state.currentPlayer,
+            newTeam: newTeam,
+        };
+        this.socket.send( JSON.stringify( newUpdate ));
+        console.log('>>>>>>>>> Message Sent - updatePlayerTeam >>>>>>>>>');
+        console.log('===> END - send_player_team');
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    // TODO: ==> send_player_position
+    send_player_position ( newPosition )
+    {
+        console.log('===> send_player_position');
+        let newUpdate = {
+            type: 'updatePlayerPosition',
+            player: this.state.currentPlayer,
+            newPosition: newPosition,
+        };
+        this.socket.send( JSON.stringify( newUpdate ));
+        console.log('>>>>>>>>> Message Sent - updatePlayerPosition >>>>>>>>>');
+        console.log('===> END - send_player_position');
+    }
+
+    /*================================================
+        ANCHOR: WS METHODS - Player Interactions
+    ==================================================*/
+
+    // TODO: ==> send_clue
+    send_clue ( clue )
     {
         // ==> update game log
         // ==> 
@@ -702,8 +672,127 @@ export default class App extends Component
         // this.socket.send( JSON.stringify( newUpdate ));
     }
 
+    /*======================================*/
+    /*======================================*/
+
+    // TODO: ==> send_card
+    send_card ( cardIndex )
+    { 
+        // use currentPlayer --> updates from server will arrive as different commands, they will not use send_card here
+        // ==> update game log
+        // ==> clear card highlights
+        // ==> send request to server
+        // ==> begin animation on recieving response from ws server
+        // ==> after animation --> change round || continue round
+        // ==> if round change, clear all card highlights
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    // TODO: ==> send_highlight
+    send_highlight ( cardIndex )
+    {
+        console.log('duplicates: ', this.state.currentPlayer.highlights.includes( cardIndex ));
+        if ( !( this.state.currentPlayer.highlights.includes( cardIndex ) ) )
+        {
+            console.log('> Add');
+            this.highlight_add( this.state.currentPlayer, cardIndex );
+            let newUpdate = {
+                type: 'updateAddHighlight',
+                player: this.state.currentPlayer,
+                index: cardIndex,
+            };
+            this.socket.send( JSON.stringify( newUpdate ));
+            console.log('>>>>>>>>> Message Sent - updateAddHighlight >>>>>>>>>');
+        }
+        else
+        {
+            console.log('> Removing');
+            this.highlight_remove( this.state.currentPlayer, cardIndex );
+            let newUpdate = {
+                type: 'updateRemoveHighlight',
+                player: this.state.currentPlayer,
+                index: cardIndex,
+            };
+            this.socket.send( JSON.stringify( newUpdate ));
+            console.log('>>>>>>>>> Message Sent - updateRemoveHighlight >>>>>>>>>');
+        }
+        console.log('===> END - send_highlight');    
+    }
+
     /*================================================
-        ANCHOR: FUNCTIONAL METHODS
+        ANCHOR: INTERACTION METHODS
+    ==================================================*/
+
+    team_select ( positionButton, colorCardTeam )
+    {
+        let player = this.state.currentPlayer;
+        let colorPlayerTeam = this.state.currentPlayer.team;
+        let positionPlayer  = this.state.currentPlayer.position;
+
+        const isOnTeam          = colorPlayerTeam;
+        const isTeamCardRed     = ( colorCardTeam === C.onst.red );
+        const isTeamCardBlue    = ( colorCardTeam === C.onst.blue );
+        const isSameTeam        = ( colorCardTeam === colorPlayerTeam );
+        const isPlayerOperative = ( positionPlayer === C.onst.operative );
+        const isPlayerSpymaster = ( positionPlayer === C.onst.spymaster );
+        const isButtonOperative = ( positionButton === C.onst.operative );
+        const isButtonSpymaster = ( positionButton === C.onst.spymaster );
+
+        // > Player does not have a team
+        if ( !isOnTeam && isTeamCardRed && isButtonOperative )
+        { props.set_player_team( props.team ); props.set_player_position( positionButton ); }
+
+        if ( !isOnTeam && isTeamCardRed && isButtonSpymaster )
+        { props.set_player_team( props.team ); props.set_player_position( positionButton ); }
+
+        if ( !isOnTeam && isTeamCardBlue && isButtonOperative )
+        { props.set_player_team( props.team ); props.set_player_position( positionButton ); }
+
+        if ( !isOnTeam && isTeamCardBlue && isButtonSpymaster )
+        { props.set_player_team( props.team ); props.set_player_position( positionButton ); }
+
+        // > Player is already on a team
+        if ( isOnTeam && isTeamCardRed && isSameTeam && isPlayerOperative && isButtonSpymaster )
+        { props.set_player_position( positionButton ); }
+
+        if ( isOnTeam && isTeamCardRed && isSameTeam && isPlayerSpymaster && isButtonOperative )
+        { props.set_player_position( positionButton ); }
+
+        if ( isOnTeam && isTeamCardRed && !isSameTeam && isPlayerOperative && isButtonOperative )
+        { props.set_player_team( props.team ); }
+
+        if ( isOnTeam && isTeamCardRed && !isSameTeam && isPlayerOperative && isButtonSpymaster )
+        { props.set_player_team( props.team ); props.set_player_position( positionButton ); }
+
+        if ( isOnTeam && isTeamCardRed && !isSameTeam && isPlayerSpymaster && isButtonOperative )
+        { props.set_player_team( props.team ); props.set_player_position( positionButton ); }
+
+        if ( isOnTeam && isTeamCardRed && !isSameTeam && isPlayerSpymaster && isButtonSpymaster )
+        { props.set_player_team( props.team ); }
+
+        if ( isOnTeam && isTeamCardBlue && isSameTeam && isPlayerOperative && isButtonSpymaster )
+        { props.set_player_position( positionButton ); }
+
+        if ( isOnTeam && isTeamCardBlue && isSameTeam && isPlayerSpymaster && isButtonOperative )
+        { props.set_player_position( positionButton ); }
+
+        if ( isOnTeam && isTeamCardBlue && !isSameTeam && isPlayerOperative && isButtonOperative )
+        { props.set_player_team( props.team ); }
+
+        if ( isOnTeam && isTeamCardBlue && !isSameTeam && isPlayerOperative && isButtonSpymaster )
+        { props.set_player_team( props.team ); props.set_player_position( positionButton ); }
+
+        if ( isOnTeam && isTeamCardBlue && !isSameTeam && isPlayerSpymaster && isButtonOperative )
+        { props.set_player_team( props.team ); props.set_player_position( positionButton ); }
+
+        if ( isOnTeam && isTeamCardBlue && !isSameTeam && isPlayerSpymaster && isButtonSpymaster )
+        { props.set_player_team( props.team ); }
+    }
+
+    /*================================================
+        ANCHOR: FUNCTIONAL METHODS - General
     ==================================================*/
 
     debounce ( func, wait, immediate )
@@ -724,32 +813,33 @@ export default class App extends Component
 
     /*======================================*/
     /*======================================*/
-    // ANCHOR: ==> set_app_dimensions
 
+    // TODO: ==> enable_interactions
+    enable_interactions ()
+    {
+        
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    // TODO: ==> disable_interactions
+    disable_interactions ()
+    {
+        
+    }
+
+    /*================================================
+        ANCHOR: FUNCTIONAL METHODS - Sizing
+    ==================================================*/
+
+    // TODO: ==> set_app_dimensions
     set_app_dimensions ()
     {
         this.setState({ appWidth: window.innerWidth });
         this.setState({ appHeight: window.innerHeight });
         let scaler = ( window.innerHeight / C.onst.maxHeight )
         this.setState({ viewScale: scaler });
-    }
-
-    /*======================================*/
-    /*======================================*/
-    // ANCHOR: ==> enable_interactions
-
-    enable_interactions ()
-    {
-    //     document.querySelector('main').classList.remove( C.onst.classDisabled );
-    }
-
-    /*======================================*/
-    /*======================================*/
-    // ANCHOR: ==> disable_interactions
-
-    disable_interactions ()
-    {
-    //     document.querySelector('main').classList.add( C.onst.classDisabled );
     }
 
     /*================================================
@@ -801,7 +891,7 @@ export default class App extends Component
         // ?? Also check for name/position/team
 
         // let playerID = this.get_cookie('player-id');
-        // this.set_current_player__ID( playerID );
+        // this.set_player_ID( playerID );
 
 
         /*================================================
@@ -835,33 +925,33 @@ export default class App extends Component
                 case 'clientConnected':
                 {
                     // This handler is only fired ONCE when the CURRENT player joins
-                    // console.log('======= HANDLER - clientConnected =======');
+                    console.log('======= HANDLER - clientConnected =======');
 
                     // Set cards
-                    // console.log('> Setting Cards');
+                    console.log('> Setting Cards');
                     
                     if ( !( updateData.cards === undefined ) && ( updateData.cards.length ) )
                     { this.set_cards( updateData.cards ); }
     
                     // Set players
-                    // console.log('> Setting players');
+                    console.log('> Setting players');
                     if ( !( updateData.players === undefined ) && ( updateData.players.length ) )
                     { this.set_players( updateData.players ); }
                     
-                    // Set players
-                    // console.log('> Setting game log');
+                    // Set log
+                    console.log('> Setting game log');
                     if ( !( updateData.gameLog === undefined ) && ( updateData.gameLog.length ) )
-                    { this.set_players( updateData.gameLog ); }
+                    { this.set_log( updateData.gameLog ); }
 
                     // Send current player information to server
-                    // console.log('> Send userConnected');
+                    console.log('> Send userConnected');
                     let newUpdate = {
                         type: 'userConnected',
                         player: this.state.currentPlayer,
                     };
                     ws.send( JSON.stringify( newUpdate ) );
                     console.log('>>>>>>>>> Message Sent - userConnected >>>>>>>>>');
-                    // console.log('======= END - HANDLER - clientConnected =======');
+                    console.log('======= END - HANDLER - clientConnected =======');
                     break;
                 }
 
@@ -871,9 +961,9 @@ export default class App extends Component
                 case 'userConnected':
                 {
                     // This handler is only fired when OTHER players join
-                    // console.log('======= HANDLER - userConnected =======');
+                    console.log('======= HANDLER - userConnected =======');
                     this.player_add( updateData.player );
-                    // console.log('======= END - HANDLER - userConnected =======');
+                    console.log('======= END - HANDLER - userConnected =======');
                     break;
                 }
 
@@ -883,9 +973,9 @@ export default class App extends Component
                 case 'clientDisconnected':
                 {
                     // This handler is only fired when OTHER players leave
-                    // console.log('======= HANDLER - clientDisconnected =======');
+                    console.log('======= HANDLER - clientDisconnected =======');
                     this.player_remove( updateData.playerID );
-                    // console.log('======= END - HANDLER - clientDisconnected =======');
+                    console.log('======= END - HANDLER - clientDisconnected =======');
                     break;
                 }
 
@@ -895,9 +985,9 @@ export default class App extends Component
 
                 case 'updatePlayerName':
                 {
-                    // console.log('======= HANDLER - updatePlayerName =======');
-                    this.set_player__name( updateData.player, updateData.newName );
-                    // console.log('======= END - HANDLER - updatePlayerName =======');
+                    console.log('======= HANDLER - updatePlayerName =======');
+                    this.set_player_name( updateData.player, updateData.newName );
+                    console.log('======= END - HANDLER - updatePlayerName =======');
                     break;
                 }
 
@@ -906,9 +996,9 @@ export default class App extends Component
 
                 case 'updatePlayerTeam':
                 {
-                    // console.log('======= HANDLER - updatePlayerTeam =======');
-                    this.set_player__team( updateData.player, updateData.newTeam );
-                    // console.log('======= END - HANDLER - updatePlayerTeam =======');
+                    console.log('======= HANDLER - updatePlayerTeam =======');
+                    this.set_player_team( updateData.player, updateData.newTeam );
+                    console.log('======= END - HANDLER - updatePlayerTeam =======');
                     break;
                 }
 
@@ -917,9 +1007,9 @@ export default class App extends Component
 
                 case 'updatePlayerPosition':
                 {
-                    // console.log('======= HANDLER - updatePlayerPosition =======');
-                    this.set_player__position( updateData.player, updateData.newPosition );
-                    // console.log('======= END - HANDLER - updatePlayerPosition =======');
+                    console.log('======= HANDLER - updatePlayerPosition =======');
+                    this.set_player_position( updateData.player, updateData.newPosition );
+                    console.log('======= END - HANDLER - updatePlayerPosition =======');
                     break;
                 }
 
@@ -929,14 +1019,7 @@ export default class App extends Component
                 case 'updatePlayerIsHost':
                 {
                     console.log('======= HANDLER - updatePlayerIsHost =======');
-                    if ( updateData.player.id === this.state.currentPlayer.id ) 
-                    { 
-                        this.set_current_player__isHost();
-                    }
-                    else
-                    {
-                        this.set_player__isHost( updateData.player );
-                    }
+                    this.set_player_isHost( updateData.player );
                     console.log('======= END - HANDLER - updatePlayerIsHost =======');
                     break;
                 }
@@ -1028,32 +1111,8 @@ export default class App extends Component
         ==================================================*/
         let countLog = 0;
         const on_dev_state = ( state ) => { this.set_game_state( state ); }
-        const on_dev_log = () => {
-            const fakeLog = [
-                { player: {team: 'red', name: 'Chilled'}, itemType: 'clue', clue: 'Food' },
-                { player: {team: 'blue', name: 'Platy'}, itemType: 'choose', cardText: 'Tower' },
-                { player: {team: 'red', name: 'Tom Fawkes'}, itemType: 'choose', cardText: 'Spring' },
-                { player: {team: 'blue', name: 'Courtilly'}, itemType: 'choose', cardText: 'Soldier' },
-                { player: {team: 'red', name: 'Junk'}, itemType: 'end' },
-                { player: {team: 'red', name: 'Raven'}, itemType: 'choose', cardText: 'Cheque' },
-                { player: {team: 'red', name: 'Kara'}, itemType: 'choose', cardText: 'Sorting' },
-                { player: {team: 'blue', name: 'Chibi'}, itemType: 'choose', cardText: 'Dragons' },
-                { player: {team: 'red', name: 'Cheesy'}, itemType: 'choose', cardText: 'I Want The Pipe' },
-                { player: {team: 'blue', name: 'Silver'}, itemType: 'choose', cardText: 'Baraka' },
-                { player: {team: 'red', name: 'Kat'}, itemType: 'choose', cardText: 'Cow' },
-                { player: {team: 'red', name: 'Jeremy'}, itemType: 'choose', cardText: 'Purple' },
-                { player: {team: 'blue', name: 'Alfredo'}, itemType: 'end' },
-                { player: {team: 'red', name: 'Jackie'}, itemType: 'choose', cardText: 'Nachos' },
-                { player: {team: 'red', name: 'Fooya'}, itemType: 'choose', cardText: 'Zepplin' },
-                { player: {team: 'blue', name: 'Knovis'}, itemType: 'choose', cardText: 'Plain' },
-                { player: {team: 'blue', name: 'Speedy'}, itemType: 'choose', cardText: 'Mucho' },
-                { player: {team: 'blue', name: 'SideArms'}, itemType: 'choose', cardText: 'Taco' },
-                { player: {team: 'red', name: 'ZeRoyalViking'}, itemType: 'choose', cardText: 'Salad' },
-                { player: {team: 'red', name: 'Tay'}, itemType: 'victory' },
-            ];
-            this.log_set( fakeLog );
-        }
-        const on_dev_input = e => { if (e.keyCode === 13) { this.set_current_player__name( e.target.value ); } }
+        const on_dev_log = () => { this.set_log( C.onst.fakeLog ); }
+        const on_dev_name = e => { if (e.keyCode === 13) { this.set_player_name( this.state.currentPlayer, e.target.value ); } }
         const dev_list_players = ( arr ) => {
             let str = '';
             for ( let i = 0; i < arr.length; i++ )
@@ -1090,72 +1149,68 @@ export default class App extends Component
                         <div className='container-app'>
 
                             <GameMenu
-                                isHost      ={this.state.currentPlayer.isHost}
-                                gameState   ={this.state.gameState}
                                 // menu_action ={this.menu_action}
+                                gameState   ={this.state.gameState}
+                                isHost      ={this.state.currentPlayer.isHost}
                             />
 
                             <div className='container-header'>
                                 <GameHeader
-                                    currentPlayer ={this.state.currentPlayer}
                                     players       ={this.state.players}
                                     playersTotal  ={this.state.playersTotal}
+                                    currentPlayer ={this.state.currentPlayer}
                                 />
 
                                 <GameMessage
-                                    currentPlayer ={this.state.currentPlayer}
-                                    gameState     ={this.state.gameState}
                                     message       ={this.state.message}
+                                    gameState     ={this.state.gameState}
+                                    currentPlayer ={this.state.currentPlayer}
                                 />
                             </div>
 
                             <div className='container-sidebar sidebar-left'>
                                 <TeamCard
-                                    currentPlayer                ={this.state.currentPlayer}
-                                    team                         ={C.onst.red}
-                                    teamData                     ={this.state.teamRed}
-                                    players                      ={this.state.players}
-                                    gameState                    ={this.state.gameState}
-                                    set_current_player__team     ={this.set_current_player__team}
-                                    set_current_player__position ={this.set_current_player__position}
+                                    team                ={C.onst.red}
+                                    team_select         ={this.team_select}
+                                    teamData            ={this.state.teamRed}
+                                    players             ={this.state.players}
+                                    gameState           ={this.state.gameState}
+                                    currentPlayer       ={this.state.currentPlayer}
                                 />
                             </div>    
                                                     
                             <div className='container-board'>
                                 <div className='container-game'>
                                     <GameBoard
-                                        cards          ={this.state.cards}
-                                        cardSize       ={this.state.cardSize}
-                                        currentPlayer  ={this.state.currentPlayer}
-                                        gameState      ={this.state.gameState}
-                                        players        ={this.state.players}
-                                        card_highlight ={this.card_highlight}
-                                        card_choose    ={this.card_choose}
                                         debounce       ={this.debounce}
+                                        send_card      ={this.send_card}
+                                        send_highlight ={this.send_highlight}
+                                        cards          ={this.state.cards}
+                                        players        ={this.state.players}
+                                        cardSize       ={this.state.cardSize}
+                                        gameState      ={this.state.gameState}
+                                        currentPlayer  ={this.state.currentPlayer}
                                     />
                                     <GameInputs
+                                        send_clue     ={this.send_clue}
+                                        clue          ={this.state.clue}
+                                        guesses       ={this.state.guesses}
                                         teamRed       ={this.state.teamRed}
                                         teamBlue      ={this.state.teamBlue}
-                                        currentPlayer ={this.state.currentPlayer}
                                         gameState     ={this.state.gameState}
-                                        guesses       ={this.state.guesses}
-                                        clue          ={this.state.clue}
-                                        clue_give     ={this.clue_give}
+                                        currentPlayer ={this.state.currentPlayer}
                                     />
                                 </div>
                             </div>
 
                             <div className='container-sidebar sidebar-right'>
                                 <TeamCard
-                                    currentPlayer                ={this.state.currentPlayer}
-                                    team                         ={C.onst.blue}
-                                    teamData                     ={this.state.teamBlue}
-                                    players                      ={this.state.players}
-                                    gameState                    ={this.state.gameState}
-                                    set_current_player__team     ={this.set_current_player__team}
-                                    set_current_player__position ={this.set_current_player__position}
-                                    set_team__cards              ={this.set_team__cards}
-                                    set_team__guesses            ={this.set_team__guesses}
+                                    team                ={C.onst.blue}
+                                    team_select         ={this.team_select}
+                                    teamData            ={this.state.teamBlue}
+                                    players             ={this.state.players}
+                                    gameState           ={this.state.gameState}
+                                    currentPlayer       ={this.state.currentPlayer}
                                 />
                                 <GameLog
                                     gameLog   ={this.state.gameLog}
@@ -1185,7 +1240,7 @@ export default class App extends Component
                                         className='name-input'
                                         placeholder='Name'
                                         defaultValue=''
-                                        onKeyDown={on_dev_input} />
+                                        onKeyDown={on_dev_name} />
                                     <Button btnClasses={'button-green'} btnFunction={on_dev_state} btnText={'Setup'} btnValue={'setup'} />
                                     <Button btnClasses={'button-red'} btnFunction={on_dev_state} btnText={'RedSpy'} btnValue={'red-spymaster'} />
                                     <Button btnClasses={'button-red'} btnFunction={on_dev_state} btnText={'RedOp'} btnValue={'red-operatives'} />

@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useRef } from 'react';
+import React, { Component } from 'react';
 import GameCard from '../GameCard/GameCard.js';
 import * as C from '../../constants.js'
 import './GameBoard.scss';
@@ -25,9 +25,7 @@ export default class GameBoard extends Component
     set_board_width ()
     {
         console.log('===> set_board_width');
-        console.log('document.querySelector(.game-board).offsetWidth : ', document.querySelector('.game-board').offsetWidth );
-        // console.log('ref.offsetWidth : ', ref.offsetWidth );
-        // this.setState({ boardWidth: ref.offsetWidth });
+
         console.log('===> END - set_board_width');
     }
 
@@ -126,17 +124,17 @@ export default class GameBoard extends Component
                     cardArray.push(
                         <GameCard
                             key={i}
-                            highlights       ={highlights}
-                            cardWidth        ={cardWidth}
-                            cardHeight       ={cardHeight}
-                            cardMargin       ={cardMargin}
-                            currentPlayer    ={this.props.currentPlayer}
-                            cardType         ={this.props.cards[i].type}
-                            cardIndex        ={this.props.cards[i].index}
-                            cardText         ={this.props.cards[i].text}
-                            cardChosen       ={this.props.cards[i].chosen}
-                            card_choose      ={this.props.card_choose}
-                            card_highlight   ={this.props.card_highlight}
+                            highlights     ={highlights}
+                            cardWidth      ={cardWidth}
+                            cardHeight     ={cardHeight}
+                            cardMargin     ={cardMargin}
+                            currentPlayer  ={this.props.currentPlayer}
+                            cardType       ={this.props.cards[i].type}
+                            cardIndex      ={this.props.cards[i].index}
+                            cardText       ={this.props.cards[i].text}
+                            cardChosen     ={this.props.cards[i].chosen}
+                            send_card      ={this.props.send_card}
+                            send_highlight ={this.props.send_highlight}
                         />
                     )
                 } // End - For loop
@@ -147,14 +145,6 @@ export default class GameBoard extends Component
         /*======================================
             COMPONENTS
         ========================================*/
-
-        // const ref = useRef(null);
-
-        // useEffect(() => {
-        //     console.log("width", ref.current.offsetWidth);
-        // }, []);
-
-        // ref={ref}
 
         return (
             <div className='game-board' >

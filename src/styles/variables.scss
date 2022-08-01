@@ -1,12 +1,12 @@
 /*======================================
-    FONTS
+    ANCHOR: FONTS
 ========================================*/
 
 $font-family: 'Nunito Sans', sans-serif;
 $font-family-cards: 'Oswald', sans-serif;
 
 /*======================================
-    SPACING / SIZING
+    ANCHOR: APP GENERAL
 ========================================*/
 
 $app-spacing: 0.6rem;
@@ -23,20 +23,67 @@ $sidebar-width: 340px;
 $sidebar-height: 900px;
 $game-header-height: 150px;
 
+$box-shadow-border-width: 1px 1px 3px;
+$box-shadow-border-color: rgba(0,0,0,0.3);
+$box-shadow: 0 0 0 0 transparent, 0 0 0 0 transparent, 0 4px 0 0 $box-shadow-border-color;
+
+/*======================================
+    ANCHOR: MESSAGE / INSTRUCTION
+========================================*/
+
 $game-message-border-radius: 10px;
 $game-message-padding: 0.25rem 0.7rem;
 
-$team-card-component-spacing: 4px;
-$team-card-list-spacing: 5px;
+$game-message: 2rem;
+$game-message-weight: 700;
+$game-message-line-height: 2.6rem;
+
+/*======================================
+    ANCHOR: LOG
+========================================*/
+
+$game-log-title: 1.1rem;
+$game-log-text: 1.1rem;
+$game-log-text-bold: 800;
+$game-log-text-extra-bold: 900;
 
 $game-log-item-padding: 4px 2px;
 $game-log-list-spacing: 1px;
 $game-log-clue-padding: 0 4px;
 
-$clue-width-min: 200px;
-$clue-height: 50px;
-$clue-border-radius: 5px;
-$clue-input-height: 30px;
+$game-log-clue-color: #888;
+$game-log-bg-color: #fff;
+
+/*======================================
+    ANCHOR: BUTTONS
+========================================*/
+
+$button-icon-size: 20px;
+$button-height: 40px;
+$button-border-radius: 1.3rem;
+
+$game-button: 1.2rem;
+$game-button-height: 1.5rem;
+$game-button-weight: 500;
+
+/*======================================
+    ANCHOR: TEAM CARDS
+========================================*/
+
+$team-card-component-spacing: 4px;
+$team-card-list-spacing: 5px;
+
+$team-remaining-cards: 3rem;
+$team-card-list-title: 0.9rem;
+
+$team-card-font-color: #fff; 
+
+/*======================================
+    ANCHOR: GAME CARDS
+========================================*/
+
+$game-card-text: 1.2rem;
+$game-card-highlighted: 0.8rem;
 
 $card-margin-bottom: 6px;
 $card-margin-right: 6px;
@@ -44,53 +91,26 @@ $card-border-size: 6px;
 $card-border-radius: 8px;
 $card-highlight-spacing: 1px;
 
-$box-shadow-border-width: 1px 1px 3px;
-$box-shadow-border-color: rgba(0,0,0,0.3);
-$box-shadow: 0 0 0 0 transparent, 0 0 0 0 transparent, 0 4px 0 0 $box-shadow-border-color;
-
-$button-icon-size: 20px;
-$button-height: 40px;
-$button-border-radius: 1.3rem;
-
 /*======================================
-    FONT SIZE / WEIGHT
+    ANCHOR: MENU
 ========================================*/
 
 $game-menu-title: 2rem;
 $game-menu-title-c: 3rem;
 
-$game-card-text: 1.2rem;
-$game-card-highlighted: 0.8rem;
-
-$team-remaining-cards: 3rem;
-$team-card-list-title: 0.9rem;
-
-$game-log-title: 1.1rem;
-$game-log-text: 1.1rem;
-$game-log-text-bold: 800;
-$game-log-text-extra-bold: 900;
-
-$game-message: 2rem;
-$game-message-weight: 700;
-$game-message-line-height: 2.6rem;
-
-$game-button: 1.2rem;
-$game-button-height: 1.5rem;
-$game-button-weight: 500;
-
 /*======================================
-    COLORS - General
+    ANCHOR: CLUES
 ========================================*/
 
-$team-card-font-color: #fff; 
-
-$game-log-clue-color: #888;
-$game-log-bg-color: #fff;
+$clue-width-min: 200px;
+$clue-height: 50px;
+$clue-border-radius: 5px;
+$clue-input-height: 30px;
 
 $game-input-bg-color: #fff;
 
 /*======================================
-    COLORS - Teams
+    ANCHOR: COLORS - Teams
 ========================================*/
 
 $team-color-red: rgb(143,43,28);
@@ -143,7 +163,7 @@ $button-red-border-top-hover: rgb(255, 188, 134);
 $button-red-border-bottom-hover: rgb(193, 65, 11);
 
 /*======================================
-    ANIMATIONS
+    ANCHOR: ANIMATIONS
 ========================================*/
 
 $animation-time__minor: 200ms;

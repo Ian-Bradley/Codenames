@@ -61,4 +61,28 @@ export const onst = {
     messageGame__setup:                 'Set up a game',
     messageGame__endRed:                'Red team wins!',
     messageGame__endBlue:               'Blue team wins!',
+
+
+    fakeLog: [
+        { player: {team: 'red', name: 'Chilled'}, itemType: 'clue', clue: 'Food' },
+        { player: {team: 'blue', name: 'Platy'}, itemType: 'choose', cardText: 'Tower' },
+        { player: {team: 'red', name: 'Tom Fawkes'}, itemType: 'choose', cardText: 'Spring' },
+        { player: {team: 'blue', name: 'Courtilly'}, itemType: 'choose', cardText: 'Soldier' },
+        { player: {team: 'red', name: 'Junk'}, itemType: 'end' },
+        { player: {team: 'red', name: 'Raven'}, itemType: 'choose', cardText: 'Cheque' },
+        { player: {team: 'red', name: 'Kara'}, itemType: 'choose', cardText: 'Sorting' },
+        { player: {team: 'blue', name: 'Chibi'}, itemType: 'choose', cardText: 'Dragons' },
+        { player: {team: 'red', name: 'Cheesy'}, itemType: 'choose', cardText: 'I Want The Pipe' },
+        { player: {team: 'blue', name: 'Silver'}, itemType: 'choose', cardText: 'Baraka' },
+        { player: {team: 'red', name: 'Kat'}, itemType: 'choose', cardText: 'Cow' },
+        { player: {team: 'red', name: 'Jeremy'}, itemType: 'choose', cardText: 'Purple' },
+        { player: {team: 'blue', name: 'Alfredo'}, itemType: 'end' },
+        { player: {team: 'red', name: 'Jackie'}, itemType: 'choose', cardText: 'Nachos' },
+        { player: {team: 'red', name: 'Fooya'}, itemType: 'choose', cardText: 'Zepplin' },
+        { player: {team: 'blue', name: 'Knovis'}, itemType: 'choose', cardText: 'Plain' },
+        { player: {team: 'blue', name: 'Speedy'}, itemType: 'choose', cardText: 'Mucho' },
+        { player: {team: 'blue', name: 'SideArms'}, itemType: 'choose', cardText: 'Taco' },
+        { player: {team: 'red', name: 'ZeRoyalViking'}, itemType: 'choose', cardText: 'Salad' },
+        { player: {team: 'red', name: 'Tay'}, itemType: 'victory' },
+    ],
 }

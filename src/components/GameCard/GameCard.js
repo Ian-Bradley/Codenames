@@ -16,14 +16,14 @@ export default class GameCard extends Component
         this.state = {
             cardHighlight: '',
         };
-        this.set_card_highlight = this.set_card_highlight.bind(this);
+        this.set_highlight = this.set_highlight.bind(this);
     }
 
     /*======================================
         STATE METHODS
     ========================================*/
 
-    set_card_highlight ( stateClass )
+    set_highlight ( stateClass )
     {
         this.setState({ cardHighlight: stateClass }); 
     }
@@ -38,16 +38,16 @@ export default class GameCard extends Component
             RENDER FUNCTIONS - Interactions
         ========================================*/
 
-        const on_card_highlight = () =>
+        const on_send_highlight = () =>
         {
-            // console.log('===> on_card_highlight');
+            // console.log('===> on_send_highlight');
             if ( !this.props.cardChosen )
             {
                 // Operative action
                 if ( this.props.currentPlayer.position === C.onst.operative )
                 {
                     // console.log('> Operative - Highlight');
-                    this.props.card_highlight( this.props.cardIndex );
+                    this.props.send_highlight( this.props.cardIndex );
                     // console.log('> END - Operative - Highlight');
                 }
 
@@ -59,26 +59,26 @@ export default class GameCard extends Component
                     // console.log('> Spymaster - Removing border highlight');
                     // TODO: add check for already having been highlighted (new state var?)
 
-                    // // this.set_card_highlight( C.onst.classHighlighted );
-                    // this.set_card_highlight( '' );
+                    // // this.  ( C.onst.classHighlighted );
+                    // this.  ( '' );
 
                     // TODO: add to guesses on clue input bar for spymaster
                     // TODO: check for gameState so only specific spymaster can select cards
                     // console.log('> END - Spymaster - Highlight');
                 }
             }
-            // console.log('===> END - on_card_highlight');
+            // console.log('===> END - on_send_highlight');
         }
 
         /*======================================*/
         /*======================================*/
 
-        const on_card_choose = () =>
+        const on_send_card = () =>
         {
-            console.log('===> on_card_choose');
+            console.log('===> on_send_card');
             // make spymaster not able to see choose button, so only operative can choose
-            // this.props.card_choose( this.props.cardIndex );
-            console.log('===> END - on_card_choose');
+            // this.props.send_card( this.props.cardIndex );
+            console.log('===> END - on_send_card');
         }
 
         /*======================================
@@ -134,23 +134,13 @@ export default class GameCard extends Component
 
         return (
             <div
-                className={
-                    'game-card'
-                    + ' '
-                    + display_classes()
-                }
-                style={{
-                    width: this.props.cardWidth + 'px',
-                    height: this.props.cardHeight + 'px'
-                }}
+                className={'game-card'+' '+ display_classes()}
+                style={{width: this.props.cardWidth + 'px', height: this.props.cardHeight + 'px'}}
             >
                 <div
-                    className={
-                        'game-card-clickable'
-                        + ' '
-                        + this.state.cardHighlight
-                    }
-                    onClick={on_card_highlight}>
+                    className={'game-card-clickable'+' '+this.state.cardHighlight}
+                    onClick={on_send_highlight}
+                >
                 </div>
                 <div className='game-card-highlighted'>
                     <ul>
@@ -160,7 +150,7 @@ export default class GameCard extends Component
                 <Button
                     btnDisplayClasses ={'game-card-button'}
                     btnClasses        ={'card-choose'}
-                    btnFunction       ={on_card_choose}
+                    btnFunction       ={on_send_card}
                     btnIcon           ={IconHand}
                 />
                 <div

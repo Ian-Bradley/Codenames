@@ -8,7 +8,7 @@ import './GameInputs.scss';
  * @props guesses (string)       Amount of guesses given by spymaster for current clue
  * @props gameState (string)     Current state of the game
  * @props clue (string)          Current clue given by spymaster
- * @props clue_give (function)   Handler function for menu buttons
+ * @props send_clue (function)   Handler function for menu buttons
  * @props currentPlayer (object) Current player information
  */
 
@@ -39,6 +39,7 @@ export default function GameInputs ( props ) {
     const on_give_clue = () =>
     {
         console.log('===> on_give_clue');
+        // props.send_clue();
         console.log('===> END - on_give_clue');
     }
 

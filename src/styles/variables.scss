@@ -21,7 +21,8 @@ $app-height: 1080px;
 
 $sidebar-width: 340px;
 $sidebar-height: 900px;
-$game-header-height: 150px;
+
+$header-height: 150px;
 
 $box-shadow-border-width: 1px 1px 3px;
 $box-shadow-border-color: rgba(0,0,0,0.3);
@@ -82,8 +83,17 @@ $team-card-font-color: #fff;
     ANCHOR: GAME CARDS
 ========================================*/
 
-$game-card-text: 1.2rem;
-$game-card-highlighted: 0.8rem;
+$card-width: 208.32px;
+$card-height: 134.4px;
+
+// scale(0.858333)
+
+// 1920
+// 1080<-(use to scale)
+// window.innerWidth<-(use to scale)
+
+$card-text: 1.2rem;
+$card-highlighted: 0.8rem;
 
 $card-margin-bottom: 6px;
 $card-margin-right: 6px;

@@ -13,21 +13,21 @@ export default class GameBoard extends Component
     {
         super(props);
         this.state = {
-            boardWidth: 0,
+            // boardWidth: 0,
         };
-        this.set_board_width = this.set_board_width.bind(this);
+        // this.set_board_width = this.set_board_width.bind(this);
     }
 
     /*======================================
         STATE METHODS
     ========================================*/
 
-    set_board_width ()
-    {
-        console.log('===> set_board_width');
+    // set_board_width ()
+    // {
+    //     console.log('===> set_board_width');
 
-        console.log('===> END - set_board_width');
-    }
+    //     console.log('===> END - set_board_width');
+    // }
 
     /*======================================
         COMPONENT ACTIONS
@@ -35,17 +35,17 @@ export default class GameBoard extends Component
 
     componentDidMount()
     {
-        console.log('> Setting board width');
-        this.set_board_width();
-        console.log('> Setting even listener');
-        let debounceResize = this.props.debounce( this.set_board_width, C.onst.debounceDelay, false );
-        window.addEventListener( 'resize', debounceResize );
+        // console.log('> Setting board width');
+        // this.set_board_width();
+        // console.log('> Setting even listener');
+        // let debounceResize = this.props.debounce( this.set_board_width, C.onst.debounceDelay, false );
+        // window.addEventListener( 'resize', debounceResize );
     }
 
     componentWillUnmount() {
-        console.log('> Unsetting even listener');
-        let debounceResize = this.props.debounce( this.set_board_width, C.onst.debounceDelay, false );
-        window.removeEventListener( 'resize', debounceResize );
+        // console.log('> Unsetting even listener');
+        // let debounceResize = this.props.debounce( this.set_board_width, C.onst.debounceDelay, false );
+        // window.removeEventListener( 'resize', debounceResize );
     }
 
     /*======================================*/
@@ -63,16 +63,16 @@ export default class GameBoard extends Component
             if
             (
                 ( !( this.props.cards.length === undefined ) && ( this.props.cards.length ) )
-                &&
-                ( this.state.boardWidth !== 0 )
+                // &&
+                // ( this.state.boardWidth !== 0 )
             )
             {
-                // Cards - Sizing
+                // > Cards - Sizing
                 // let cardWidth  = ( ( document.querySelector('.game-board').offsetWidth - C.onst.cardMarginWidth - 1 ) * 0.2 ); // -1 for safety | 0.2 for 1/5 (5x5)
-                console.log('this.state.boardWidth: ', this.state.boardWidth);
-                let cardWidth  = ( ( this.state.boardWidth - C.onst.cardMarginWidth - 1 ) * 0.2 ); // -1 for safety | 0.2 for 1/5 (5x5)
-                let cardHeight = ( cardWidth * C.onst.cardSizeRatio );
-                let cardMargin = ( cardHeight * C.onst.cardTextRatio ); // amount to space text properly // TODO: refine
+                // console.log('this.state.boardWidth: ', this.state.boardWidth);
+                // let cardWidth  = ( ( this.state.boardWidth - C.onst.cardMarginWidth - 1 ) * 0.2 ); // -1 for safety | 0.2 for 1/5 (5x5)
+                // let cardHeight = ( cardWidth * C.onst.cardSizeRatio );
+                // let cardMargin = ( cardHeight * C.onst.cardTextRatio ); // amount to space text properly // TODO: refine
 
 
                 // Cards - Building
@@ -125,14 +125,15 @@ export default class GameBoard extends Component
                         <GameCard
                             key={i}
                             highlights     ={highlights}
-                            cardWidth      ={cardWidth}
-                            cardHeight     ={cardHeight}
-                            cardMargin     ={cardMargin}
+                            // cardWidth      ={cardWidth}
+                            // cardHeight     ={cardHeight}
+                            // cardMargin     ={cardMargin}
                             currentPlayer  ={this.props.currentPlayer}
-                            cardType       ={this.props.cards[i].type}
-                            cardIndex      ={this.props.cards[i].index}
-                            cardText       ={this.props.cards[i].text}
-                            cardChosen     ={this.props.cards[i].chosen}
+                            card           ={this.props.cards[i]}
+                            // cardType       ={this.props.cards[i].type}
+                            // cardIndex      ={this.props.cards[i].index}
+                            // cardText       ={this.props.cards[i].text}
+                            // cardChosen     ={this.props.cards[i].chosen}
                             send_card      ={this.props.send_card}
                             send_highlight ={this.props.send_highlight}
                         />

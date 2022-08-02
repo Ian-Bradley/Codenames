@@ -6,7 +6,14 @@ export const onst = {
     maxOperatives: 5,
     maxSpymasters: 2,
     maxPlayers:    12,
-    maxHeight:     1080,
+
+    appWidth:      1920,
+    appHeight:     1080,
+    sidebarWidth:  340,
+    sidebarHeight: 900,
+    headerHeight:  150,
+    cardWidth:     208.32,
+    cardHeight:    134.4,
 
     classActive:      'active',
     classDisabled:    'disabled',

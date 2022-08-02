@@ -120,12 +120,12 @@ class Game
             cards: build_cards(),
             // Teams
             teamRed: {
-                cards: 0,
-                guesses: 0,
+                remainingCards: 0,
+                remainingGuesses: 0,
             },
             teamBlue: {
-                cards: 0,
-                guesses: 0,
+                remainingCards: 0,
+                remainingGuesses: 0,
             },
             // Players
             players: [],
@@ -142,11 +142,11 @@ class Game
 
         // State methods - Game Settings
         this.set_game_state = this.set_game_state.bind(this);
-        this.next_round     = this.next_round.bind(this);
+        this.set_next_round = this.set_next_round.bind(this);
 
         // State methods - Teams
-        this.set_team_cards   = this.set_team_cards.bind(this);
-        this.set_team_guesses = this.set_team_guesses.bind(this);
+        this.set_team_remaining_cards   = this.set_team_remaining_cards.bind(this);
+        this.set_team_remaining_guesses = this.set_team_remaining_guesses.bind(this);
 
         // State methods - Players
         this.player_add    = this.player_add.bind(this);
@@ -205,56 +205,56 @@ class Game
     /*======================================*/
     /*======================================*/
 
-    next_round ()
+    set_next_round ()
     {
-        console.log('===> next_round');
+        console.log('===> set_next_round');
         console.log('> BEFORE: ', this.state.round);
         this.state.round++;
         console.log('> AFTER: ', this.state.round);
-        console.log('===> END - next_round');
+        console.log('===> END - set_next_round');
     }
 
     /*======================================
         ANCHOR: STATE METHODS - Team Info
     ========================================*/
 
-    set_team_cards ( team, cards )
+    set_team_remaining_cards ( team, cards )
     {
-        console.log('===> set_team_cards: ', team, ' ', cards);
+        console.log('===> set_team_remaining_cards: ', team, ' ', cards);
         if ( team === 'red' )
         {
-            console.log('> BEFORE: ', this.state.teamRed.cards);
-            this.state.teamRed.cards = cards;
-            console.log('> AFTER: ', this.state.teamRed.cards);
+            console.log('> BEFORE: ', this.state.teamRed.remainingCards);
+            this.state.teamRed.remainingCards = cards;
+            console.log('> AFTER: ', this.state.teamRed.remainingCards);
         }
         if ( team === 'blue' )
         {
-            console.log('> BEFORE: ', this.state.teamBlue.cards);
-            this.state.teamBlue.cards = cards;
-            console.log('> AFTER: ', this.state.teamBlue.cards);
+            console.log('> BEFORE: ', this.state.teamBlue.remainingCards);
+            this.state.teamBlue.remainingCards = cards;
+            console.log('> AFTER: ', this.state.teamBlue.remainingCards);
         }
-        console.log('===> END - set_team_cards');
+        console.log('===> END - set_team_remaining_cards');
     }
 
     /*======================================*/
     /*======================================*/
 
-    set_team_guesses ( team, guesses )
+    set_team_remaining_guesses ( team, guesses )
     {
-        console.log('===> set_team_guesses: ', team, ' ', guesses);
+        console.log('===> set_team_remaining_guesses: ', team, ' ', guesses);
         if ( team === 'red' )
         {
-            console.log('> BEFORE: ', this.state.teamRed.guesses);
-            this.state.teamRed.guesses = guesses;
-            console.log('> AFTER: ', this.state.teamRed.guesses);
+            console.log('> BEFORE: ', this.state.teamRed.remainingGuesses);
+            this.state.teamRed.remainingGuesses = guesses;
+            console.log('> AFTER: ', this.state.teamRed.remainingGuesses);
         }
         if ( team === 'blue' )
         {
-            console.log('> BEFORE: ', this.state.teamBlue.guesses);
-            this.state.teamBlue.guesses = guesses;
-            console.log('> AFTER: ', this.state.teamBlue.guesses);
+            console.log('> BEFORE: ', this.state.teamBlue.remainingGuesses);
+            this.state.teamBlue.remainingGuesses = guesses;
+            console.log('> AFTER: ', this.state.teamBlue.remainingGuesses);
         }
-        console.log('===> END - set_team_guesses');
+        console.log('===> END - set_team_remaining_guesses');
     }
 
     /*======================================

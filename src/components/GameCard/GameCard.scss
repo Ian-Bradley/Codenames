@@ -5,24 +5,27 @@
 ========================================*/
 
 main.codenames .game-card {
-    background-image: url("./images/card-neutral.png");
-    width: 20%;
-    height: 13%;
+    position: absolute;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+
+    width: $card-width;
+    height: $card-height;
+
     margin-right: $card-margin-right;
     margin-bottom:  $card-margin-bottom;
     border-radius: $card-border-radius;
     transition: $transition__transform-cards;
     z-index: 20;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: end;
-    align-items: center;
+
+    background-image: url("./images/card-neutral.png");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
 
-    &:nth-child(5n) { margin-right: 0px; }
     &.active        { pointer-events: none; }
     &.card-red      { background-image: url("./images/card-red.png")   }
     &.card-blue     { background-image: url("./images/card-blue.png")  }
@@ -70,7 +73,7 @@ main.codenames .game-card {
         -webkit-user-select: none;
         user-select: none;
         max-width: calc( 100% - $button-height );
-        font-size: $game-card-highlighted;
+        font-size: $card-highlighted;
 
         & ul {
             display: flex;
@@ -94,7 +97,7 @@ main.codenames .game-card {
         color: #000;
         font-weight: 900;
         font-family: $font-family-cards;
-        font-size: $game-card-text;
+        font-size: $card-text;
         letter-spacing: -1px;
         text-transform: uppercase;
         margin-bottom: 10%;

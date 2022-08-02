@@ -21,7 +21,6 @@ export default function TeamCard ( props ) {
     const count_positions = ( currentPlayer, players, team, position ) =>
     {
         let count = 0;
-        // Connected players
         for ( let i = 0; i < players.length; i++ )
         {
             if ( ( players[i].team === team ) && ( players[i].position === position ) )
@@ -29,7 +28,6 @@ export default function TeamCard ( props ) {
                 count++;
             }
         }
-        // Current player
         if ( ( currentPlayer.team === team ) && ( currentPlayer.position === position ) )
         {
             count++;

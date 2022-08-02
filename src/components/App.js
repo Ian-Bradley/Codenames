@@ -65,12 +65,12 @@ export default class App extends Component
             message: 'temp message',
             // Teams
             teamRed: {
-                cards: 0,
-                guesses: 0,
+                remainingCards: 0,
+                remainingGuesses: 0,
             },
             teamBlue: {
-                cards: 0,
-                guesses: 0,
+                remainingCards: 0,
+                remainingGuesses: 0,
             },
             // Players
             playersTotal: 1,
@@ -109,8 +109,8 @@ export default class App extends Component
         this.set_log        = this.set_log.bind(this);
 
         // State methods - Teams
-        this.set_team_cards   = this.set_team_cards.bind(this);
-        this.set_team_guesses = this.set_team_guesses.bind(this);
+        this.set_team_remaining_cards   = this.set_team_remaining_cards.bind(this);
+        this.set_team_remaining_guesses = this.set_team_remaining_guesses.bind(this);
 
         // State methods - Players
         this.player_add    = this.player_add.bind(this);
@@ -228,7 +228,7 @@ export default class App extends Component
         ANCHOR: STATE METHODS - Team Info
     ==================================================*/
 
-    set_team_cards ( team, amount )
+    set_team_remaining_cards ( team, amount )
     {
         if ( team === C.onst.red )
         {
@@ -251,7 +251,7 @@ export default class App extends Component
     /*======================================*/
     /*======================================*/
 
-    set_team_guesses ( team, amount )
+    set_team_remaining_guesses ( team, amount )
     {
         if ( team === C.onst.red )
         {
@@ -742,53 +742,39 @@ export default class App extends Component
 
         // > Player does not have a team
         if ( !isOnTeam && isTeamCardRed && isButtonOperative )
-        { props.set_player_team( props.team ); props.set_player_position( positionButton ); }
-
+        { this.set_player_team( player, colorCardTeam ); this.set_player_position( player, positionButton ); }
         if ( !isOnTeam && isTeamCardRed && isButtonSpymaster )
-        { props.set_player_team( props.team ); props.set_player_position( positionButton ); }
-
+        { this.set_player_team( player, colorCardTeam ); this.set_player_position( player, positionButton ); }
         if ( !isOnTeam && isTeamCardBlue && isButtonOperative )
-        { props.set_player_team( props.team ); props.set_player_position( positionButton ); }
-
+        { this.set_player_team( player, colorCardTeam ); this.set_player_position( player, positionButton ); }
         if ( !isOnTeam && isTeamCardBlue && isButtonSpymaster )
-        { props.set_player_team( props.team ); props.set_player_position( positionButton ); }
+        { this.set_player_team( player, colorCardTeam ); this.set_player_position( player, positionButton ); }
 
         // > Player is already on a team
         if ( isOnTeam && isTeamCardRed && isSameTeam && isPlayerOperative && isButtonSpymaster )
-        { props.set_player_position( positionButton ); }
-
+        { this.set_player_position( player, positionButton ); }
         if ( isOnTeam && isTeamCardRed && isSameTeam && isPlayerSpymaster && isButtonOperative )
-        { props.set_player_position( positionButton ); }
-
+        { this.set_player_position( player, positionButton ); }
         if ( isOnTeam && isTeamCardRed && !isSameTeam && isPlayerOperative && isButtonOperative )
-        { props.set_player_team( props.team ); }
-
+        { this.set_player_team( player, colorCardTeam ); }
         if ( isOnTeam && isTeamCardRed && !isSameTeam && isPlayerOperative && isButtonSpymaster )
-        { props.set_player_team( props.team ); props.set_player_position( positionButton ); }
-
+        { this.set_player_team( player, colorCardTeam ); this.set_player_position( player, positionButton ); }
         if ( isOnTeam && isTeamCardRed && !isSameTeam && isPlayerSpymaster && isButtonOperative )
-        { props.set_player_team( props.team ); props.set_player_position( positionButton ); }
-
+        { this.set_player_team( player, colorCardTeam ); this.set_player_position( player, positionButton ); }
         if ( isOnTeam && isTeamCardRed && !isSameTeam && isPlayerSpymaster && isButtonSpymaster )
-        { props.set_player_team( props.team ); }
-
+        { this.set_player_team( player, colorCardTeam ); }
         if ( isOnTeam && isTeamCardBlue && isSameTeam && isPlayerOperative && isButtonSpymaster )
-        { props.set_player_position( positionButton ); }
-
+        { this.set_player_position( player, positionButton ); }
         if ( isOnTeam && isTeamCardBlue && isSameTeam && isPlayerSpymaster && isButtonOperative )
-        { props.set_player_position( positionButton ); }
-
+        { this.set_player_position( player, positionButton ); }
         if ( isOnTeam && isTeamCardBlue && !isSameTeam && isPlayerOperative && isButtonOperative )
-        { props.set_player_team( props.team ); }
-
+        { this.set_player_team( player, colorCardTeam ); }
         if ( isOnTeam && isTeamCardBlue && !isSameTeam && isPlayerOperative && isButtonSpymaster )
-        { props.set_player_team( props.team ); props.set_player_position( positionButton ); }
-
+        { this.set_player_team( player, colorCardTeam ); this.set_player_position( player, positionButton ); }
         if ( isOnTeam && isTeamCardBlue && !isSameTeam && isPlayerSpymaster && isButtonOperative )
-        { props.set_player_team( props.team ); props.set_player_position( positionButton ); }
-
+        { this.set_player_team( player, colorCardTeam ); this.set_player_position( player, positionButton ); }
         if ( isOnTeam && isTeamCardBlue && !isSameTeam && isPlayerSpymaster && isButtonSpymaster )
-        { props.set_player_team( props.team ); }
+        { this.set_player_team( player, colorCardTeam ); }
     }
 
     /*================================================
@@ -838,7 +824,7 @@ export default class App extends Component
     {
         this.setState({ appWidth: window.innerWidth });
         this.setState({ appHeight: window.innerHeight });
-        let scaler = ( window.innerHeight / C.onst.maxHeight )
+        let scaler = ( window.innerHeight / C.onst.appHeight )
         this.setState({ viewScale: scaler });
     }
 
@@ -1142,9 +1128,7 @@ export default class App extends Component
             >
                 <div className='bg-texture-layer'>
                     <div className='scaler'
-                        style={{
-                            transform: 'scale(' + this.state.viewScale + ')'
-                        }}
+                        style={{transform: 'scale(' + this.state.viewScale + ')'}}
                     >
                         <div className='container-app'>
 
@@ -1170,47 +1154,45 @@ export default class App extends Component
 
                             <div className='container-sidebar sidebar-left'>
                                 <TeamCard
-                                    team                ={C.onst.red}
-                                    team_select         ={this.team_select}
-                                    teamData            ={this.state.teamRed}
-                                    players             ={this.state.players}
-                                    gameState           ={this.state.gameState}
-                                    currentPlayer       ={this.state.currentPlayer}
+                                    team          ={C.onst.red}
+                                    team_select   ={this.team_select}
+                                    teamData      ={this.state.teamRed}
+                                    players       ={this.state.players}
+                                    gameState     ={this.state.gameState}
+                                    currentPlayer ={this.state.currentPlayer}
                                 />
                             </div>    
                                                     
                             <div className='container-board'>
-                                <div className='container-game'>
-                                    <GameBoard
-                                        debounce       ={this.debounce}
-                                        send_card      ={this.send_card}
-                                        send_highlight ={this.send_highlight}
-                                        cards          ={this.state.cards}
-                                        players        ={this.state.players}
-                                        cardSize       ={this.state.cardSize}
-                                        gameState      ={this.state.gameState}
-                                        currentPlayer  ={this.state.currentPlayer}
-                                    />
-                                    <GameInputs
-                                        send_clue     ={this.send_clue}
-                                        clue          ={this.state.clue}
-                                        guesses       ={this.state.guesses}
-                                        teamRed       ={this.state.teamRed}
-                                        teamBlue      ={this.state.teamBlue}
-                                        gameState     ={this.state.gameState}
-                                        currentPlayer ={this.state.currentPlayer}
-                                    />
-                                </div>
+                                <GameBoard
+                                    debounce       ={this.debounce}
+                                    send_card      ={this.send_card}
+                                    send_highlight ={this.send_highlight}
+                                    cards          ={this.state.cards}
+                                    players        ={this.state.players}
+                                    cardSize       ={this.state.cardSize}
+                                    gameState      ={this.state.gameState}
+                                    currentPlayer  ={this.state.currentPlayer}
+                                />
+                                <GameInputs
+                                    send_clue     ={this.send_clue}
+                                    clue          ={this.state.clue}
+                                    guesses       ={this.state.guesses}
+                                    teamRed       ={this.state.teamRed}
+                                    teamBlue      ={this.state.teamBlue}
+                                    gameState     ={this.state.gameState}
+                                    currentPlayer ={this.state.currentPlayer}
+                                />
                             </div>
 
                             <div className='container-sidebar sidebar-right'>
                                 <TeamCard
-                                    team                ={C.onst.blue}
-                                    team_select         ={this.team_select}
-                                    teamData            ={this.state.teamBlue}
-                                    players             ={this.state.players}
-                                    gameState           ={this.state.gameState}
-                                    currentPlayer       ={this.state.currentPlayer}
+                                    team          ={C.onst.blue}
+                                    team_select   ={this.team_select}
+                                    teamData      ={this.state.teamBlue}
+                                    players       ={this.state.players}
+                                    gameState     ={this.state.gameState}
+                                    currentPlayer ={this.state.currentPlayer}
                                 />
                                 <GameLog
                                     gameLog   ={this.state.gameLog}

@@ -52,18 +52,20 @@ export default class GameCard extends Component
                 }
 
                 // Spymaster action
+                // NOTE: also check for team so that opposing spymaster cannot see your highlights
                 if ( this.props.currentPlayer.position === C.onst.spymaster )
                 {
+                    // TODO: Spymaster highlighting
                     // console.log('> Spymaster - Highlight');
                     // console.log('> Spymaster - Adding border highlight');
                     // console.log('> Spymaster - Removing border highlight');
-                    // TODO: add check for already having been highlighted (new state var?)
+                    // add check for already having been highlighted (new state var?)
 
                     // // this.  ( C.onst.classHighlighted );
                     // this.  ( '' );
 
-                    // TODO: add to guesses on clue input bar for spymaster
-                    // TODO: check for gameState so only specific spymaster can select cards
+                    // add to guesses on clue input bar for spymaster
+                    // check for gameState so only specific spymaster can select cards
                     // console.log('> END - Spymaster - Highlight');
                 }
             }
@@ -135,7 +137,7 @@ export default class GameCard extends Component
         return (
             <div
                 className={'game-card'+' '+ display_classes()}
-                style={{width: this.props.cardWidth + 'px', height: this.props.cardHeight + 'px'}}
+                // style={{width: this.props.cardWidth + 'px', height: this.props.cardHeight + 'px'}}
             >
                 <div
                     className={'game-card-clickable'+' '+this.state.cardHighlight}
@@ -155,7 +157,7 @@ export default class GameCard extends Component
                 />
                 <div
                     className='game-card-text'
-                    style={{marginBottom: this.props.cardMargin + 'px'}}
+                    // style={{marginBottom: this.props.cardMargin + 'px'}}
                 >
                     {this.props.cardText}
                 </div>

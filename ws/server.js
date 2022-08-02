@@ -96,6 +96,7 @@ const build_cards = () =>
             index: indexes[i],
             text: codenames[i],
             type: cardType,
+            highlighted: false,
             chosen: false,
         };
         cards[i] = card;

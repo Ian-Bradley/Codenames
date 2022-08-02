@@ -12,7 +12,8 @@ import './GameInputs.scss';
  * @props currentPlayer (object) Current player information
  */
 
-export default function GameInputs ( props ) {
+export default function GameInputs ( props )
+{
 
     /*======================================
         RENDER FUNCTIONS - Interactions

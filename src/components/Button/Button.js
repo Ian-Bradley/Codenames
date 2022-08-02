@@ -11,7 +11,8 @@ import './Button.scss';
  * @props btnDisplayClasses (string) Classes for modifying button display (ex: hide/show or disable interactions)
  */
 
-export default function Button ( props ) {
+export default function Button ( props )
+{
 
     /*======================================
         RENDER FUNCTIONS - Interactions

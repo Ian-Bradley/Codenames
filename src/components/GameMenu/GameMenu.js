@@ -8,7 +8,8 @@ import './GameMenu.scss';
  * @props menu_action (function) Handler function for menu buttons
  */
 
-export default function GameMenu ( props ) {
+export default function GameMenu ( props )
+{
 
     /*======================================
         RENDER FUNCTIONS - Interactions

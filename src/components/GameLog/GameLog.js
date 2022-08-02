@@ -7,7 +7,8 @@ import './GameLog.scss';
  * @props gameState (string) Current state of the game
  */
 
-export default function GameLog ( props ) {
+export default function GameLog ( props )
+{
 
     /*======================================
         RENDER FUNCTIONS - Displaying

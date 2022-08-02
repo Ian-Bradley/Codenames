@@ -12,7 +12,8 @@ import './TeamCard.scss';
  * @props currentPlayer (object) Current player information
  */
 
-export default function TeamCard ( props ) {
+export default function TeamCard ( props )
+{
 
     /*======================================
         HELPER METHODS

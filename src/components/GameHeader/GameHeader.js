@@ -13,7 +13,8 @@ import './GameHeader.scss';
  * @props currentPlayer (object) Current player information
  */
 
-export default function GameHeader ( props ) {
+export default function GameHeader ( props )
+{
 
     /*======================================
         RENDER FUNCTIONS - Interactions

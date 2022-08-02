@@ -15,8 +15,6 @@ main.codenames .game-card {
     width: $card-width;
     height: $card-height;
 
-    margin-right: $card-margin-right;
-    margin-bottom:  $card-margin-bottom;
     border-radius: $card-border-radius;
     transition: $transition__transform-cards;
     z-index: 20;

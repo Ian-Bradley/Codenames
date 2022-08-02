@@ -3,7 +3,7 @@ import Button from './Button/Button.js';
 import GameLog from './GameLog/GameLog.js';
 import GameMenu from './GameMenu/GameMenu.js';
 import TeamCard from './TeamCard/TeamCard.js';
-import GameBoard from './GameBoard/GameBoard.js';
+import GameCard from './GameCard/GameCard.js';
 import GameInputs from './GameInputs/GameInputs.js';
 import GameHeader from './GameHeader/GameHeader.js';
 import GameMessage from './GameMessage/GameMessage.js';
@@ -122,6 +122,7 @@ export default class App extends Component
         this.set_player_team     = this.set_player_team.bind(this);
         this.set_player_position = this.set_player_position.bind(this);
         this.set_player_isHost   = this.set_player_isHost.bind(this);
+        this.get_card_highlights = this.get_card_highlights.bind(this);
 
         // State methods - Highlighting
         this.highlight_add        = this.highlight_add.bind(this);
@@ -457,6 +458,52 @@ export default class App extends Component
         }
         console.log('===> END - set_player_isHost');
     }
+
+    /*======================================*/
+    /*======================================*/
+
+    // TODO: ===> get_card_highlights
+    get_card_highlights ( cardIndex )
+    {
+        console.log('===> get_card_highlights');
+        // > Current Player
+        let highlights = [];
+        if
+        (
+            !( this.state.currentPlayer.highlights === undefined )
+            &&
+            ( this.state.currentPlayer.highlights.length )
+            &&
+            ( this.state.currentPlayer.highlights.includes( cardIndex ) )
+        )
+        {
+            highlights.push(
+                {
+                    name: this.state.currentPlayer.name,
+                    team: this.state.currentPlayer.team
+                }
+            );
+        }
+        // > Other Players
+        if ( !( this.state.players === undefined ) && ( this.state.players.length ) ) 
+        {
+            for ( let j = 0; j < this.state.players.length; j++ )
+            {
+                if ( this.state.players[j].highlights.includes( cardIndex ) )
+                {
+                    highlights.push(
+                        {
+                            name: this.state.players[j].name,
+                            team: this.state.players[j].team
+                        }
+                    );
+                }
+            }
+        }
+        console.log('===> END - get_card_highlights');
+        return highlights;
+    }
+
 
     /*================================================
         ANCHOR: STATE METHODS - Highlighting
@@ -863,7 +910,7 @@ export default class App extends Component
     }
 
     /*================================================
-        ANCHOR: COMPONENT ACTIONS
+        ANCHOR: COMPONENT ACTIONS - Mount
     ==================================================*/
 
     componentDidMount()
@@ -872,9 +919,8 @@ export default class App extends Component
         this.set_app_dimensions();
 
         // TODO: Cookies
-        // Get current playerID from cookies
+        // Get current playerID (and maybe name/team/color) from cookies
         // If ID is not present, auth page has failed to store cookie
-        // ?? Also check for name/position/team
 
         // let playerID = this.get_cookie('player-id');
         // this.set_player_ID( playerID );
@@ -1079,7 +1125,7 @@ export default class App extends Component
     }
 
     /*================================================
-        ANCHOR: COMPONENT ACTIONS - continued
+        ANCHOR: COMPONENT ACTIONS - Unmount
     ==================================================*/
 
     componentWillUnmount() {
@@ -1092,9 +1138,73 @@ export default class App extends Component
 
     render()
     {
+
+        /*================================================
+            ANCHOR: RENDER FUNCTIONS - Displaying
+        ==================================================*/
+
+        // TODO: ===> display_cards
+        const display_cards = () =>
+        {
+            if ( !( this.state.cards.length === undefined ) && ( this.state.cards.length ) )
+            {
+                // C.onst.cardWidth:     214.32 // 208.32(Card) + 6(Margin)
+                // C.onst.cardHeight:    140.4 // 134.4(Card) + 6(Margin)
+                // C.onst.cardLeftBase:  340 // 340(Sidebar) + 85(Margin)
+                // C.onst.cardTopBase:   0
+                // C.onst.cardTextSpacing1: 0.16
+                // C.onst.cardTextSpacing2: 0.16
+
+                let cardArray  = [];
+                let positionData = {};
+                let columns = {
+                    twoo:  [ 1, 6,11,16,21],
+                    thre:  [ 2, 7,12,17,22],
+                    four:  [ 3, 8,13,18,23],
+                    five:  [ 4, 9,14,19,24],
+                };
+                
+                for ( let i = 0; i < this.state.cards.length; i++ )
+                {
+                    // > Positioning
+                    positionData = {
+                        top: C.onst.cardTopBase,
+                        left: C.onst.cardLeftBase,
+                    };
+                    if (  5 <= i <= 9  ) { positionData.top += ( C.onst.cardHeight ) * 1; }
+                    if ( 10 <= i <= 14 ) { positionData.top += ( C.onst.cardHeight ) * 2; }
+                    if ( 15 <= i <= 19 ) { positionData.top += ( C.onst.cardHeight ) * 3; }
+                    if ( 20 <= i <= 24 ) { positionData.top += ( C.onst.cardHeight ) * 4; }
+                    if ( columns.twoo.includes(i) ) { positionData.left += ( C.onst.cardWidth ) * 1; }
+                    if ( columns.thre.includes(i) ) { positionData.left += ( C.onst.cardWidth ) * 2; }
+                    if ( columns.four.includes(i) ) { positionData.left += ( C.onst.cardWidth ) * 3; }
+                    if ( columns.five.includes(i) ) { positionData.left += ( C.onst.cardWidth ) * 4; }
+
+                    // > Get list of highlighting players
+                    let highlights = this.get_card_highlights( this.state.cards[i] );
+                    if ( !( highlights === undefined ) && ( highlights.length ) )
+                    { console.log('==> display_cards > highlights: ', highlights); }
+
+                    cardArray.push(
+                        <GameCard
+                            key={i}
+                            highlights     ={highlights}
+                            positionData   ={positionData}
+                            currentPlayer  ={this.state.currentPlayer}
+                            card           ={this.state.cards[i]}
+                            send_card      ={this.send_card}
+                            send_highlight ={this.send_highlight}
+                        />
+                    );
+                }
+                return cardArray;
+            }
+        }
+
         /*================================================
             ANCHOR: RENDER FUNCTIONS - Dev Tools
         ==================================================*/
+
         let countLog = 0;
         const on_dev_state = ( state ) => { this.set_game_state( state ); }
         const on_dev_log = () => { this.set_log( C.onst.fakeLog ); }
@@ -1164,16 +1274,7 @@ export default class App extends Component
                             </div>    
                                                     
                             <div className='container-board'>
-                                <GameBoard
-                                    debounce       ={this.debounce}
-                                    send_card      ={this.send_card}
-                                    send_highlight ={this.send_highlight}
-                                    cards          ={this.state.cards}
-                                    players        ={this.state.players}
-                                    cardSize       ={this.state.cardSize}
-                                    gameState      ={this.state.gameState}
-                                    currentPlayer  ={this.state.currentPlayer}
-                                />
+                                {display_cards()}
                                 <GameInputs
                                     send_clue     ={this.send_clue}
                                     clue          ={this.state.clue}

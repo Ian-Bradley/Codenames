@@ -9,20 +9,28 @@ export const onst = {
 
     appWidth:      1920,
     appHeight:     1080,
-    sidebarWidth:  340,
-    sidebarHeight: 900,
-    headerHeight:  150,
-    cardWidth:     208.32,
-    cardHeight:    134.4,
+
+    cardWidth:     214.32, // 208.32(Card) + 6(Margin)
+    cardHeight:    140.4, // 134.4(Card) + 6(Margin)
+    cardLeftBase:  340, // 340(Sidebar) + 85(Margin)
+    cardTopBase:   0,
+    cardTextSpacing1: 0.16,
+    cardTextSpacing2: 0.16,
+
+    cardTotal:        25, // 5x5 board
+    cardTotalNeutral: 7,
+    cardTotalBlue:    8,
+    cardTotalRed:     9,
+    cardTotalBlack:   1,
+
+    transitionTime__fade:        200,
+    transitionTime__stateChange: 2000,
 
     classActive:      'active',
     classDisabled:    'disabled',
     classHidden:      'hidden',
     classHighlighted: 'highlighted',
     classChosen:      'chosen',
-
-    transitionTime__fade:        200,
-    transitionTime__stateChange: 2000,
 
     spymaster: 'spymaster',
     operative: 'operative',
@@ -45,19 +53,6 @@ export const onst = {
     gameState_blueSpymaster:  'blue-spymaster',
     gameState_blueOperatives: 'blue-operatives',
     gameState_end:            'end',
-
-    // cardSizeRatio: 1.5493827,
-    cardSizeRatio: 0.6454183,
-    cardTextRatio: 0.16,
-
-    cardTotal:        25, // 5x5 board
-    cardTotalNeutral: 7,
-    cardTotalBlue:    8,
-    cardTotalRed:     9,
-    cardTotalBlack:   1,
-
-    cardMarginRight: 6,
-    cardMarginWidth: 24, // cardMarginRight * 4 (5x5 board with 4 gaps between rows/columns)
 
     messageOpponent__waitingSpymaster:  'The opponent spymaster is playing, wait for your turn...',
     messageOpponent__waitingOperatives: 'The opponent operatives are playing, wait for your turn...',

@@ -10,8 +10,6 @@ import GameMessage from './GameMessage/GameMessage.js';
 import * as C from '../constants.js'
 import './App.scss';
 
-// TODO: currentPlayer to player
-
 /*================================================
     ANCHOR: HELPER FUNCTIONS
 ==================================================*/
@@ -315,7 +313,6 @@ export default class App extends Component
 
     set_player_name ( player, newName )
     {
-        console.log('===> set_player_name');
         if ( player.id === this.state.currentPlayer.id )
         {
             // > Current player
@@ -340,7 +337,6 @@ export default class App extends Component
                 return { players };
             });
         }
-        console.log('===> END - set_player_name');
     }
 
     /*======================================*/
@@ -348,7 +344,6 @@ export default class App extends Component
 
     set_player_team ( player, newTeam )
     {
-        console.log('===> set_player_team');
         if ( player.id === this.state.currentPlayer.id )
         {
             // > Current player
@@ -373,7 +368,6 @@ export default class App extends Component
                 return { players };
             });
         }
-        console.log('===> END - set_player_team');
     }
 
     /*======================================*/
@@ -381,7 +375,6 @@ export default class App extends Component
 
     set_player_position ( player, newPosition )
     {
-        console.log('===> set_player_position');
         if ( player.id === this.state.currentPlayer.id )
         {
             // > Current player
@@ -406,7 +399,6 @@ export default class App extends Component
                 return { players };
             });
         }
-        console.log('===> END - set_player_position');
     }
 
     /*======================================*/
@@ -462,10 +454,8 @@ export default class App extends Component
     /*======================================*/
     /*======================================*/
 
-    // TODO: ===> get_card_highlights
     get_card_highlights ( cardIndex )
     {
-        console.log('===> get_card_highlights');
         // > Current Player
         let highlights = [];
         if
@@ -491,7 +481,7 @@ export default class App extends Component
             {
                 if ( this.state.players[j].highlights.includes( cardIndex ) )
                 {
-                    highlights.push(
+                        highlights.push(
                         {
                             name: this.state.players[j].name,
                             team: this.state.players[j].team
@@ -500,10 +490,8 @@ export default class App extends Component
                 }
             }
         }
-        console.log('===> END - get_card_highlights');
         return highlights;
     }
-
 
     /*================================================
         ANCHOR: STATE METHODS - Highlighting
@@ -511,10 +499,8 @@ export default class App extends Component
 
     highlight_add ( player, cardIndex )
     {
-        console.log('===> highlight_add: ', player, ' ', cardIndex);
         if ( player.id === this.state.currentPlayer.id )
         {
-            console.log('> IS CURRENT PLAYER');
             // Current player - State
             this.setState( prevState => {
                 let currentPlayer = { ...prevState.currentPlayer };
@@ -524,7 +510,6 @@ export default class App extends Component
         }
         else
         {
-            console.log('> IS OTHER PLAYER');
             // Other player - State
             this.setState( prevState => {
                 let players = prevState.players;
@@ -538,7 +523,6 @@ export default class App extends Component
                 return { players };
             });
         }
-        console.log('===> END - highlight_add');
     }
 
     /*======================================*/
@@ -546,10 +530,8 @@ export default class App extends Component
 
     highlight_remove ( player, cardIndex )
     {
-        console.log('===> highlight_remove: ', player, ' ', cardIndex);
         if ( player.id === this.state.currentPlayer.id )
         {
-            console.log('> IS CURRENT PLAYER');
             // Current player - State
             this.setState( prevState => {
                 let currentPlayer = { ...prevState.currentPlayer };
@@ -561,7 +543,6 @@ export default class App extends Component
         }
         else
         {
-            console.log('> IS OTHER PLAYER');
             // Other player - State
             this.setState( prevState => {
                 let players = prevState.players;
@@ -577,14 +558,12 @@ export default class App extends Component
                 return { players };
             });
         }
-        console.log('===> END - highlight_remove');
     }
 
     /*======================================*/
     /*======================================*/
 
     // TODO: ==> highlight_clear_card
-    // NOTE: may not need WS for this --> only activated by card choose
     highlight_clear_card ( cardIndex )
     {
         // State
@@ -600,7 +579,6 @@ export default class App extends Component
     /*======================================*/
 
     // TODO: ==> highlight_clear_all
-    // NOTE: may not need WS for this --> only activated by card choose/round change
     highlight_clear_all ()
     {
         // this.setState({ highlights: [] });
@@ -740,10 +718,8 @@ export default class App extends Component
     // TODO: ==> send_highlight
     send_highlight ( cardIndex )
     {
-        console.log('duplicates: ', this.state.currentPlayer.highlights.includes( cardIndex ));
         if ( !( this.state.currentPlayer.highlights.includes( cardIndex ) ) )
         {
-            console.log('> Add');
             this.highlight_add( this.state.currentPlayer, cardIndex );
             let newUpdate = {
                 type: 'updateAddHighlight',
@@ -755,7 +731,6 @@ export default class App extends Component
         }
         else
         {
-            console.log('> Removing');
             this.highlight_remove( this.state.currentPlayer, cardIndex );
             let newUpdate = {
                 type: 'updateRemoveHighlight',
@@ -765,7 +740,6 @@ export default class App extends Component
             this.socket.send( JSON.stringify( newUpdate ));
             console.log('>>>>>>>>> Message Sent - updateRemoveHighlight >>>>>>>>>');
         }
-        console.log('===> END - send_highlight');    
     }
 
     /*================================================
@@ -957,33 +931,28 @@ export default class App extends Component
                 case 'clientConnected':
                 {
                     // This handler is only fired ONCE when the CURRENT player joins
-                    console.log('======= HANDLER - clientConnected =======');
+                    // console.log('======= HANDLER - clientConnected =======');
 
                     // Set cards
-                    console.log('> Setting Cards');
-                    
                     if ( !( updateData.cards === undefined ) && ( updateData.cards.length ) )
                     { this.set_cards( updateData.cards ); }
     
                     // Set players
-                    console.log('> Setting players');
                     if ( !( updateData.players === undefined ) && ( updateData.players.length ) )
                     { this.set_players( updateData.players ); }
                     
                     // Set log
-                    console.log('> Setting game log');
                     if ( !( updateData.gameLog === undefined ) && ( updateData.gameLog.length ) )
                     { this.set_log( updateData.gameLog ); }
 
                     // Send current player information to server
-                    console.log('> Send userConnected');
                     let newUpdate = {
                         type: 'userConnected',
                         player: this.state.currentPlayer,
                     };
                     ws.send( JSON.stringify( newUpdate ) );
                     console.log('>>>>>>>>> Message Sent - userConnected >>>>>>>>>');
-                    console.log('======= END - HANDLER - clientConnected =======');
+                    // console.log('======= END - HANDLER - clientConnected =======');
                     break;
                 }
 
@@ -993,9 +962,9 @@ export default class App extends Component
                 case 'userConnected':
                 {
                     // This handler is only fired when OTHER players join
-                    console.log('======= HANDLER - userConnected =======');
+                    // console.log('======= HANDLER - userConnected =======');
                     this.player_add( updateData.player );
-                    console.log('======= END - HANDLER - userConnected =======');
+                    // console.log('======= END - HANDLER - userConnected =======');
                     break;
                 }
 
@@ -1143,18 +1112,10 @@ export default class App extends Component
             ANCHOR: RENDER FUNCTIONS - Displaying
         ==================================================*/
 
-        // TODO: ===> display_cards
         const display_cards = () =>
         {
             if ( !( this.state.cards.length === undefined ) && ( this.state.cards.length ) )
             {
-                // C.onst.cardWidth:     214.32 // 208.32(Card) + 6(Margin)
-                // C.onst.cardHeight:    140.4 // 134.4(Card) + 6(Margin)
-                // C.onst.cardLeftBase:  340 // 340(Sidebar) + 85(Margin)
-                // C.onst.cardTopBase:   0
-                // C.onst.cardTextSpacing1: 0.16
-                // C.onst.cardTextSpacing2: 0.16
-
                 let cardArray  = [];
                 let positionData = {};
                 let columns = {
@@ -1171,17 +1132,17 @@ export default class App extends Component
                         top: C.onst.cardTopBase,
                         left: C.onst.cardLeftBase,
                     };
-                    if (  5 <= i <= 9  ) { positionData.top += ( C.onst.cardHeight ) * 1; }
-                    if ( 10 <= i <= 14 ) { positionData.top += ( C.onst.cardHeight ) * 2; }
-                    if ( 15 <= i <= 19 ) { positionData.top += ( C.onst.cardHeight ) * 3; }
-                    if ( 20 <= i <= 24 ) { positionData.top += ( C.onst.cardHeight ) * 4; }
-                    if ( columns.twoo.includes(i) ) { positionData.left += ( C.onst.cardWidth ) * 1; }
-                    if ( columns.thre.includes(i) ) { positionData.left += ( C.onst.cardWidth ) * 2; }
-                    if ( columns.four.includes(i) ) { positionData.left += ( C.onst.cardWidth ) * 3; }
-                    if ( columns.five.includes(i) ) { positionData.left += ( C.onst.cardWidth ) * 4; }
+                    if ( (  5 <= i ) && ( i <=  9 ) ) { positionData.top += ( ( C.onst.cardHeight ) * 1 ); }
+                    if ( ( 10 <= i ) && ( i <= 14 ) ) { positionData.top += ( ( C.onst.cardHeight ) * 2 ); }
+                    if ( ( 15 <= i ) && ( i <= 19 ) ) { positionData.top += ( ( C.onst.cardHeight ) * 3 ); }
+                    if ( ( 20 <= i ) && ( i <= 24 ) ) { positionData.top += ( ( C.onst.cardHeight ) * 4 ); }
+                    if ( columns.twoo.includes(i) ) { positionData.left += ( ( C.onst.cardWidth ) * 1 ); }
+                    if ( columns.thre.includes(i) ) { positionData.left += ( ( C.onst.cardWidth ) * 2 ); }
+                    if ( columns.four.includes(i) ) { positionData.left += ( ( C.onst.cardWidth ) * 3 ); }
+                    if ( columns.five.includes(i) ) { positionData.left += ( ( C.onst.cardWidth ) * 4 ); }
 
                     // > Get list of highlighting players
-                    let highlights = this.get_card_highlights( this.state.cards[i] );
+                    let highlights = this.get_card_highlights( this.state.cards[i].index );
                     if ( !( highlights === undefined ) && ( highlights.length ) )
                     { console.log('==> display_cards > highlights: ', highlights); }
 
@@ -1205,21 +1166,22 @@ export default class App extends Component
             ANCHOR: RENDER FUNCTIONS - Dev Tools
         ==================================================*/
 
-        let countLog = 0;
         const on_dev_state = ( state ) => { this.set_game_state( state ); }
         const on_dev_log = () => { this.set_log( C.onst.fakeLog ); }
         const on_dev_name = e => { if (e.keyCode === 13) { this.set_player_name( this.state.currentPlayer, e.target.value ); } }
-        const dev_list_players = ( arr ) => {
+        const dev_list_players = () => {
             let str = '';
-            for ( let i = 0; i < arr.length; i++ )
-            {
-                str += arr[i].name;
-                if( arr[i].isHost )
-                { str += '[host]'; }
-                str += ', ';
-            }
+            for ( let i = 0; i < this.state.players.length; i++ )
+            {str += this.state.players[i].name; if( this.state.players[i].isHost ) { str += '[host]'; } str += ', ';}
             return str;
         }
+        const dev_list_highlights = () => {
+            let str = '';
+            for ( let i = 0; i < this.state.currentPlayer.highlights.length; i++ )
+            {str += this.state.currentPlayer.highlights[i]; str += ', '; }
+            return str;
+        }
+        
 
         /*================================================
             ANCHOR: COMPONENTS
@@ -1301,36 +1263,33 @@ export default class App extends Component
                                 />
                             </div>
 
-                            <div id='dev-tools'>
-                                <div>
-                                    <ul>
-                                        <li>
-                                            <span>Players: </span>{dev_list_players(this.state.players)}
-                                        </li>
-                                        <li><span>Current Player: </span></li>
-                                        <li><span>ID: </span>{ this.state.currentPlayer.id}</li>
-                                        <li><span>Name: </span> {this.state.currentPlayer.name}</li>
-                                        <li><span>Team: </span>{ this.state.currentPlayer.team}</li>
-                                        <li><span>Posit: </span> {this.state.currentPlayer.position}</li>
-                                        <li><span>Game State: </span> {this.state.gameState}</li>
-                                        <li><span>Host: </span> {this.state.currentPlayer.isHost.toString()}</li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <Button btnFunction={on_dev_log} btnText={'Log'} />
-                                    <input
-                                        type='text'
-                                        className='name-input'
-                                        placeholder='Name'
-                                        defaultValue=''
-                                        onKeyDown={on_dev_name} />
-                                    <Button btnClasses={'button-green'} btnFunction={on_dev_state} btnText={'Setup'} btnValue={'setup'} />
-                                    <Button btnClasses={'button-red'} btnFunction={on_dev_state} btnText={'RedSpy'} btnValue={'red-spymaster'} />
-                                    <Button btnClasses={'button-red'} btnFunction={on_dev_state} btnText={'RedOp'} btnValue={'red-operatives'} />
-                                    <Button btnClasses={'button-blue'} btnFunction={on_dev_state} btnText={'BlueSpy'} btnValue={'blue-spymaster'} />
-                                    <Button btnClasses={'button-blue'} btnFunction={on_dev_state} btnText={'BlueOp'} btnValue={'blue-operatives'} />
-                                    <Button btnClasses={'button-green'} btnFunction={on_dev_state} btnText={'End'} btnValue={'end'} />
-                                </div>
+                            <div className='dev-tools left'>
+                                <ul>
+                                    <li><span>Game State: </span> {this.state.gameState}</li>
+                                    <li><span>Players: </span>{dev_list_players()}</li>
+                                    <li><span>Current Player: </span></li>
+                                    <li><span>ID: </span>{ this.state.currentPlayer.id}</li>
+                                    <li><span>Name: </span> {this.state.currentPlayer.name}</li>
+                                    <li><span>Team: </span>{ this.state.currentPlayer.team}</li>
+                                    <li><span>Position: </span> {this.state.currentPlayer.position}</li>
+                                    <li><span>Highlights: </span> {dev_list_highlights()}</li>
+                                    <li><span>Host: </span> {this.state.currentPlayer.isHost.toString()}</li>
+                                </ul>
+                            </div>
+                            <div className='dev-tools right'>
+                                <Button btnFunction={on_dev_log} btnText={'Log'} />
+                                <input
+                                    type='text'
+                                    className='name-input'
+                                    placeholder='Name'
+                                    defaultValue=''
+                                    onKeyDown={on_dev_name} />
+                                <Button btnClasses={'button-green'} btnFunction={on_dev_state} btnText={'Setup'} btnValue={'setup'} />
+                                <Button btnClasses={'button-red'} btnFunction={on_dev_state} btnText={'RedSpy'} btnValue={'red-spymaster'} />
+                                <Button btnClasses={'button-red'} btnFunction={on_dev_state} btnText={'RedOp'} btnValue={'red-operatives'} />
+                                <Button btnClasses={'button-blue'} btnFunction={on_dev_state} btnText={'BlueSpy'} btnValue={'blue-spymaster'} />
+                                <Button btnClasses={'button-blue'} btnFunction={on_dev_state} btnText={'BlueOp'} btnValue={'blue-operatives'} />
+                                <Button btnClasses={'button-green'} btnFunction={on_dev_state} btnText={'End'} btnValue={'end'} />
                             </div>
                         </div>
                     </div>

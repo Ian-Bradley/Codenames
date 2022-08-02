@@ -1,16 +1,15 @@
 @import "../styles/variables.scss";
 
-#dev-tools {
+.dev-tools {
     position: fixed;
-    width: 100%;
     bottom: 5px;
-    left: 5px;
     z-index: 1000;
     display: flex;
     flex-flow: row wrap;
     align-items: flex-end;
 
-    &>div:nth-child(1) {
+    &.left {
+        left: 5px;
         width: auto;
         white-space: nowrap;
 
@@ -25,15 +24,12 @@
         }
     }
 
-    &>div:nth-child(2) {
+    &.right {
         display: flex;
         flex-flow: row nowrap;
-        max-height: 38px;
-        margin-left: 150px;
-    }
+        position: fixed;
 
-    &>div>div,>div>input {
-        margin-right: 4px;
+        right: 0;
     }
 }
 

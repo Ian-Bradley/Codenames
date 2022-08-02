@@ -12,7 +12,7 @@ export const onst = {
 
     cardWidth:     214.32, // 208.32(Card) + 6(Margin)
     cardHeight:    140.4, // 134.4(Card) + 6(Margin)
-    cardLeftBase:  340, // 340(Sidebar) + 85(Margin)
+    cardLeftBase:  425, // 340(Sidebar) + 85(Margin)
     cardTopBase:   0,
     cardTextSpacing1: 0.16,
     cardTextSpacing2: 0.16,

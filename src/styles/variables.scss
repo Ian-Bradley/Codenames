@@ -64,7 +64,7 @@ $button-height: 40px;
 $button-border-radius: 1.3rem;
 
 $button-font-size: 1.2rem;
-$button-height: 1.5rem;
+$button-height: 2.5rem;
 $button-weight: 500;
 
 /*======================================
@@ -85,8 +85,11 @@ $team-card-font-color: #fff;
 
 $card-width: 208.32px;
 $card-height: 134.4px;
+$card-spacing-height: 140.4px;
+$card-text-spacing: 21px;
+$card-text-spacing2: 30px;
 
-$card-text: 1.2rem;
+$card-text: 1.5rem;
 $card-highlighted: 0.8rem;
 
 $card-border-size: 6px;
@@ -106,10 +109,18 @@ $game-menu-title-c: 3rem;
 
 $clue-width-min: 200px;
 $clue-height: 50px;
-$clue-border-radius: 5px;
+
+$clue-spacing: 6px;
+
+$clue-font-size: 1.2rem;
+$clue-font-weight: 500;
+
+$clue-input-font-size: 1rem;
+$clue-input-font-weight: 600;
 $clue-input-height: 30px;
 
-$game-input-bg-color: #fff;
+$clue-border-radius: 5px;
+$clue-bg-color: #fff;
 
 /*======================================
     ANCHOR: COLORS - Teams

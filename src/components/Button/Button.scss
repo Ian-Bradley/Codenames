@@ -5,25 +5,32 @@
 ========================================*/
 
 main.codenames .game-button {
+    position: relative;
+
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+
     height: $button-height;
     max-height: $button-height;
-    cursor: pointer;
+    min-width: 0px;
+
     font-size: $button-font-size;
     font-weight: $button-weight;
     line-height: $button-height;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: center;
-    position: relative;
+
     padding: 0.4rem 1rem 0.3rem;
     border-radius: $button-border-radius;
+    border-color: $button-yellow-border__1 $button-yellow-border__2 $button-yellow-border__3;
+    background-color: $button-yellow;
+
+    cursor: pointer;
     -webkit-user-select: none;
     user-select: none;
     outline: currentcolor none medium;
+
     transition: $transition__all;
-    min-width: 0px;
-    background-color: $button-yellow;
-    border-color: $button-yellow-border__1 $button-yellow-border__2 $button-yellow-border__3;
 
     &:hover {
         background-color: $button-yellow-hover;

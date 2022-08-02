@@ -6,9 +6,9 @@ import './GameCard.scss';
 
 export default function GameCard ( props )
 {
-    /*======================================
+    /*================================================
         ANCHOR: RENDER FUNCTIONS - Interactions
-    ========================================*/
+    ==================================================*/
 
     const on_send_highlight = () =>
     {
@@ -56,34 +56,9 @@ export default function GameCard ( props )
         console.log('===> END - on_send_card');
     }
 
-    /*======================================
+    /*================================================
         ANCHOR: RENDER FUNCTIONS - Displaying
-    ========================================*/
-
-    const display_highlighting = () =>
-    {
-        if ( !( props.highlights === undefined ) && ( props.highlights.length ) )
-        {
-            // console.log('===> display_highlighting');
-            let highlights = [];
-            // console.log('props.highlights: ', props.highlights);
-            // console.log('> Beggining highlight array.push loop');
-            for ( let i = 0; i < props.highlights.length; i++ )
-            {
-                highlights.push(
-                    <li key={i} className={'player-' + props.highlights[i].team}>
-                        {props.highlights[i].name}
-                    </li>
-                );
-            }
-            // console.log('highlights: ', highlights);
-            // console.log('===> END - display_highlighting');
-            return highlights;
-        }
-    }
-
-    /*======================================*/
-    /*======================================*/
+    ==================================================*/
 
     const display_classes = () =>
     {
@@ -103,9 +78,48 @@ export default function GameCard ( props )
         return cardClass;
     }
 
-    /*======================================
+    /*======================================*/
+    /*======================================*/
+
+    const display_highlighting = () =>
+    {
+        if ( !( props.highlights === undefined ) && ( props.highlights.length ) )
+        {
+            let highlights = [];
+            for ( let i = 0; i < props.highlights.length; i++ )
+            {
+                highlights.push(
+                    <li key={i} className={'player-' + props.highlights[i].team}>
+                        {props.highlights[i].name}
+                    </li>
+                );
+            }
+            return highlights;
+        }
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    const display_text = () =>
+    {
+        let words = props.card.text.split(' ');
+        console.log('props.card.text: ', props.card.text);
+        console.log('words: ', words);
+        if ( ( words.length === 1 ) && ( props.card.text.length > 10 ) )
+        {
+            console.log('test1');
+        }
+        if ( words.length > 1 )
+        {
+            console.log('test2');
+        }
+        return props.card.text;
+    }
+    
+    /*================================================
         ANCHOR: COMPONENTS
-    ========================================*/
+    ==================================================*/
 
     return (
         <div
@@ -132,7 +146,7 @@ export default function GameCard ( props )
                 btnIcon           ={IconHand}
             />
             <div className='game-card-text'>
-                {props.card.text}
+                {display_text()}
             </div>
         </div>
     );

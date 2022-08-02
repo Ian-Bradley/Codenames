@@ -344,6 +344,8 @@ export default class App extends Component
 
     set_player_team ( player, newTeam )
     {
+        console.log('SET_PLAYER_TEAM - team: ', newTeam);
+        console.log('SET_PLAYER_TEAM - typeof :', typeof newTeam);
         if ( player.id === this.state.currentPlayer.id )
         {
             // > Current player
@@ -375,6 +377,8 @@ export default class App extends Component
 
     set_player_position ( player, newPosition )
     {
+        console.log('SET_PLAYER_POSITION - position: ', newPosition);
+        console.log('SET_PLAYER_POSITION - typeof :', typeof newPosition);
         if ( player.id === this.state.currentPlayer.id )
         {
             // > Current player
@@ -630,51 +634,51 @@ export default class App extends Component
     ==================================================*/
 
     // TODO: ==> send_player_name
-    send_player_name ( newName )
+    send_player_name ( player, newName )
     {
-        console.log('===> send_player_name');
+        // console.log('===> send_player_name');
         let newUpdate = {
             type: 'updatePlayerName',
-            player: this.state.currentPlayer,
+            player: player,
             newName: newName,
         };
         this.socket.send( JSON.stringify( newUpdate ));
-        console.log('>>>>>>>>> Message Sent - updatePlayerName >>>>>>>>>');
-        console.log('===> END - send_player_name');
+        // console.log('>>>>>>>>> Message Sent - updatePlayerName >>>>>>>>>');
+        // console.log('===> END - send_player_name');
     }
 
     /*======================================*/
     /*======================================*/
 
     // TODO: ==> send_player_team
-    send_player_team ( newTeam )
+    send_player_team ( player, newTeam )
     {
-        console.log('===> send_player_team');
+        // console.log('===> send_player_team');
         let newUpdate = {
             type: 'updatePlayerTeam',
-            player: this.state.currentPlayer,
+            player: player,
             newTeam: newTeam,
         };
         this.socket.send( JSON.stringify( newUpdate ));
-        console.log('>>>>>>>>> Message Sent - updatePlayerTeam >>>>>>>>>');
-        console.log('===> END - send_player_team');
+        // console.log('>>>>>>>>> Message Sent - updatePlayerTeam >>>>>>>>>');
+        // console.log('===> END - send_player_team');
     }
 
     /*======================================*/
     /*======================================*/
 
     // TODO: ==> send_player_position
-    send_player_position ( newPosition )
+    send_player_position ( player, newPosition )
     {
-        console.log('===> send_player_position');
+        // console.log('===> send_player_position');
         let newUpdate = {
             type: 'updatePlayerPosition',
-            player: this.state.currentPlayer,
+            player: player,
             newPosition: newPosition,
         };
         this.socket.send( JSON.stringify( newUpdate ));
-        console.log('>>>>>>>>> Message Sent - updatePlayerPosition >>>>>>>>>');
-        console.log('===> END - send_player_position');
+        // console.log('>>>>>>>>> Message Sent - updatePlayerPosition >>>>>>>>>');
+        // console.log('===> END - send_player_position');
     }
 
     /*================================================
@@ -763,39 +767,39 @@ export default class App extends Component
 
         // > Player does not have a team
         if ( !isOnTeam && isTeamCardRed && isButtonOperative )
-        { this.set_player_team( player, colorCardTeam ); this.set_player_position( player, positionButton ); }
+        { this.send_player_team( player, colorCardTeam ); this.send_player_position( player, positionButton ); }
         if ( !isOnTeam && isTeamCardRed && isButtonSpymaster )
-        { this.set_player_team( player, colorCardTeam ); this.set_player_position( player, positionButton ); }
+        { this.send_player_team( player, colorCardTeam ); this.send_player_position( player, positionButton ); }
         if ( !isOnTeam && isTeamCardBlue && isButtonOperative )
-        { this.set_player_team( player, colorCardTeam ); this.set_player_position( player, positionButton ); }
+        { this.send_player_team( player, colorCardTeam ); this.send_player_position( player, positionButton ); }
         if ( !isOnTeam && isTeamCardBlue && isButtonSpymaster )
-        { this.set_player_team( player, colorCardTeam ); this.set_player_position( player, positionButton ); }
+        { this.send_player_team( player, colorCardTeam ); this.send_player_position( player, positionButton ); }
 
         // > Player is already on a team
         if ( isOnTeam && isTeamCardRed && isSameTeam && isPlayerOperative && isButtonSpymaster )
-        { this.set_player_position( player, positionButton ); }
+        { this.send_player_position( player, positionButton ); }
         if ( isOnTeam && isTeamCardRed && isSameTeam && isPlayerSpymaster && isButtonOperative )
-        { this.set_player_position( player, positionButton ); }
+        { this.send_player_position( player, positionButton ); }
         if ( isOnTeam && isTeamCardRed && !isSameTeam && isPlayerOperative && isButtonOperative )
-        { this.set_player_team( player, colorCardTeam ); }
+        { this.send_player_team( player, colorCardTeam ); }
         if ( isOnTeam && isTeamCardRed && !isSameTeam && isPlayerOperative && isButtonSpymaster )
-        { this.set_player_team( player, colorCardTeam ); this.set_player_position( player, positionButton ); }
+        { this.send_player_team( player, colorCardTeam ); this.send_player_position( player, positionButton ); }
         if ( isOnTeam && isTeamCardRed && !isSameTeam && isPlayerSpymaster && isButtonOperative )
-        { this.set_player_team( player, colorCardTeam ); this.set_player_position( player, positionButton ); }
+        { this.send_player_team( player, colorCardTeam ); this.send_player_position( player, positionButton ); }
         if ( isOnTeam && isTeamCardRed && !isSameTeam && isPlayerSpymaster && isButtonSpymaster )
-        { this.set_player_team( player, colorCardTeam ); }
+        { this.send_player_team( player, colorCardTeam ); }
         if ( isOnTeam && isTeamCardBlue && isSameTeam && isPlayerOperative && isButtonSpymaster )
-        { this.set_player_position( player, positionButton ); }
+        { this.send_player_position( player, positionButton ); }
         if ( isOnTeam && isTeamCardBlue && isSameTeam && isPlayerSpymaster && isButtonOperative )
-        { this.set_player_position( player, positionButton ); }
+        { this.send_player_position( player, positionButton ); }
         if ( isOnTeam && isTeamCardBlue && !isSameTeam && isPlayerOperative && isButtonOperative )
-        { this.set_player_team( player, colorCardTeam ); }
+        { this.send_player_team( player, colorCardTeam ); }
         if ( isOnTeam && isTeamCardBlue && !isSameTeam && isPlayerOperative && isButtonSpymaster )
-        { this.set_player_team( player, colorCardTeam ); this.set_player_position( player, positionButton ); }
+        { this.send_player_team( player, colorCardTeam ); this.send_player_position( player, positionButton ); }
         if ( isOnTeam && isTeamCardBlue && !isSameTeam && isPlayerSpymaster && isButtonOperative )
-        { this.set_player_team( player, colorCardTeam ); this.set_player_position( player, positionButton ); }
+        { this.send_player_team( player, colorCardTeam ); this.send_player_position( player, positionButton ); }
         if ( isOnTeam && isTeamCardBlue && !isSameTeam && isPlayerSpymaster && isButtonSpymaster )
-        { this.set_player_team( player, colorCardTeam ); }
+        { this.send_player_team( player, colorCardTeam ); }
     }
 
     /*================================================
@@ -974,9 +978,9 @@ export default class App extends Component
                 case 'clientDisconnected':
                 {
                     // This handler is only fired when OTHER players leave
-                    console.log('======= HANDLER - clientDisconnected =======');
+                    // console.log('======= HANDLER - clientDisconnected =======');
                     this.player_remove( updateData.playerID );
-                    console.log('======= END - HANDLER - clientDisconnected =======');
+                    // console.log('======= END - HANDLER - clientDisconnected =======');
                     break;
                 }
 
@@ -986,9 +990,9 @@ export default class App extends Component
 
                 case 'updatePlayerName':
                 {
-                    console.log('======= HANDLER - updatePlayerName =======');
+                    // console.log('======= HANDLER - updatePlayerName =======');
                     this.set_player_name( updateData.player, updateData.newName );
-                    console.log('======= END - HANDLER - updatePlayerName =======');
+                    // console.log('======= END - HANDLER - updatePlayerName =======');
                     break;
                 }
 
@@ -997,9 +1001,9 @@ export default class App extends Component
 
                 case 'updatePlayerTeam':
                 {
-                    console.log('======= HANDLER - updatePlayerTeam =======');
+                    // console.log('======= HANDLER - updatePlayerTeam =======');
                     this.set_player_team( updateData.player, updateData.newTeam );
-                    console.log('======= END - HANDLER - updatePlayerTeam =======');
+                    // console.log('======= END - HANDLER - updatePlayerTeam =======');
                     break;
                 }
 
@@ -1008,9 +1012,9 @@ export default class App extends Component
 
                 case 'updatePlayerPosition':
                 {
-                    console.log('======= HANDLER - updatePlayerPosition =======');
+                    // console.log('======= HANDLER - updatePlayerPosition =======');
                     this.set_player_position( updateData.player, updateData.newPosition );
-                    console.log('======= END - HANDLER - updatePlayerPosition =======');
+                    // console.log('======= END - HANDLER - updatePlayerPosition =======');
                     break;
                 }
 
@@ -1181,7 +1185,6 @@ export default class App extends Component
             {str += this.state.currentPlayer.highlights[i]; str += ', '; }
             return str;
         }
-        
 
         /*================================================
             ANCHOR: COMPONENTS

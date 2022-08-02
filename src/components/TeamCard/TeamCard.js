@@ -87,7 +87,7 @@ export default function TeamCard ( props )
 
     const display_remaining_cards = () =>
     {
-        let remaining = props.teamData.cards;
+        let remaining = props.teamData.remainingCards;
         if ( props.gameState === C.onst.gameState_setup )
         {
             remaining = '-'
@@ -100,10 +100,10 @@ export default function TeamCard ( props )
 
     const display_remaining_guesses = () =>
     {
-        let remaining = props.teamData.guesses;
-        if ( props.gameState === C.onst.gameState_setup )
+        let remaining = props.teamData.remainingGuesses;
+        if ( props.gameState === C.onst.gameState_setup)
         {
-            remaining = '-'
+            return '-';
         }
         return remaining;
     }

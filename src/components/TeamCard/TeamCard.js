@@ -1,7 +1,7 @@
-import React from 'react';
-import Button from '../Button/Button.js';
-import * as C from '../../constants.js'
-import './TeamCard.scss';
+import React from 'react'
+import Button from '../Button/Button.js'
+import * as C from '../../helpers/constants.js'
+import './TeamCard.scss'
 
 /**
  * @props team (string)          Team name/color
@@ -21,19 +21,19 @@ export default function TeamCard ( props )
 
     const count_positions = ( currentPlayer, players, team, position ) =>
     {
-        let count = 0;
+        let count = 0
         for ( let i = 0; i < players.length; i++ )
         {
             if ( ( players[i].team === team ) && ( players[i].position === position ) )
             {
-                count++;
+                count++
             }
         }
         if ( ( currentPlayer.team === team ) && ( currentPlayer.position === position ) )
         {
-            count++;
+            count++
         }
-        return count;
+        return count
     }
 
     /*======================================
@@ -42,7 +42,7 @@ export default function TeamCard ( props )
 
     const on_select_position = ( positionButton ) =>
     {
-        props.team_select( positionButton, props.team );
+        props.team_select( positionButton, props.team )
     }
     
     /*======================================
@@ -51,7 +51,7 @@ export default function TeamCard ( props )
 
     const display_team_card_class = () =>
     {
-        return 'team-card team-' + props.team;
+        return 'team-card team-' + props.team
     }
 
     /*======================================*/
@@ -60,7 +60,7 @@ export default function TeamCard ( props )
 
     const display_players_list = ( position ) =>
     {
-        let players = [];
+        let players = []
 
         // Connected players
         if ( !( props.players === undefined ) && ( props.players.length ) )
@@ -69,7 +69,7 @@ export default function TeamCard ( props )
             {
                 if ( ( props.players[i].team === props.team ) && ( props.players[i].position === position ))
                 {
-                    players.push( <li key={i}>{props.players[i].name}</li> );
+                    players.push( <li key={i}>{props.players[i].name}</li> )
                 }
             }
         }
@@ -77,9 +77,9 @@ export default function TeamCard ( props )
         // Current player
         if ( ( props.currentPlayer.team === props.team ) && ( props.currentPlayer.position === position ) )
         {
-            players.push( <li key={props.players.length}>{props.currentPlayer.name}</li> );
+            players.push( <li key={props.players.length}>{props.currentPlayer.name}</li> )
         }
-        return players;
+        return players
     }
 
     /*======================================*/
@@ -87,12 +87,12 @@ export default function TeamCard ( props )
 
     const display_remaining_cards = () =>
     {
-        let remaining = props.teamData.remainingCards;
+        let remaining = props.teamData.remainingCards
         if ( props.gameState === C.onst.gameState_setup )
         {
             remaining = '-'
         }
-        return remaining;
+        return remaining
     }
 
     /*======================================*/
@@ -100,12 +100,12 @@ export default function TeamCard ( props )
 
     const display_remaining_guesses = () =>
     {
-        let remaining = props.teamData.remainingGuesses;
+        let remaining = props.teamData.remainingGuesses
         if ( props.gameState === C.onst.gameState_setup)
         {
-            return '-';
+            return '-'
         }
-        return remaining;
+        return remaining
     }
 
     /*======================================*/
@@ -113,7 +113,7 @@ export default function TeamCard ( props )
 
     const display_button_operative = () =>
     {
-        let operativesTotal = count_positions( props.currentPlayer, props.players, props.team, C.onst.operative );
+        let operativesTotal = count_positions( props.currentPlayer, props.players, props.team, C.onst.operative )
         if ( ( operativesTotal <= C.onst.maxOperatives ) && ( props.gameState === C.onst.gameState_setup ) )
         {
             return (
@@ -132,7 +132,7 @@ export default function TeamCard ( props )
 
     const display_button_spymaster = () =>
     {
-        let spymastersTotal = count_positions( props.currentPlayer, props.players, props.team, C.onst.spymaster );
+        let spymastersTotal = count_positions( props.currentPlayer, props.players, props.team, C.onst.spymaster )
         if ( ( spymastersTotal <= C.onst.maxSpymasters ) && ( props.gameState === C.onst.gameState_setup ) )
         {
             return (
@@ -174,5 +174,5 @@ export default function TeamCard ( props )
                 {display_button_spymaster()}
             </div>
         </div>
-    );
+    )
 }

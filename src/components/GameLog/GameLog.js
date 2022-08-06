@@ -1,6 +1,6 @@
-import React from 'react';
-import * as C from '../../constants.js'
-import './GameLog.scss';
+import React from 'react'
+import * as C from '../../helpers/constants.js'
+import './GameLog.scss'
 
 /**
  * @props gameLog (array)    Log of game actions
@@ -16,66 +16,66 @@ export default function GameLog ( props )
 
     const display_log_items = () =>
     {
-        // console.log('===> display_log_items');
-        let gameLog = props.gameLog;
-        // console.log('gameLog: ', gameLog);
+        // console.log('===> display_log_items')
+        let gameLog = props.gameLog
+        // console.log('gameLog: ', gameLog)
         if ( !( gameLog === undefined ) && ( gameLog.length ) )
         {
-            let log = [];
-            // console.log('> Before Log Loop');
+            let log = []
+            // console.log('> Before Log Loop')
             for ( let i = 0; i < gameLog.length; i++ )
             {
-                // console.log('gameLog[i].itemType: ', gameLog[i].itemType);
+                // console.log('gameLog[i].itemType: ', gameLog[i].itemType)
                 switch( gameLog[i].itemType )
                 {
                     case 'clue':
                     {
-                        // console.log('> Case: clue');
+                        // console.log('> Case: clue')
                         log.push(
                             <li key={i} className={'team-' + gameLog[i].player.team}>
                                 <span>{gameLog[i].player.name}</span> gives clue <span className='game-log-clue'>{gameLog[i].clue}</span>
                             </li>
-                        );
-                        break;
+                        )
+                        break
                     }
 
                     case 'choose':
                     {
-                        // console.log('> Case: choose');
+                        // console.log('> Case: choose')
                         log.push(
                             <li key={i} className={'team-' + gameLog[i].player.team}>
                                 <span>{gameLog[i].player.name}</span> taps <span className={'card-' + gameLog[i].player.team}>{gameLog[i].cardText}</span>
                             </li>
-                        );
-                        break;
+                        )
+                        break
                     }
         
                     case 'end':
                     {
-                        // console.log('> Case: end');
+                        // console.log('> Case: end')
                         log.push(
                             <li key={i} className={'team-' + gameLog[i].player.team}>
                                 <span>{gameLog[i].player.name}</span> ends guessing
                             </li>
-                        );
-                        break;
+                        )
+                        break
                     }
         
                     case 'victory':
                     {
-                        // console.log('> Case: victory');
+                        // console.log('> Case: victory')
                         log.push(
                             <li key={i} className={'team-' + gameLog[i].player.team + ' victory'}>
                                 <span>{gameLog[i].player.team} team</span> <span>wins</span>
                             </li>
-                        );
-                        break;
+                        )
+                        break
                     }
                     default:
                 }
             }
-            // console.log('===> END - display_log_items');
-            return log;
+            // console.log('===> END - display_log_items')
+            return log
         }
     }
 
@@ -85,12 +85,12 @@ export default function GameLog ( props )
 
     const display_log_classes = (  ) =>
     {
-        let logClasses = 'game-log';
+        let logClasses = 'game-log'
         if ( props.gameState !== C.onst.gameState_setup )
         {
-            logClasses += ' ' + C.onst.classActive;
+            logClasses += ' ' + C.onst.classActive
         }
-        return logClasses;
+        return logClasses
     }
 
     /*======================================
@@ -108,5 +108,5 @@ export default function GameLog ( props )
                 </ul>
             </div>
         </div>
-    );
+    )
 }

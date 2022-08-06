@@ -607,65 +607,65 @@ wss.on('connection', ( wsClient ) =>
             ==================================================*/
 
             case 'userConnected':
-            {
-                // > Send new player data to all other players
-                // console.log('======= HANDLER - userConnected =======');
-                updateData.id = uuidv4();
-                clientData.playerID = updateData.player.id // set id for disconnecting player removal
-                game.player_add( updateData.player );
-                wss.broadcast( JSON.stringify( updateData ), wsClient );
-                // console.log('>>>>>>>>> Message Sent - userConnected >>>>>>>>>');
-
-                // > Determine/set/send host
-                if ( !game.state.originalHost )
                 {
-                    // console.log('> Original Host');
-                    game.set_player_original_host( updateData.player.id );
-                }
-
-                if ( wss.clients.size === 1 || ( game.state.originalHost === updateData.player.id ) )
-                {
-                    updateData.player.isHost = game.set_player_host( updateData.player );
-
-                    // Send host data to all
+                    // > Send new player data to all other players
+                    // console.log('======= HANDLER - userConnected =======');
                     updateData.id = uuidv4();
-                    updateData.type = 'updatePlayerIsHost';
-                    wss.broadcast_all( JSON.stringify( updateData ) );
-                    // console.log('>>>>>>>>> Message Sent - updatePlayerIsHost >>>>>>>>>');
+                    clientData.playerID = updateData.player.id // set id for disconnecting player removal
+                    game.player_add( updateData.player );
+                    wss.broadcast( JSON.stringify( updateData ), wsClient );
+                    // console.log('>>>>>>>>> Message Sent - userConnected >>>>>>>>>');
+
+                    // > Determine/set/send host
+                    if ( !game.state.originalHost )
+                    {
+                        // console.log('> Original Host');
+                        game.set_player_original_host( updateData.player.id );
+                    }
+
+                    if ( wss.clients.size === 1 || ( game.state.originalHost === updateData.player.id ) )
+                    {
+                        updateData.player.isHost = game.set_player_host( updateData.player );
+
+                        // Send host data to all
+                        updateData.id = uuidv4();
+                        updateData.type = 'updatePlayerIsHost';
+                        wss.broadcast_all( JSON.stringify( updateData ) );
+                        // console.log('>>>>>>>>> Message Sent - updatePlayerIsHost >>>>>>>>>');
+                    }
+            
+                    // console.log('======= END HANDLER - userConnected =======');
+                    break;
                 }
-        
-                // console.log('======= END HANDLER - userConnected =======');
-                break;
-            }
 
             /*================================================
                 ANCHOR: HANDLER - PLAYER INFO
             ==================================================*/
 
             case 'updatePlayerName':
-            {
-                // console.log('======= HANDLER - updatePlayerName =======');
-                updateData.id = uuidv4();
-                game.set_player_name( updateData.player, updateData.newName );
-                wss.broadcast_all( JSON.stringify( updateData ) );
-                // console.log('>>>>>>>>> Message Sent - updatePlayerName >>>>>>>>>');
-                // console.log('======= END HANDLER - updatePlayerName =======');
-                break;
-            }
+                {
+                    // console.log('======= HANDLER - updatePlayerName =======');
+                    updateData.id = uuidv4();
+                    game.set_player_name( updateData.player, updateData.newName );
+                    wss.broadcast_all( JSON.stringify( updateData ) );
+                    // console.log('>>>>>>>>> Message Sent - updatePlayerName >>>>>>>>>');
+                    // console.log('======= END HANDLER - updatePlayerName =======');
+                    break;
+                }
 
             /*======================================*/
             /*======================================*/
 
             case 'updatePlayerTeam':
-            {
-                // console.log('======= HANDLER - updatePlayerTeam =======');
-                updateData.id = uuidv4();
-                game.set_player_team( updateData.player, updateData.newTeam );
-                wss.broadcast_all( JSON.stringify( updateData ) );
-                // console.log('>>>>>>>>> Message Sent - updatePlayerTeam >>>>>>>>>');
-                // console.log('======= END HANDLER - updatePlayerTeam =======');
-                break;
-            }
+                {
+                    // console.log('======= HANDLER - updatePlayerTeam =======');
+                    updateData.id = uuidv4();
+                    game.set_player_team( updateData.player, updateData.newTeam );
+                    wss.broadcast_all( JSON.stringify( updateData ) );
+                    // console.log('>>>>>>>>> Message Sent - updatePlayerTeam >>>>>>>>>');
+                    // console.log('======= END HANDLER - updatePlayerTeam =======');
+                    break;
+                }
 
             /*======================================*/
             /*======================================*/
@@ -686,62 +686,62 @@ wss.on('connection', ( wsClient ) =>
             ==================================================*/
 
             case 'updateAddHighlight':
-            {
-                // console.log('======= HANDLER - updateAddHighlight =======');
-                updateData.id = uuidv4();
-                game.highlight_add( updateData.player, updateData.index );
-                wss.broadcast( JSON.stringify( updateData ), wsClient );
-                // console.log('>>>>>>>>> Message Sent - updateAddHighlight >>>>>>>>>');
-                // console.log('======= END HANDLER - updateAddHighlight =======');
-                break;
-            }
+                {
+                    // console.log('======= HANDLER - updateAddHighlight =======');
+                    updateData.id = uuidv4();
+                    game.highlight_add( updateData.player, updateData.index );
+                    wss.broadcast( JSON.stringify( updateData ), wsClient );
+                    // console.log('>>>>>>>>> Message Sent - updateAddHighlight >>>>>>>>>');
+                    // console.log('======= END HANDLER - updateAddHighlight =======');
+                    break;
+                }
             
             /*======================================*/
             /*======================================*/
 
             case 'updateRemoveHighlight':
-            {
-                // console.log('======= HANDLER - updateRemoveHighlight =======');
-                updateData.id = uuidv4();
-                game.highlight_remove( updateData.player, updateData.index );
-                wss.broadcast( JSON.stringify( updateData ), wsClient );
-                // console.log('>>>>>>>>> Message Sent - updateRemoveHighlight >>>>>>>>>');
-                // console.log('======= END HANDLER - updateRemoveHighlight =======');
-                break;
-            }
+                {
+                    // console.log('======= HANDLER - updateRemoveHighlight =======');
+                    updateData.id = uuidv4();
+                    game.highlight_remove( updateData.player, updateData.index );
+                    wss.broadcast( JSON.stringify( updateData ), wsClient );
+                    // console.log('>>>>>>>>> Message Sent - updateRemoveHighlight >>>>>>>>>');
+                    // console.log('======= END HANDLER - updateRemoveHighlight =======');
+                    break;
+                }
             
             /*======================================*/
             /*======================================*/
 
             // case 'updateClearCardHighlights':
-            // {
-            //     updateData.id = uuidv4();
-            //     game.clear_card_highlights( updateData.index );
-            //     wss.broadcast( JSON.stringify( updateData ), wsClient );
-            //     break;
-            // }
-            
+            //     {
+            //         updateData.id = uuidv4();
+            //         game.clear_card_highlights( updateData.index );
+            //         wss.broadcast( JSON.stringify( updateData ), wsClient );
+            //         break;
+            //     }
+                
             /*======================================*/
             /*======================================*/
 
             // case 'updateClearHighlights':
-            // {
-            //     updateData.id = uuidv4();
-            //     game.clear_highlights();
-            //     wss.broadcast( JSON.stringify( updateData ), wsClient );
-            //     break;
-            // }
+            //     {
+            //         updateData.id = uuidv4();
+            //         game.clear_highlights();
+            //         wss.broadcast( JSON.stringify( updateData ), wsClient );
+            //         break;
+            //     }
 
             /*================================================
                 ANCHOR: HANDLER - CARD CHOOSING
             ==================================================*/
 
             // case 'updateCardChoose':
-            // {
-            //     updateData.id = uuidv4();
-            //     wss.broadcast( JSON.stringify( updateData ), wsClient );
-            //     break;
-            // }
+            //     {
+            //         updateData.id = uuidv4();
+            //         wss.broadcast( JSON.stringify( updateData ), wsClient );
+            //         break;
+            //     }
 
             default:
         }

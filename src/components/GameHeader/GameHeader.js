@@ -1,11 +1,11 @@
-import React from 'react';
-import Button from '../Button/Button.js';
-import IconFace from '../../images/icons/face.svg';
-import IconUser from '../../images/icons/user.svg';
-import IconQuestion from '../../images/icons/question.svg';
-import IconStopwatch from '../../images/icons/stopwatch.svg';
-import * as C from '../../constants.js'
-import './GameHeader.scss';
+import React from 'react'
+import Button from '../Button/Button.js'
+import IconFace from '../../images/icons/face.svg'
+import IconUser from '../../images/icons/user.svg'
+import IconQuestion from '../../images/icons/question.svg'
+import IconStopwatch from '../../images/icons/stopwatch.svg'
+import * as C from '../../helpers/constants.js'
+import './GameHeader.scss'
 
 /**
  * @props players (array)        Current connected players list
@@ -22,8 +22,8 @@ export default function GameHeader ( props )
 
     const on_game_players = () =>
     {
-        console.log('===> on_game_players');
-        console.log('===> END - on_game_players');
+        console.log('===> on_game_players')
+        console.log('===> END - on_game_players')
     }
 
     /*======================================*/
@@ -31,8 +31,8 @@ export default function GameHeader ( props )
 
     const on_game_timer = () =>
     {
-        console.log('===> on_game_timer');
-        console.log('===> END - on_game_timer');
+        console.log('===> on_game_timer')
+        console.log('===> END - on_game_timer')
     }
 
     /*======================================*/
@@ -40,8 +40,8 @@ export default function GameHeader ( props )
 
     const on_game_info = () =>
     {
-        console.log('===> on_game_info');
-        console.log('===> END - on_game_info');
+        console.log('===> on_game_info')
+        console.log('===> END - on_game_info')
     }
 
     /*======================================*/
@@ -49,8 +49,8 @@ export default function GameHeader ( props )
 
     const on_game_reset = () =>
     {
-        console.log('===> on_game_reset');
-        console.log('===> END - on_game_reset');
+        console.log('===> on_game_reset')
+        console.log('===> END - on_game_reset')
     }
 
     /*======================================*/
@@ -58,8 +58,8 @@ export default function GameHeader ( props )
     
     const on_game_current_player = () =>
     {
-        console.log('===> on_game_current_player');
-        console.log('===> END - on_game_current_player');
+        console.log('===> on_game_current_player')
+        console.log('===> END - on_game_current_player')
     }
 
     /*======================================
@@ -116,5 +116,5 @@ export default function GameHeader ( props )
                 />
             </div>
         </div>
-    );
+    )
 }

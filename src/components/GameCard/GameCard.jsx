@@ -5,7 +5,7 @@ import Button from '../Button/Button.jsx'
 import IconHand from '../../images/icons/hand.svg'
 
 // CSS + GLOBAL CONSTANTS
-import * as C from '../../helpers/constants.js'
+import * as C from '../../../helpers/constants.js'
 import './GameCard.scss'
 
 /*

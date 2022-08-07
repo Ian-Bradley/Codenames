@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import * as C from '../../helpers/constants.js'
+import * as C from '../../../helpers/constants.js'
 
 const initialState = {
     game: {

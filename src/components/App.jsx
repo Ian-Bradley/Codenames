@@ -12,8 +12,8 @@ import GameHeader from './GameHeader/GameHeader.js'
 import GameInstruction from './GameInstruction/GameInstruction.jsx'
 
 // CSS + GLOBAL CONSTANTS + HELPER FUNCTIONS
-import * as C from '../helpers/constants.js'
-import * as H from '../helpers/functions.js'
+import * as C from '../../helpers/constants.js'
+import * as H from '../../helpers/functions.js'
 import './App.scss'
 
 /*================================================

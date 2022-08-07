@@ -4,7 +4,7 @@ import React from 'react'
 import Button from '../Button/Button.jsx'
 
 // CSS + GLOBAL CONSTANTS
-import * as C from '../../helpers/constants.js'
+import * as C from '../../../helpers/constants.js'
 import './TeamCard.scss'
 
 /**

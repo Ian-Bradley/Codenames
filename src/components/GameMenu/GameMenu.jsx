@@ -1,6 +1,6 @@
 import React from 'react'
 import Button from '../Button/Button.jsx'
-import * as C from '../../helpers/constants.js'
+import * as C from '../../../helpers/constants.js'
 import './GameMenu.scss'
 
 /**

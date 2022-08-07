@@ -8,7 +8,7 @@ import IconQuestion from '../../images/icons/question.svg'
 import IconStopwatch from '../../images/icons/stopwatch.svg'
 
 // CSS + GLOBAL CONSTANTS
-import * as C from '../../helpers/constants.js'
+import * as C from '../../../helpers/constants.js'
 import './GameHeader.scss'
 
 export default function GameHeader ( props )

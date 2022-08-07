@@ -1,5 +1,5 @@
 import React from 'react'
-import * as C from '../../helpers/constants.js'
+import * as C from '../../../helpers/constants.js'
 import './log.scss'
 
 /*

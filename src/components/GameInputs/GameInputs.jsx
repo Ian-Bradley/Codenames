@@ -3,17 +3,18 @@ import Button from '../Button/Button.jsx'
 import './GameInputs.scss'
 
 /**
- * @props teamRed (object)     Team data for remaining guesses and cards
- * @props teamBlue (object)    Team data for remaining guesses and cards
- * @props guesses (string)     Amount of guesses given by spymaster for current clue
- * @props gameState (string)   Current state of the game
- * @props clue (string)        Current clue given by spymaster
- * @props send_clue (function) Handler function for menu buttons
- * @props user (object) Current user information
+ * @props sendClue (function) Handler function for menu buttons
  */
 
 export default function GameInputs ( props )
 {
+    /*================================================
+        ANCHOR: STATE
+    ==================================================*/
+
+    const clue    = useSelector( ( state ) => { return state['clue'].clue } )
+    const guesses = useSelector( ( state ) => { return state['guesses'].guesses } )
+
     /*================================================
         ANCHOR: INTERACTIONS
     ==================================================*/
@@ -39,7 +40,7 @@ export default function GameInputs ( props )
     const onGiveClue = () =>
     {
         console.log('===> onGiveClue')
-        // props.send_clue()
+        // props.sendClue()
         console.log('===> END - onGiveClue')
     }
 
@@ -60,13 +61,29 @@ export default function GameInputs ( props )
     {
         // if()
 
-        // props.teamRed
-        // props.teamBlue
+        // teamRed
+        // teamBlue
 
-        // for ( let i = 0 i < props..length i++ )
+        // for ( let i = 0 i < .length i++ )
         // {
 
         // }
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    const displayClue = () =>
+    {
+        if ( clue ) { return clue }
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    const displayGuesses = () =>
+    {
+        if ( guesses ) { return guesses }
     }
 
     /*================================================
@@ -104,10 +121,10 @@ export default function GameInputs ( props )
             </div>
             <div className='clue-container'>
                 <div className='clue'>
-                    {props.clue}
+                    {displayClue}
                 </div>
                 <div className='guess-amount'>
-                    {props.guesses}
+                    {displayGuesses}
                 </div>
             </div>
             <div className='clue-end-container'>

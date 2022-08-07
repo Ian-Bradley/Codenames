@@ -1,5 +1,7 @@
 export const onst = {
     dev: true,
+    
+    wsURL: 'ws://localhost:3001',
 
     debounceDelay: 200,
 

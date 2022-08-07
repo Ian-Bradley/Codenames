@@ -1,16 +1,22 @@
 import React from 'react'
 import './GameMessage.scss'
 
-/**
- * @props message (string) Turn-message to be displayed to instruct users
- */
-
 export default function GameMessage ( props )
 {
+    /*================================================
+        ANCHOR: STATE
+    ==================================================*/
+
+    const instruction = useSelector( ( state ) => { return state['instruction'].instruction } )
+    
+    /*================================================
+        ANCHOR: COMPONENTS
+    ==================================================*/
+
     return (
-        <div className='game-message'>
+        <div className='game-instruction'>
             <div>
-                <span>{props.message}</span>
+                <span>{instruction}</span>
             </div>
         </div>
     )

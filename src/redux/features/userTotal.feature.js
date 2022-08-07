@@ -36,6 +36,6 @@ let userTotalSlice = createSlice({
 export const {
     setUserTotal,
     incrementUserTotal,
-    decrementUserTotal
+    decrementUserTotal,
 } = userTotalSlice.actions
 export default userTotalSlice.reducer

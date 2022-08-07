@@ -9,17 +9,17 @@ main.codenames .game-instruction {
     height: 100%;
 
     & div {
-        padding: $game-message-padding;
+        padding: $game-Instruction-padding;
 
         border: none;
-        border-radius: $game-message-border-radius;
+        border-radius: $game-Instruction-border-radius;
         background: #fff;
     }
 
     & span {
-        font-size: $game-message;
-        font-weight: $game-message-weight;
-        line-height: $game-message-line-height;
+        font-size: $game-Instruction;
+        font-weight: $game-Instruction-weight;
+        line-height: $game-Instruction-line-height;
 
         pointer-events: none;
         -webkit-user-select: none;

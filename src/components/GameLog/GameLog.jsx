@@ -2,13 +2,14 @@ import React from 'react'
 import * as C from '../../helpers/constants.js'
 import './GameLog.scss'
 
-/**
- * @props gameLog (array)    Log of game actions
- * @props gameState (string) Current state of the game
- */
-
 export default function GameLog ( props )
 {
+    /*================================================
+        ANCHOR: STATES
+    ==================================================*/
+
+    const gameLog = useSelector( ( state ) => { return state['log'].log } )
+    const gameState = useSelector( ( state ) => { return state['gameState'].gameState } )
 
     /*================================================
         ANCHOR: INTERACTIONS
@@ -22,7 +23,6 @@ export default function GameLog ( props )
     const displayLogItems = () =>
     {
         // console.log('===> display_log_items')
-        let gameLog = props.gameLog
         // console.log('gameLog: ', gameLog)
         if ( !( gameLog === undefined ) && ( gameLog.length ) )
         {
@@ -91,7 +91,7 @@ export default function GameLog ( props )
     const displayLogClasses = (  ) =>
     {
         let logClasses = 'game-log'
-        if ( props.gameState !== C.onst.gameState_setup )
+        if ( gameState !== C.onst.gameState_setup )
         {
             logClasses += ' ' + C.onst.classActive
         }

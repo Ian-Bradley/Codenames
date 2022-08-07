@@ -107,6 +107,17 @@ let usersSlice = createSlice({
         },
 
         /*======================================*/
+        
+        removeUsersIsHost: function ( state, action )
+        {
+            state.users.map( ( user ) =>
+                {
+                    user.IsHost = false
+                }
+            )
+        },
+
+        /*======================================*/
 
         addUserHighlight: function ( state, action )
         {
@@ -139,7 +150,7 @@ let usersSlice = createSlice({
 
         /*======================================*/
 
-        deleteAllUserHighlights: function ( state, action )
+        deleteAllUsersHighlights: function ( state, action )
         {
             // action.payload = user id (String)
             state.users.map( ( user ) =>
@@ -173,9 +184,10 @@ export const {
     setUserTeam,
     setUserPosition,
     setUserIsHost,
+    removeUsersIsHost,
     addUserHighlight,
     deleteUserHighlight,
-    deleteAllUserHighlights,
+    deleteAllUsersHighlights,
     deleteAllHighlights,
 } = usersSlice.actions
 export default usersSlice.reducer

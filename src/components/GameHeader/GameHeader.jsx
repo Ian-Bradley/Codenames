@@ -11,14 +11,14 @@ import IconStopwatch from '../../images/icons/stopwatch.svg'
 import * as C from '../../helpers/constants.js'
 import './GameHeader.scss'
 
-/**
- * @props users (array) Current connected users list
- * @props usersTotal (number) Total amount of users
- * @props user (object) Current user information
- */
-
 export default function GameHeader ( props )
 {
+    /*================================================
+        ANCHOR: STATES
+    ==================================================*/
+
+    const user      = useSelector( ( state ) => { return state['user'].user } )
+    const userTotal = useSelector( ( state ) => { return state['userTotal'].userTotal } )
 
     /*================================================
         ANCHOR: INTERACTIONS
@@ -72,7 +72,7 @@ export default function GameHeader ( props )
 
     const displayButtonReset = () =>
     {
-        if ( props.user.isHost )
+        if ( user.isHost )
         {
             return (
                 <Button
@@ -96,7 +96,7 @@ export default function GameHeader ( props )
                     btnFunction ={onGameUsers}
                     btnText     ={'Users'}
                     btnIcon     ={IconUser}
-                    btnData     ={props.usersTotal}
+                    btnData     ={userTotal}
                 />
                 <Button
                     btnDisplayClasses ={C.onst.classDisabled}
@@ -113,9 +113,9 @@ export default function GameHeader ( props )
             <div className='game-controls-right'>
                 {displayButtonReset()}
                 <Button
-                    btnClasses  ={'game-current-user button-' + props.user.team}
+                    btnClasses  ={'game-current-user button-' + user.team}
                     btnFunction ={onGameCurrentUser}
-                    btnText     ={props.user.name}
+                    btnText     ={user.name}
                     btnIcon     ={IconFace}
                 />
             </div>

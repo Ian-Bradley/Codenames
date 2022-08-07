@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import * as H from '../../helpers/helpers.js'
+import * as H from '../../helpers/functions.js'
 
 const initialState = {
     user: {
@@ -48,6 +48,14 @@ let userSlice = createSlice({
 
         /*======================================*/
 
+        setIsHost: function ( state, action )
+        {
+            // action.payload = host state (Boolean)
+            state.user.IsHost = action.payload
+        },
+        
+        /*======================================*/
+
         addHighlight: function ( state, action )
         {
             // action.payload = highlight (Object)
@@ -71,16 +79,6 @@ let userSlice = createSlice({
         },
 
         /*======================================*/
-
-        setIsHost: function ( state, action )
-        {
-            // action.payload = host state (Boolean)
-            state.user.IsHost = action.payload
-        },
-
-        /*======================================*/
-
-        /*======================================*/
     }
 })
 export const {
@@ -88,9 +86,9 @@ export const {
     setName,
     setTeam,
     setPosition,
+    setIsHost,
     addHighlight,
     deleteHighlight,
     deleteAllHighlights,
-    setIsHost,
 } = userSlice.actions
 export default userSlice.reducer

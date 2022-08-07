@@ -9,7 +9,7 @@ import TeamCard from './TeamCard/TeamCard.js'
 import GameCard from './GameCard/GameCard.js'
 import GameInputs from './GameInputs/GameInputs.js'
 import GameHeader from './GameHeader/GameHeader.js'
-import GameMessage from './GameMessage/GameMessage.js'
+import GameInstruction from './GameInstruction/GameInstruction.jsx'
 
 // CSS + GLOBAL CONSTANTS + HELPER FUNCTIONS
 import * as C from '../helpers/constants.js'
@@ -30,12 +30,15 @@ export default function App ()
     ==================================================*/
 
     // Redux
-    // const user  = useSelector( ( state ) => { return state['user'].user } )
+    const user = useSelector( ( state ) => { return state['user'].user } )
+    const users = useSelector( ( state ) => { return state['users'].users } )
+    const userTotal = useSelector( ( state ) => { return state['userTotal'].userTotal } )
+    const messages = useSelector( ( state ) => { return state['messages'].messages } )
+    const log = useSelector( ( state ) => { return state['log'].log } )
     const dispatch = useDispatch()
     // Hooks
     const [WSReady, setWSReady] = useState(false)
     const [WS, setWS] = useState(new WebSocket( C.onst.wsURL ))
-
 
     // constructor(props)
     // {
@@ -47,7 +50,7 @@ export default function App ()
     //         cards: [],
     //         clue: '',
     //         guesses: '',
-    //         message: 'temp message',
+    //         instruction: 'temp instruction',
     //         // Teams
     //         teamRed: {
     //             remainingCards: 0,
@@ -57,19 +60,6 @@ export default function App ()
     //             remainingCards: 0,
     //             remainingGuesses: 0,
     //         },
-    //         // Players
-    //         playersTotal: 1,
-    //         players: [],
-    //         currentPlayer: {
-    //             id: H.elper.generateRandomID(), // ID will come from name input page (1 before game page)
-    //             name: H.elper.generateRandomName(),
-    //             team: '',
-    //             position: '',
-    //             highlights: [],
-    //             isHost: false
-    //         },
-    //         // Game Log
-    //         gameLog: [],
     //         // Sizing
     //         appWidth: window.innerWidth,
     //         appHeight: window.innerHeight,
@@ -88,30 +78,30 @@ export default function App ()
     // this.set_game_state = this.set_game_state.bind(this)
     // this.set_round      = this.set_round.bind(this)
     // this.set_cards      = this.set_cards.bind(this)
-    // this.set_players    = this.set_players.bind(this)
+    // this.set_users    = this.set_users.bind(this)
     // this.set_clue       = this.set_clue.bind(this)
-    // this.set_message    = this.set_message.bind(this)
+    // this.set_instruction    = this.set_instruction.bind(this)
     // this.set_log        = this.set_log.bind(this)
 
     // // State methods - Teams
     // this.set_team_remaining_cards   = this.set_team_remaining_cards.bind(this)
     // this.set_team_remaining_guesses = this.set_team_remaining_guesses.bind(this)
 
-    // // State methods - Players
-    // this.player_add    = this.player_add.bind(this)
-    // this.player_remove = this.player_remove.bind(this)
+    // // State methods - Users
+    // this.user_add    = this.user_add.bind(this)
+    // this.user_remove = this.user_remove.bind(this)
 
-    // // State methods - Player Info
-    // this.set_player_ID       = this.set_player_ID.bind(this)
-    // this.set_player_name     = this.set_player_name.bind(this)
-    // this.set_player_team     = this.set_player_team.bind(this)
-    // this.set_player_position = this.set_player_position.bind(this)
-    // this.set_player_isHost   = this.set_player_isHost.bind(this)
+    // // State methods - User Info
+    // this.set_user_ID       = this.set_user_ID.bind(this)
+    // this.set_user_name     = this.set_user_name.bind(this)
+    // this.set_user_team     = this.set_user_team.bind(this)
+    // this.set_user_position = this.set_user_position.bind(this)
+    // this.set_user_isHost   = this.set_user_isHost.bind(this)
     // this.get_card_highlights = this.get_card_highlights.bind(this)
 
     // // State methods - Highlighting
-    // this.highlight_add        = this.highlight_add.bind(this)
-    // this.highlight_remove     = this.highlight_remove.bind(this)
+    // this.addHighlight        = this.addHighlight.bind(this)
+    // this.removeHighlight     = this.removeHighlight.bind(this)
     // this.highlight_clear_card = this.highlight_clear_card.bind(this)
     // this.highlight_clear_all  = this.highlight_clear_all.bind(this)
 
@@ -119,18 +109,18 @@ export default function App ()
     // this.log_add_item = this.log_add_item.bind(this)
     // this.log_clear    = this.log_clear.bind(this)
 
-    // // WS Methods - Player Info
-    // this.send_player_name     = this.send_player_name.bind(this)
-    // this.send_player_team     = this.send_player_team.bind(this)
-    // this.send_player_position = this.send_player_position.bind(this)
+    // // WS Methods - User Info
+    // this.sendUserName     = this.sendUserName.bind(this)
+    // this.sendUserTeam     = this.sendUserTeam.bind(this)
+    // this.sendUserPosition = this.sendUserPosition.bind(this)
 
-    // // WS Methods - Player Interactions
-    // this.send_clue      = this.send_clue.bind(this)
-    // this.send_card      = this.send_card.bind(this)
-    // this.send_highlight = this.send_highlight.bind(this)
+    // // WS Methods - User Interactions
+    // this.sendClue      = this.sendClue.bind(this)
+    // this.sendCard      = this.sendCard.bind(this)
+    // this.sendHighlight = this.sendHighlight.bind(this)
 
     // // Interaction Methods
-    // this.team_select = this.team_select.bind(this)
+    // this.teamSelect = this.teamSelect.bind(this)
 
     // // Functional methods - General
     // this.debounce             = this.debounce.bind(this)
@@ -180,10 +170,10 @@ export default function App ()
     /*======================================*/
     /*======================================*/
 
-    // set_players ( playersArray )
+    // set_users ( usersArray )
     // { 
-    //     this.setState({ players: playersArray })
-    //     this.setState({ playersTotal: this.state.players.length + 1 })
+    //     this.setState({ users: usersArray })
+    //     this.setState({ usersTotal: users.length + 1 })
     // }
 
     /*======================================*/
@@ -205,9 +195,9 @@ export default function App ()
     /*======================================*/
     /*======================================*/
 
-    // set_message ( newMessage )
+    // set_instruction ( newMessage )
     // { 
-    //     this.setState({ message: newMessage })
+    //     this.setState({ instruction: newInstruction })
     // }
 
     /*================================================
@@ -258,70 +248,70 @@ export default function App ()
     // }
 
     /*================================================
-        ANCHOR: STATE METHODS - Players
+        ANCHOR: STATE METHODS - Users
     ==================================================*/
 
-    // player_add ( player )
+    // user_add ( user )
     // { 
     //     this.setState( prevState => ({
-    //         players: [ ...prevState.players, player ]
+    //         users: [ ...prevState.users, user ]
     //     }))
-    //     this.setState({ playersTotal: this.state.playersTotal + 1 })
+    //     this.setState({ usersTotal: this.state.usersTotal + 1 })
     // }
     
     /*======================================*/
     /*======================================*/
 
-    // player_remove ( playerID )
+    // user_remove ( userID )
     // {
     //     this.setState( prevState => {
-    //         let players = prevState.players.filter( player => player.id !== playerID )
-    //         return { players }
+    //         let users = prevState.users.filter( user => user.id !== userID )
+    //         return { users }
     //     })
-    //     this.setState({ playersTotal: this.state.playersTotal - 1 })
+    //     this.setState({ usersTotal: this.state.usersTotal - 1 })
     // }
 
     /*================================================
-        ANCHOR: STATE METHODS - Player Info
+        ANCHOR: STATE METHODS - User Info
     ==================================================*/
 
-    // > This function is ONLY for the current player
-    // set_player_ID ( playerID )
+    // > This function is ONLY for the current user
+    // set_user_ID ( userID )
     // {
     //     this.setState(prevState => {
-    //         let currentPlayer = { ...prevState.currentPlayer }
-    //         currentPlayer.id = playerID
-    //         return { currentPlayer }
+    //         let user = { ...prevState.user }
+    //         user.id = userID
+    //         return { user }
     //     })
     // }
 
     /*======================================*/
     /*======================================*/
 
-    // set_player_name ( player, newName )
+    // set_user_name ( user, newName )
     // {
-    //     if ( player.id === this.state.currentPlayer.id )
+    //     if ( user.id === user.id )
     //     {
-    //         // > Current player
+    //         // > Current user
     //         this.setState(prevState => {
-    //             let currentPlayer = { ...prevState.currentPlayer }
-    //             currentPlayer.name = newName
-    //             return { currentPlayer }
+    //             let user = { ...prevState.user }
+    //             user.name = newName
+    //             return { user }
     //         })
     //     }
     //     else
     //     {
-    //         // > Other player
+    //         // > Other user
     //         this.setState( prevState => {
-    //             let players = prevState.players
-    //             for ( let i = 0; i < players.length; i++ )
+    //             let users = prevState.users
+    //             for ( let i = 0; i < users.length; i++ )
     //             {
-    //                 if ( players[i].id === player.id )
+    //                 if ( users[i].id === user.id )
     //                 {
-    //                     players[i].name = newName
+    //                     users[i].name = newName
     //                 }
     //             }
-    //             return { players }
+    //             return { users }
     //         })
     //     }
     // }
@@ -329,32 +319,32 @@ export default function App ()
     /*======================================*/
     /*======================================*/
 
-    // set_player_team ( player, newTeam )
+    // set_user_team ( user, newTeam )
     // {
     //     console.log('SET_PLAYER_TEAM - team: ', newTeam)
     //     console.log('SET_PLAYER_TEAM - typeof :', typeof newTeam)
-    //     if ( player.id === this.state.currentPlayer.id )
+    //     if ( user.id === user.id )
     //     {
-    //         // > Current player
+    //         // > Current user
     //         this.setState(prevState => {
-    //             let currentPlayer = { ...prevState.currentPlayer }
-    //             currentPlayer.team = newTeam
-    //             return { currentPlayer }
+    //             let user = { ...prevState.user }
+    //             user.team = newTeam
+    //             return { user }
     //         })
     //     }
     //     else
     //     {
-    //         // > Other player
+    //         // > Other user
     //         this.setState( prevState => {
-    //             let players = prevState.players
-    //             for ( let i = 0; i < players.length; i++ )
+    //             let users = prevState.users
+    //             for ( let i = 0; i < users.length; i++ )
     //             {
-    //                 if ( players[i].id === player.id )
+    //                 if ( users[i].id === user.id )
     //                 {
-    //                     players[i].team = newTeam
+    //                     users[i].team = newTeam
     //                 }
     //             }
-    //             return { players }
+    //             return { users }
     //         })
     //     }
     // }
@@ -362,32 +352,32 @@ export default function App ()
     /*======================================*/
     /*======================================*/
 
-    // set_player_position ( player, newPosition )
+    // set_user_position ( user, newPosition )
     // {
     //     console.log('SET_PLAYER_POSITION - position: ', newPosition)
     //     console.log('SET_PLAYER_POSITION - typeof :', typeof newPosition)
-    //     if ( player.id === this.state.currentPlayer.id )
+    //     if ( user.id === user.id )
     //     {
-    //         // > Current player
+    //         // > Current user
     //         this.setState( prevState => {
-    //             let currentPlayer = { ...prevState.currentPlayer }
-    //             currentPlayer.position = newPosition
-    //             return { currentPlayer }
+    //             let user = { ...prevState.user }
+    //             user.position = newPosition
+    //             return { user }
     //         })
     //     }
     //     else
     //     {
-    //         // > Other player
+    //         // > Other user
     //         this.setState( prevState => {
-    //             let players = prevState.players
-    //             for ( let i = 0; i < players.length; i++ )
+    //             let users = prevState.users
+    //             for ( let i = 0; i < users.length; i++ )
     //             {
-    //                 if ( players[i].id === player.id )
+    //                 if ( users[i].id === user.id )
     //                 {
-    //                     players[i].position = newPosition
+    //                     users[i].position = newPosition
     //                 }
     //             }
-    //             return { players }
+    //             return { users }
     //         })
     //     }
     // }
@@ -395,51 +385,51 @@ export default function App ()
     /*======================================*/
     /*======================================*/
 
-    // set_player_isHost ( player )
+    // set_user_isHost ( user )
     // {
-    //     console.log('===> set_player_isHost')
-    //     if ( player.id === this.state.currentPlayer.id )
+    //     console.log('===> set_user_isHost')
+    //     if ( user.id === user.id )
     //     {
-    //         // > Current player
-    //         // > Set current player to host
+    //         // > Current user
+    //         // > Set current user to host
     //         this.setState( prevState => {
-    //             let currentPlayer = { ...prevState.currentPlayer }
-    //             currentPlayer.isHost = true
-    //             return { currentPlayer }
+    //             let user = { ...prevState.user }
+    //             user.isHost = true
+    //             return { user }
     //         })
-    //         // > Remove host from other players
+    //         // > Remove host from other users
     //         this.setState( prevState => {
-    //             let players = prevState.players
-    //             for ( let i = 0; i < players.length; i++ )
+    //             let users = prevState.users
+    //             for ( let i = 0; i < users.length; i++ )
     //             {
-    //                 players[i].isHost = false
+    //                 users[i].isHost = false
     //             }
-    //             return { players }
+    //             return { users }
     //         })
     //     }
     //     else
     //     {
-    //         // > Other player
-    //         // > Remove current player as host
+    //         // > Other user
+    //         // > Remove current user as host
     //         this.setState( prevState => {
-    //             let currentPlayer = { ...prevState.currentPlayer }
-    //             currentPlayer.isHost = false
-    //             return { currentPlayer }
+    //             let user = { ...prevState.user }
+    //             user.isHost = false
+    //             return { user }
     //         })
-    //         // > Remove host from other players and set specified player as host
+    //         // > Remove host from other users and set specified user as host
     //         this.setState( prevState => {
-    //             let players = prevState.players
-    //             for ( let i = 0; i < players.length; i++ )
+    //             let users = prevState.users
+    //             for ( let i = 0; i < users.length; i++ )
     //             {
-    //                 if ( players[i].id === player.id )
-    //                 { players[i].isHost = true }
+    //                 if ( users[i].id === user.id )
+    //                 { users[i].isHost = true }
     //                 else
-    //                 { players[i].isHost = false }
+    //                 { users[i].isHost = false }
     //             }
-    //             return { players }
+    //             return { users }
     //         })
     //     }
-    //     console.log('===> END - set_player_isHost')
+    //     console.log('===> END - set_user_isHost')
     // }
 
     /*======================================*/
@@ -447,35 +437,35 @@ export default function App ()
 
     // get_card_highlights ( cardIndex )
     // {
-    //     // > Current Player
+    //     // > Current User
     //     let highlights = []
     //     if
     //     (
-    //         !( this.state.currentPlayer.highlights === undefined )
+    //         !( user.highlights === undefined )
     //         &&
-    //         ( this.state.currentPlayer.highlights.length )
+    //         ( user.highlights.length )
     //         &&
-    //         ( this.state.currentPlayer.highlights.includes( cardIndex ) )
+    //         ( user.highlights.includes( cardIndex ) )
     //     )
     //     {
     //         highlights.push(
     //             {
-    //                 name: this.state.currentPlayer.name,
-    //                 team: this.state.currentPlayer.team
+    //                 name: user.name,
+    //                 team: user.team
     //             }
     //         )
     //     }
-    //     // > Other Players
-    //     if ( !( this.state.players === undefined ) && ( this.state.players.length ) ) 
+    //     // > Other Users
+    //     if ( !( users === undefined ) && ( users.length ) ) 
     //     {
-    //         for ( let j = 0; j < this.state.players.length; j++ )
+    //         for ( let j = 0; j < users.length; j++ )
     //         {
-    //             if ( this.state.players[j].highlights.includes( cardIndex ) )
+    //             if ( users[j].highlights.includes( cardIndex ) )
     //             {
     //                     highlights.push(
     //                     {
-    //                         name: this.state.players[j].name,
-    //                         team: this.state.players[j].team
+    //                         name: users[j].name,
+    //                         team: users[j].team
     //                     }
     //                 )
     //             }
@@ -488,30 +478,30 @@ export default function App ()
         ANCHOR: STATE METHODS - Highlighting
     ==================================================*/
 
-    // highlight_add ( player, cardIndex )
+    // addHighlight ( user, cardIndex )
     // {
-    //     if ( player.id === this.state.currentPlayer.id )
+    //     if ( user.id === user.id )
     //     {
-    //         // Current player - State
+    //         // Current user - State
     //         this.setState( prevState => {
-    //             let currentPlayer = { ...prevState.currentPlayer }
-    //             currentPlayer.highlights.push( cardIndex )
-    //             return { currentPlayer }
+    //             let user = { ...prevState.user }
+    //             user.highlights.push( cardIndex )
+    //             return { user }
     //         })
     //     }
     //     else
     //     {
-    //         // Other player - State
+    //         // Other user - State
     //         this.setState( prevState => {
-    //             let players = prevState.players
-    //             for ( let i = 0; i < players.length; i++ )
+    //             let users = prevState.users
+    //             for ( let i = 0; i < users.length; i++ )
     //             {
-    //                 if ( players[i].id === player.id )
+    //                 if ( users[i].id === user.id )
     //                 {
-    //                     players[i].highlights.push( cardIndex )
+    //                     users[i].highlights.push( cardIndex )
     //                 }
     //             }
-    //             return { players }
+    //             return { users }
     //         })
     //     }
     // }
@@ -519,34 +509,34 @@ export default function App ()
     /*======================================*/
     /*======================================*/
 
-    // highlight_remove ( player, cardIndex )
+    // removeHighlight ( user, cardIndex )
     // {
-    //     if ( player.id === this.state.currentPlayer.id )
+    //     if ( user.id === user.id )
     //     {
-    //         // Current player - State
+    //         // Current user - State
     //         this.setState( prevState => {
-    //             let currentPlayer = { ...prevState.currentPlayer }
-    //             currentPlayer.highlights = currentPlayer.highlights.filter(
+    //             let user = { ...prevState.user }
+    //             user.highlights = user.highlights.filter(
     //                 highlightItem => ( highlightItem !== cardIndex )
     //             )
-    //             return { currentPlayer }
+    //             return { user }
     //         })
     //     }
     //     else
     //     {
-    //         // Other player - State
+    //         // Other user - State
     //         this.setState( prevState => {
-    //             let players = prevState.players
-    //             for ( let i = 0; i < players.length; i++ )
+    //             let users = prevState.users
+    //             for ( let i = 0; i < users.length; i++ )
     //             {
-    //                 if ( ( players[i].id === player.id ) && ( players[i].highlights.includes( cardIndex ) ) )
+    //                 if ( ( users[i].id === user.id ) && ( users[i].highlights.includes( cardIndex ) ) )
     //                 {
-    //                     players[i].highlights = players[i].highlights.filter(
+    //                     users[i].highlights = users[i].highlights.filter(
     //                         highlightIndex => ( highlightIndex !== cardIndex )
     //                     )
     //                 }
     //             }
-    //             return { players }
+    //             return { users }
     //         })
     //     }
     // }
@@ -624,11 +614,11 @@ export default function App ()
     // this.setAppDimensions()
 
     // TODO: Cookies
-    // Get current playerID (and maybe name/team/color) from cookies
+    // Get current userID (and maybe name/team/color) from cookies
     // If ID is not present, auth page has failed to store cookie
 
-    // let playerID = this.getCookie('player-id')
-    // this.set_player_ID( playerID )
+    // let userID = this.getCookie('user-id')
+    // this.set_user_ID( userID )
 
 
 
@@ -676,25 +666,25 @@ export default function App ()
     
                 case 'clientConnected':
                     {
-                        // This handler is only fired ONCE when the CURRENT player joins
+                        // This handler is only fired ONCE when the CURRENT user joins
                         // console.log('======= HANDLER - clientConnected =======')
         
                         // Set cards
                         if ( !( updateData.cards === undefined ) && ( updateData.cards.length ) )
                         { this.set_cards( updateData.cards ) }
         
-                        // Set players
-                        if ( !( updateData.players === undefined ) && ( updateData.players.length ) )
-                        { this.set_players( updateData.players ) }
+                        // Set users
+                        if ( !( updateData.users === undefined ) && ( updateData.users.length ) )
+                        { this.set_users( updateData.users ) }
                         
                         // Set log
                         if ( !( updateData.gameLog === undefined ) && ( updateData.gameLog.length ) )
                         { this.set_log( updateData.gameLog ) }
         
-                        // Send current player information to server
+                        // Send current user information to server
                         let newUpdate = {
                             type: 'userConnected',
-                            player: this.state.currentPlayer,
+                            user: user,
                         }
                         ws.send( JSON.stringify( newUpdate ) )
                         console.log('>>>>>>>>> Message Sent - userConnected >>>>>>>>>')
@@ -707,9 +697,9 @@ export default function App ()
     
                 case 'userConnected':
                     {
-                        // This handler is only fired when OTHER players join
+                        // This handler is only fired when OTHER users join
                         // console.log('======= HANDLER - userConnected =======')
-                        this.player_add( updateData.player )
+                        this.user_add( updateData.user )
                         // console.log('======= END - HANDLER - userConnected =======')
                         break
                     }
@@ -719,9 +709,9 @@ export default function App ()
     
                 case 'clientDisconnected':
                     {
-                        // This handler is only fired when OTHER players leave
+                        // This handler is only fired when OTHER users leave
                         // console.log('======= HANDLER - clientDisconnected =======')
-                        this.player_remove( updateData.playerID )
+                        this.user_remove( updateData.userID )
                         // console.log('======= END - HANDLER - clientDisconnected =======')
                         break
                     }
@@ -730,44 +720,44 @@ export default function App ()
                     ANCHOR: HANDLER - PLAYERS INFO
                 ==================================================*/
     
-                case 'updatePlayerName':
+                case 'updateUserName':
                     {
-                        // console.log('======= HANDLER - updatePlayerName =======')
-                        this.set_player_name( updateData.player, updateData.newName )
-                        // console.log('======= END - HANDLER - updatePlayerName =======')
+                        // console.log('======= HANDLER - updateUserName =======')
+                        this.set_user_name( updateData.user, updateData.newName )
+                        // console.log('======= END - HANDLER - updateUserName =======')
                         break
                     }
     
                 /*======================================*/
                 /*======================================*/
     
-                case 'updatePlayerTeam':
+                case 'updateUserTeam':
                 {
-                    // console.log('======= HANDLER - updatePlayerTeam =======')
-                    this.set_player_team( updateData.player, updateData.newTeam )
-                    // console.log('======= END - HANDLER - updatePlayerTeam =======')
+                    // console.log('======= HANDLER - updateUserTeam =======')
+                    this.set_user_team( updateData.user, updateData.newTeam )
+                    // console.log('======= END - HANDLER - updateUserTeam =======')
                     break
                 }
     
                 /*======================================*/
                 /*======================================*/
     
-                case 'updatePlayerPosition':
+                case 'updateUserPosition':
                 {
-                    // console.log('======= HANDLER - updatePlayerPosition =======')
-                    this.set_player_position( updateData.player, updateData.newPosition )
-                    // console.log('======= END - HANDLER - updatePlayerPosition =======')
+                    // console.log('======= HANDLER - updateUserPosition =======')
+                    this.set_user_position( updateData.user, updateData.newPosition )
+                    // console.log('======= END - HANDLER - updateUserPosition =======')
                     break
                 }
     
                 /*======================================*/
                 /*======================================*/
     
-                case 'updatePlayerIsHost':
+                case 'updateUserIsHost':
                 {
-                    console.log('======= HANDLER - updatePlayerIsHost =======')
-                    this.set_player_isHost( updateData.player )
-                    console.log('======= END - HANDLER - updatePlayerIsHost =======')
+                    console.log('======= HANDLER - updateUserIsHost =======')
+                    this.set_user_isHost( updateData.user )
+                    console.log('======= END - HANDLER - updateUserIsHost =======')
                     break
                 }
                 
@@ -778,7 +768,7 @@ export default function App ()
                 case 'updateAddHighlight':
                 {
                     console.log('======= HANDLER - updateAddHighlight =======')
-                    this.highlight_add( updateData.player, updateData.index )
+                    this.addHighlight( updateData.user, updateData.index )
                     console.log('======= END - HANDLER - updateAddHighlight =======')
                     break
                 }
@@ -789,7 +779,7 @@ export default function App ()
                 case 'updateRemoveHighlight':
                 {
                     console.log('======= HANDLER - updateRemoveHighlight =======')
-                    this.highlight_remove( updateData.player, updateData.index )
+                    this.removeHighlight( updateData.user, updateData.index )
                     console.log('======= END - HANDLER - updateRemoveHighlight =======')
                     break
                 }
@@ -869,63 +859,63 @@ export default function App ()
     }, [WS])
 
     /*================================================
-        ANCHOR: WS METHODS - Player Info
+        ANCHOR: WS METHODS - User Info
     ==================================================*/
 
-    // TODO: ==> send_player_name
-    const send_player_name = ( player, newName ) =>
+    // TODO: ==> sendUserName
+    const sendUserName = ( user, newName ) =>
     {
-        // console.log('===> send_player_name')
+        console.log('===> sendUserName')
         let newUpdate = {
-            type: 'updatePlayerName',
-            player: player,
+            type: 'updateUserName',
+            user: user,
             newName: newName,
         }
         this.socket.send( JSON.stringify( newUpdate ))
-        // console.log('>>>>>>>>> Message Sent - updatePlayerName >>>>>>>>>')
-        // console.log('===> END - send_player_name')
+        console.log('>>>>>>>>> Message Sent - updateUserName >>>>>>>>>')
+        console.log('===> END - sendUserName')
     }
 
     /*======================================*/
     /*======================================*/
 
-    // TODO: ==> send_player_team
-    const send_player_team = ( player, newTeam ) =>
+    // TODO: ==> sendUserTeam
+    const sendUserTeam = ( user, newTeam ) =>
     {
-        // console.log('===> send_player_team')
+        console.log('===> sendUserTeam')
         let newUpdate = {
-            type: 'updatePlayerTeam',
-            player: player,
+            type: 'updateUserTeam',
+            user: user,
             newTeam: newTeam,
         }
         this.socket.send( JSON.stringify( newUpdate ))
-        // console.log('>>>>>>>>> Message Sent - updatePlayerTeam >>>>>>>>>')
-        // console.log('===> END - send_player_team')
+        console.log('>>>>>>>>> Message Sent - updateUserTeam >>>>>>>>>')
+        console.log('===> END - sendUserTeam')
     }
 
     /*======================================*/
     /*======================================*/
 
-    // TODO: ==> send_player_position
-    const send_player_position = ( player, newPosition ) =>
+    // TODO: ==> sendUserPosition
+    const sendUserPosition = ( user, newPosition ) =>
     {
-        // console.log('===> send_player_position')
+        console.log('===> sendUserPosition')
         let newUpdate = {
-            type: 'updatePlayerPosition',
-            player: player,
+            type: 'updateUserPosition',
+            user: user,
             newPosition: newPosition,
         }
         this.socket.send( JSON.stringify( newUpdate ))
-        // console.log('>>>>>>>>> Message Sent - updatePlayerPosition >>>>>>>>>')
-        // console.log('===> END - send_player_position')
+        console.log('>>>>>>>>> Message Sent - updateUserPosition >>>>>>>>>')
+        console.log('===> END - sendUserPosition')
     }
 
     /*================================================
-        ANCHOR: WS METHODS - Player Interactions
+        ANCHOR: WS METHODS - User Interactions
     ==================================================*/
 
-    // TODO: ==> send_clue
-    const send_clue = ( clue ) =>
+    // TODO: ==> sendClue
+    const sendClue = ( clue ) =>
     {
         // ==> update game log
         // ==> 
@@ -934,7 +924,7 @@ export default function App ()
 
         // let newUpdate = {
         //     type: 'updateCardChoose',
-        //     player: {},
+        //     user: {},
         //     clue: clue,
         // }
         // this.socket.send( JSON.stringify( newUpdate ))
@@ -943,10 +933,10 @@ export default function App ()
     /*======================================*/
     /*======================================*/
 
-    // TODO: ==> send_card
-    const send_card = ( cardIndex ) =>
+    // TODO: ==> sendCard
+    const sendCard = ( cardIndex ) =>
     { 
-        // use currentPlayer --> updates from server will arrive as different commands, they will not use send_card here
+        // use user --> updates from server will arrive as different commands, they will not use sendCard here
         // ==> update game log
         // ==> clear card highlights
         // ==> send request to server
@@ -958,15 +948,15 @@ export default function App ()
     /*======================================*/
     /*======================================*/
 
-    // TODO: ==> send_highlight
-    const send_highlight = ( cardIndex ) =>
+    // TODO: ==> sendHighlight
+    const sendHighlight = ( cardIndex ) =>
     {
-        if ( !( this.state.currentPlayer.highlights.includes( cardIndex ) ) )
+        if ( !( user.highlights.includes( cardIndex ) ) )
         {
-            this.highlight_add( this.state.currentPlayer, cardIndex )
+            this.addHighlight( user, cardIndex )
             let newUpdate = {
                 type: 'updateAddHighlight',
-                player: this.state.currentPlayer,
+                user: user,
                 index: cardIndex,
             }
             this.socket.send( JSON.stringify( newUpdate ))
@@ -974,10 +964,10 @@ export default function App ()
         }
         else
         {
-            this.highlight_remove( this.state.currentPlayer, cardIndex )
+            this.removeHighlight( user, cardIndex )
             let newUpdate = {
                 type: 'updateRemoveHighlight',
-                player: this.state.currentPlayer,
+                user: user,
                 index: cardIndex,
             }
             this.socket.send( JSON.stringify( newUpdate ))
@@ -989,56 +979,56 @@ export default function App ()
         ANCHOR: INTERACTION METHODS
     ==================================================*/
 
-    const team_select = ( positionButton, colorCardTeam ) =>
+    const teamSelect = ( positionButton, colorCardTeam ) =>
     {
-        let player = this.state.currentPlayer
-        let colorPlayerTeam = this.state.currentPlayer.team
-        let positionPlayer  = this.state.currentPlayer.position
+        let user = user
+        let colorUserTeam = user.team
+        let positionUser  = user.position
 
-        const isOnTeam          = colorPlayerTeam
+        const isOnTeam          = colorUserTeam
         const isTeamCardRed     = ( colorCardTeam === C.onst.red )
         const isTeamCardBlue    = ( colorCardTeam === C.onst.blue )
-        const isSameTeam        = ( colorCardTeam === colorPlayerTeam )
-        const isPlayerOperative = ( positionPlayer === C.onst.operative )
-        const isPlayerSpymaster = ( positionPlayer === C.onst.spymaster )
+        const isSameTeam        = ( colorCardTeam === colorUserTeam )
+        const isUserOperative = ( positionUser === C.onst.operative )
+        const isUserSpymaster = ( positionUser === C.onst.spymaster )
         const isButtonOperative = ( positionButton === C.onst.operative )
         const isButtonSpymaster = ( positionButton === C.onst.spymaster )
 
-        // > Player does not have a team
+        // > User does not have a team
         if ( !isOnTeam && isTeamCardRed && isButtonOperative )
-        { this.send_player_team( player, colorCardTeam ); this.send_player_position( player, positionButton ) }
+        { this.sendUserTeam( user, colorCardTeam ); this.sendUserPosition( user, positionButton ) }
         if ( !isOnTeam && isTeamCardRed && isButtonSpymaster )
-        { this.send_player_team( player, colorCardTeam ); this.send_player_position( player, positionButton ) }
+        { this.sendUserTeam( user, colorCardTeam ); this.sendUserPosition( user, positionButton ) }
         if ( !isOnTeam && isTeamCardBlue && isButtonOperative )
-        { this.send_player_team( player, colorCardTeam ); this.send_player_position( player, positionButton ) }
+        { this.sendUserTeam( user, colorCardTeam ); this.sendUserPosition( user, positionButton ) }
         if ( !isOnTeam && isTeamCardBlue && isButtonSpymaster )
-        { this.send_player_team( player, colorCardTeam ); this.send_player_position( player, positionButton ) }
+        { this.sendUserTeam( user, colorCardTeam ); this.sendUserPosition( user, positionButton ) }
 
-        // > Player is already on a team
-        if ( isOnTeam && isTeamCardRed && isSameTeam && isPlayerOperative && isButtonSpymaster )
-        { this.send_player_position( player, positionButton ) }
-        if ( isOnTeam && isTeamCardRed && isSameTeam && isPlayerSpymaster && isButtonOperative )
-        { this.send_player_position( player, positionButton ) }
-        if ( isOnTeam && isTeamCardRed && !isSameTeam && isPlayerOperative && isButtonOperative )
-        { this.send_player_team( player, colorCardTeam ) }
-        if ( isOnTeam && isTeamCardRed && !isSameTeam && isPlayerOperative && isButtonSpymaster )
-        { this.send_player_team( player, colorCardTeam ); this.send_player_position( player, positionButton ) }
-        if ( isOnTeam && isTeamCardRed && !isSameTeam && isPlayerSpymaster && isButtonOperative )
-        { this.send_player_team( player, colorCardTeam ); this.send_player_position( player, positionButton ) }
-        if ( isOnTeam && isTeamCardRed && !isSameTeam && isPlayerSpymaster && isButtonSpymaster )
-        { this.send_player_team( player, colorCardTeam ) }
-        if ( isOnTeam && isTeamCardBlue && isSameTeam && isPlayerOperative && isButtonSpymaster )
-        { this.send_player_position( player, positionButton ) }
-        if ( isOnTeam && isTeamCardBlue && isSameTeam && isPlayerSpymaster && isButtonOperative )
-        { this.send_player_position( player, positionButton ) }
-        if ( isOnTeam && isTeamCardBlue && !isSameTeam && isPlayerOperative && isButtonOperative )
-        { this.send_player_team( player, colorCardTeam ) }
-        if ( isOnTeam && isTeamCardBlue && !isSameTeam && isPlayerOperative && isButtonSpymaster )
-        { this.send_player_team( player, colorCardTeam ); this.send_player_position( player, positionButton ) }
-        if ( isOnTeam && isTeamCardBlue && !isSameTeam && isPlayerSpymaster && isButtonOperative )
-        { this.send_player_team( player, colorCardTeam ); this.send_player_position( player, positionButton ) }
-        if ( isOnTeam && isTeamCardBlue && !isSameTeam && isPlayerSpymaster && isButtonSpymaster )
-        { this.send_player_team( player, colorCardTeam ) }
+        // > User is already on a team
+        if ( isOnTeam && isTeamCardRed && isSameTeam && isUserOperative && isButtonSpymaster )
+        { this.sendUserPosition( user, positionButton ) }
+        if ( isOnTeam && isTeamCardRed && isSameTeam && isUserSpymaster && isButtonOperative )
+        { this.sendUserPosition( user, positionButton ) }
+        if ( isOnTeam && isTeamCardRed && !isSameTeam && isUserOperative && isButtonOperative )
+        { this.sendUserTeam( user, colorCardTeam ) }
+        if ( isOnTeam && isTeamCardRed && !isSameTeam && isUserOperative && isButtonSpymaster )
+        { this.sendUserTeam( user, colorCardTeam ); this.sendUserPosition( user, positionButton ) }
+        if ( isOnTeam && isTeamCardRed && !isSameTeam && isUserSpymaster && isButtonOperative )
+        { this.sendUserTeam( user, colorCardTeam ); this.sendUserPosition( user, positionButton ) }
+        if ( isOnTeam && isTeamCardRed && !isSameTeam && isUserSpymaster && isButtonSpymaster )
+        { this.sendUserTeam( user, colorCardTeam ) }
+        if ( isOnTeam && isTeamCardBlue && isSameTeam && isUserOperative && isButtonSpymaster )
+        { this.sendUserPosition( user, positionButton ) }
+        if ( isOnTeam && isTeamCardBlue && isSameTeam && isUserSpymaster && isButtonOperative )
+        { this.sendUserPosition( user, positionButton ) }
+        if ( isOnTeam && isTeamCardBlue && !isSameTeam && isUserOperative && isButtonOperative )
+        { this.sendUserTeam( user, colorCardTeam ) }
+        if ( isOnTeam && isTeamCardBlue && !isSameTeam && isUserOperative && isButtonSpymaster )
+        { this.sendUserTeam( user, colorCardTeam ); this.sendUserPosition( user, positionButton ) }
+        if ( isOnTeam && isTeamCardBlue && !isSameTeam && isUserSpymaster && isButtonOperative )
+        { this.sendUserTeam( user, colorCardTeam ); this.sendUserPosition( user, positionButton ) }
+        if ( isOnTeam && isTeamCardBlue && !isSameTeam && isUserSpymaster && isButtonSpymaster )
+        { this.sendUserTeam( user, colorCardTeam ) }
     }
 
     /*================================================
@@ -1143,16 +1133,16 @@ export default function App ()
                     top: C.onst.cardTopBase,
                     left: C.onst.cardLeftBase,
                 }
-                if ( C.onst.row.two.includes(i) )   { positionData.top += ( ( C.onst.cardHeight ) * 1 ) }
-                if ( C.onst.row.three.includes(i) ) { positionData.top += ( ( C.onst.cardHeight ) * 2 ) }
-                if ( C.onst.row.four.includes(i) )  { positionData.top += ( ( C.onst.cardHeight ) * 3 ) }
-                if ( C.onst.row.five.includes(i) )  { positionData.top += ( ( C.onst.cardHeight ) * 4 ) }
-                if ( C.onst.columns.two.includes(i)   ) { positionData.left += ( ( C.onst.cardWidth ) * 1 ) }
+                if ( C.onst.row.two.includes(i) )       { positionData.top += ( ( C.onst.cardHeight ) * 1 ) }
+                if ( C.onst.row.three.includes(i) )     { positionData.top += ( ( C.onst.cardHeight ) * 2 ) }
+                if ( C.onst.row.four.includes(i) )      { positionData.top += ( ( C.onst.cardHeight ) * 3 ) }
+                if ( C.onst.row.five.includes(i) )      { positionData.top += ( ( C.onst.cardHeight ) * 4 ) }
+                if ( C.onst.columns.two.includes(i) )   { positionData.left += ( ( C.onst.cardWidth ) * 1 ) }
                 if ( C.onst.columns.three.includes(i) ) { positionData.left += ( ( C.onst.cardWidth ) * 2 ) }
-                if ( C.onst.columns.four.includes(i)  ) { positionData.left += ( ( C.onst.cardWidth ) * 3 ) }
-                if ( C.onst.columns.five.includes(i)  ) { positionData.left += ( ( C.onst.cardWidth ) * 4 ) }
+                if ( C.onst.columns.four.includes(i) )  { positionData.left += ( ( C.onst.cardWidth ) * 3 ) }
+                if ( C.onst.columns.five.includes(i) )  { positionData.left += ( ( C.onst.cardWidth ) * 4 ) }
 
-                // > Get list of highlighting players
+                // > Get list of highlighting users
                 let highlights = this.get_card_highlights( this.state.cards[i].index )
                 if ( !( highlights === undefined ) && ( highlights.length ) )
                 { console.log('==> displayCards > highlights: ', highlights) }
@@ -1162,10 +1152,10 @@ export default function App ()
                         key={i}
                         highlights     ={highlights}
                         positionData   ={positionData}
-                        currentPlayer  ={this.state.currentPlayer}
+                        user  ={user}
                         card           ={this.state.cards[i]}
-                        send_card      ={this.send_card}
-                        send_highlight ={this.send_highlight}
+                        sendCard      ={this.sendCard}
+                        sendHighlight ={this.sendHighlight}
                     />
                 )
             }
@@ -1179,17 +1169,17 @@ export default function App ()
 
     const onDevState = ( state ) => { this.set_game_state( state ) }
     const on_dev_log = () => { this.set_log( C.onst.fakeLog ) }
-    const on_dev_name = e => { if(e.keyCode === 13) { this.set_player_name( this.state.currentPlayer, e.target.value ) } }
-    const devListPlayers = () => {
+    const on_dev_name = e => { if(e.keyCode === 13) { this.set_user_name( user, e.target.value ) } }
+    const devListUsers = () => {
         let str = ''
-        for ( let i = 0; i < this.state.players.length; i++ )
-        {str += this.state.players[i].name; if( this.state.players[i].isHost ) { str += '[host]' } str += ', '}
+        for ( let i = 0; i < users.length; i++ )
+        {str += users[i].name; if( users[i].isHost ) { str += '[host]' } str += ', '}
         return str
     }
     const devListHighlights = () => {
         let str = ''
-        for ( let i = 0; i < this.state.currentPlayer.highlights.length; i++ )
-        {str += this.state.currentPlayer.highlights[i]; str += ', ' }
+        for ( let i = 0; i < user.highlights.length; i++ )
+        {str += user.highlights[i]; str += ', ' }
         return str
     }
 
@@ -1201,7 +1191,7 @@ export default function App ()
         <main className={
                 'codenames'
                 + ' ' + this.state.gameState
-                + ' ' + this.state.currentPlayer.position
+                + ' ' + user.position
             }
             style={{
                 width: this.state.appWidth + 'px',
@@ -1217,55 +1207,45 @@ export default function App ()
                         <GameMenu
                             // menu_action ={this.menu_action}
                             gameState   ={this.state.gameState}
-                            isHost      ={this.state.currentPlayer.isHost}
+                            isHost      ={user.isHost}
                         />
 
                         <div className='container-header'>
-                            <GameHeader
-                                players       ={this.state.players}
-                                playersTotal  ={this.state.playersTotal}
-                                currentPlayer ={this.state.currentPlayer}
-                            />
+                            <GameHeader />
 
-                            <GameMessage
-                                message       ={this.state.message}
-                                gameState     ={this.state.gameState}
-                                currentPlayer ={this.state.currentPlayer}
+                            <GameInstruction
+                                instruction ={this.state.instruction}
+                                gameState ={this.state.gameState}
                             />
                         </div>
 
                         <div className='container-sidebar sidebar-left'>
                             <TeamCard
                                 team          ={C.onst.red}
-                                team_select   ={this.team_select}
+                                teamSelect   ={this.teamSelect}
                                 teamData      ={this.state.teamRed}
-                                players       ={this.state.players}
                                 gameState     ={this.state.gameState}
-                                currentPlayer ={this.state.currentPlayer}
                             />
                         </div>    
                                                 
                         <div className='container-board'>
                             {displayCards()}
                             <GameInputs
-                                send_clue     ={this.send_clue}
+                                sendClue     ={this.sendClue}
                                 clue          ={this.state.clue}
                                 guesses       ={this.state.guesses}
                                 teamRed       ={this.state.teamRed}
                                 teamBlue      ={this.state.teamBlue}
                                 gameState     ={this.state.gameState}
-                                currentPlayer ={this.state.currentPlayer}
                             />
                         </div>
 
                         <div className='container-sidebar sidebar-right'>
                             <TeamCard
                                 team          ={C.onst.blue}
-                                team_select   ={this.team_select}
+                                teamSelect   ={this.teamSelect}
                                 teamData      ={this.state.teamBlue}
-                                players       ={this.state.players}
                                 gameState     ={this.state.gameState}
-                                currentPlayer ={this.state.currentPlayer}
                             />
                             <GameLog
                                 gameLog   ={this.state.gameLog}
@@ -1276,14 +1256,14 @@ export default function App ()
                         <div className='dev-tools left'>
                             <ul>
                                 <li><span>Game State: </span> {this.state.gameState}</li>
-                                <li><span>Players: </span>{devListPlayers()}</li>
-                                <li><span>Current Player: </span></li>
-                                <li><span>ID: </span>{ this.state.currentPlayer.id}</li>
-                                <li><span>Name: </span> {this.state.currentPlayer.name}</li>
-                                <li><span>Team: </span>{ this.state.currentPlayer.team}</li>
-                                <li><span>Position: </span> {this.state.currentPlayer.position}</li>
+                                <li><span>Users: </span>{devListUsers()}</li>
+                                <li><span>Current User: </span></li>
+                                <li><span>ID: </span>{user.id}</li>
+                                <li><span>Name: </span> {user.name}</li>
+                                <li><span>Team: </span>{user.team}</li>
+                                <li><span>Position: </span> {user.position}</li>
                                 <li><span>Highlights: </span> {devListHighlights()}</li>
-                                <li><span>Host: </span> {this.state.currentPlayer.isHost.toString()}</li>
+                                <li><span>Host: </span> {user.isHost.toString()}</li>
                             </ul>
                         </div>
                         <div className='dev-tools right'>

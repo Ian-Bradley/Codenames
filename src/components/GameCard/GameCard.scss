@@ -82,8 +82,8 @@ main.codenames .game-card {
             color: #fff;
             margin-right: $card-highlight-spacing;
             padding: 0 2px;
-            &.player-red  { background-color: red; }
-            &.player-blue { background-color: blue; }
+            &.user-red  { background-color: red; }
+            &.user-blue { background-color: blue; }
         }
     }
 

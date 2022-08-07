@@ -1,20 +1,23 @@
 import React from 'react'
 import * as C from '../../helpers/constants.js'
-import './GameLog.scss'
+import './log.scss'
 
-export default function GameLog ( props )
+/*
+logItem (Object)
+    type (String)
+    name (String)
+    team (String)
+    text (String)
+*/
+
+export default function log ( props )
 {
     /*================================================
         ANCHOR: STATES
     ==================================================*/
 
-    const gameLog = useSelector( ( state ) => { return state['log'].log } )
-    const gameState = useSelector( ( state ) => { return state['gameState'].gameState } )
-
-    /*================================================
-        ANCHOR: INTERACTIONS
-    ==================================================*/
-
+    const log = useSelector( ( state ) => { return state['log'].log } )
+    const gameState = useSelector( ( state ) => { return state['game'].game.state } )
 
     /*================================================
         ANCHOR: DISPLAYING
@@ -22,23 +25,18 @@ export default function GameLog ( props )
 
     const displayLogItems = () =>
     {
-        // console.log('===> display_log_items')
-        // console.log('gameLog: ', gameLog)
-        if ( !( gameLog === undefined ) && ( gameLog.length ) )
+        if ( !( log === undefined ) && ( log.length ) )
         {
-            let log = []
-            // console.log('> Before Log Loop')
-            for ( let i = 0; i < gameLog.length; i++ )
+            let gameLog = []
+            for ( let i = 0; i < log.length; i++ )
             {
-                // console.log('gameLog[i].type: ', gameLog[i].type)
-                switch( gameLog[i].type )
+                switch( log[i].type )
                 {
                     case 'clue':
                     {
-                        // console.log('> Case: clue')
-                        log.push(
-                            <li key={i} className={'team-' + gameLog[i].team}>
-                                <span>{gameLog[i].name}</span> gives clue <span className='game-log-clue'>{gameLog[i].text}</span>
+                        gameLog.push(
+                            <li key={i} className={'team-' + log[i].team}>
+                                <span>{log[i].name}</span> gives clue <span className='game-log-clue'>{log[i].text}</span>
                             </li>
                         )
                         break
@@ -46,10 +44,9 @@ export default function GameLog ( props )
 
                     case 'choose':
                     {
-                        // console.log('> Case: choose')
-                        log.push(
-                            <li key={i} className={'team-' + gameLog[i].team}>
-                                <span>{gameLog[i].name}</span> taps <span className={'card-' + gameLog[i].team}>{gameLog[i].text}</span>
+                        gameLog.push(
+                            <li key={i} className={'team-' + log[i].team}>
+                                <span>{log[i].name}</span> taps <span className={'card-' + log[i].team}>{log[i].text}</span>
                             </li>
                         )
                         break
@@ -57,10 +54,9 @@ export default function GameLog ( props )
         
                     case 'end':
                     {
-                        // console.log('> Case: end')
-                        log.push(
-                            <li key={i} className={'team-' + gameLog[i].team}>
-                                <span>{gameLog[i].name}</span> ends guessing
+                        gameLog.push(
+                            <li key={i} className={'team-' + log[i].team}>
+                                <span>{log[i].name}</span> ends guessing
                             </li>
                         )
                         break
@@ -68,10 +64,9 @@ export default function GameLog ( props )
         
                     case 'victory':
                     {
-                        // console.log('> Case: victory')
-                        log.push(
-                            <li key={i} className={'team-' + gameLog[i].team + ' victory'}>
-                                <span>{gameLog[i].team} team</span> <span>wins</span>
+                        gameLog.push(
+                            <li key={i} className={'team-' + log[i].team + ' victory'}>
+                                <span>{log[i].team} team</span> <span>wins</span>
                             </li>
                         )
                         break
@@ -79,8 +74,7 @@ export default function GameLog ( props )
                     default:
                 }
             }
-            // console.log('===> END - display_log_items')
-            return log
+            return gameLog
         }
     }
 

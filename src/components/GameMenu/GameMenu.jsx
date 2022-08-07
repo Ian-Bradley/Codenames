@@ -1,15 +1,22 @@
 import React from 'react'
 import Button from '../Button/Button.jsx'
+import * as C from '../../helpers/constants.js'
 import './GameMenu.scss'
 
 /**
- * @props isHost (boolean)       Flag for game host
- * @props gameState (string)     Current state of the game
  * @props menuAction (function) Handler function for menu buttons
  */
 
 export default function GameMenu ( props )
 {
+    /*================================================
+        ANCHOR: STATE
+    ==================================================*/
+
+    // Redux
+    const isUserHost = useSelector( ( state ) => { return state['user'].user.isHost } )
+    const gameState  = useSelector( ( state ) => { return state['game'].game.state } )
+
     /*================================================
         ANCHOR: INTERACTIONS
     ==================================================*/
@@ -45,30 +52,46 @@ export default function GameMenu ( props )
         ANCHOR: DISPLAYING
     ==================================================*/
 
-    const displayButtonClasses = () =>
+    const displayMenu = () =>
     {
-        if ( props.isHost )
+        if ( gameState === C.onst.gameState_setup )
         {
-            return [
-                (<Button
-                    key         ={0}
-                    btnClasses  ={'randomize-teams'}
-                    btnFunction ={onRandomizeTeams}
-                    btnText     ={'Randomize Teams'}
-                />),
-                (<Button
-                    key         ={1}
-                    btnClasses  ={'reset-teams'}
-                    btnFunction ={onResetTeams}
-                    btnText     ={'Reset Teams'}
-                />),
-                (<Button
-                    key         ={2}
-                    btnClasses  ={'start-new-game button-green'}
-                    btnFunction ={onStartNewGame}
-                    btnText     ={'Start New Game'}
-                />)
-            ]
+            let buttons = [];
+            if ( isUserHost )
+            {
+                buttons = [
+                    (<Button
+                        key         ={0}
+                        btnClasses  ={'randomize-teams'}
+                        btnFunction ={onRandomizeTeams}
+                        btnText     ={'Randomize Teams'}
+                    />),
+                    (<Button
+                        key         ={1}
+                        btnClasses  ={'reset-teams'}
+                        btnFunction ={onResetTeams}
+                        btnText     ={'Reset Teams'}
+                    />),
+                    (<Button
+                        key         ={2}
+                        btnClasses  ={'start-new-game button-green'}
+                        btnFunction ={onStartNewGame}
+                        btnText     ={'Start New Game'}
+                    />),
+                ]
+            }
+    
+            return (
+                <div className='game-menu'>
+                    <div className='game-title'>
+                        <span>C</span>ODENAMES
+                    </div>
+    
+                    <div className='game-menu-buttons'>
+                        {buttons}
+                    </div>
+                </div>
+            )
         }
     }
     
@@ -77,14 +100,8 @@ export default function GameMenu ( props )
     ==================================================*/
 
     return (
-        <div className='game-menu'>
-            <div className='game-title'>
-                <span>C</span>ODENAMES
-            </div>
-
-            <div className='game-menu-buttons'>
-                {displayButtonClasses()}
-            </div>
-        </div>
+        <React.Fragment>
+            {displayMenu()}
+        </React.Fragment>
     )
 }

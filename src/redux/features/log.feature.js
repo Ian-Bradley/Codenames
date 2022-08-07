@@ -6,12 +6,10 @@ const initialState = {
 
 /*
 logItem (Object)
-    id: (String)
-    data: (Object)
-        type (String)
-        name (String)
-        team (String)
-        text (String)
+    type (String)
+    name (String)
+    team (String)
+    text (String)
 */
 
 let logSlice = createSlice({

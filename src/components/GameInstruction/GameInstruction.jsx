@@ -7,7 +7,7 @@ export default function GameMessage ( props )
         ANCHOR: STATE
     ==================================================*/
 
-    const instruction = useSelector( ( state ) => { return state['instruction'].instruction } )
+    const instruction = useSelector( ( state ) => { return state['game'].game.instruction } )
     
     /*================================================
         ANCHOR: COMPONENTS

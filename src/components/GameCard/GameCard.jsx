@@ -8,8 +8,31 @@ import IconHand from '../../images/icons/hand.svg'
 import * as C from '../../helpers/constants.js'
 import './GameCard.scss'
 
+/*
+@props highlights (Array)
+@props positionData (Object)
+    top: (Number)
+    left: (Number)
+@props card (Object)
+    index: (Number)
+    text: (String)
+    type: (String)
+    highlighted: (Boolean)
+    chosen: (Boolean)
+@props sendCard (Function)
+@props sendHighlight (Function)
+*/
+
 export default function GameCard ( props )
 {
+    /*================================================
+        ANCHOR: STATE
+    ==================================================*/
+
+    // Redux
+    const user      = useSelector( ( state ) => { return state['user'].user } )
+    const gameState = useSelector( ( state ) => { return state['game'].game.state } )
+
     /*================================================
         ANCHOR: INTERACTIONS
     ==================================================*/
@@ -20,7 +43,7 @@ export default function GameCard ( props )
         if ( !props.card.chosen )
         {
             // Operative action
-            if ( props.user.position === C.onst.operative )
+            if ( user.position === C.onst.operative )
             {
                 // console.log('> Operative - Highlight')
                 props.sendHighlight( props.card.index )
@@ -30,7 +53,7 @@ export default function GameCard ( props )
             // Spymaster action
             // NOTE: also check for team so that opposing spymaster cannot see your highlights
             // props.card.highlighted (boolean)
-            if ( props.user.position === C.onst.spymaster )
+            if ( user.position === C.onst.spymaster )
             {
                 // TODO: Spymaster highlighting
                 // console.log('> Spymaster - Highlight')
@@ -56,7 +79,7 @@ export default function GameCard ( props )
     {
         console.log('===> onSendCard')
         // make spymaster not able to see choose button, so only operative can choose
-        // props.send_card( props.card.index )
+        // props.sendCard( props.card.index )
         console.log('===> END - onSendCard')
     }
 
@@ -70,7 +93,7 @@ export default function GameCard ( props )
         // TODO: change to server-only storage of card colors
         // only send to spymasters during non-set-up game states
         let cardClass = ''
-        if ( props.user.position === C.onst.spymaster )
+        if ( user.position === C.onst.spymaster )
         {
             if ( props.card.type === C.onst.red   ) { cardClass += C.onst.cardRed   }
             if ( props.card.type === C.onst.blue  ) { cardClass += C.onst.cardBlue  }
@@ -108,8 +131,8 @@ export default function GameCard ( props )
     const displayText = () =>
     {
         let words = props.card.text.split(' ')
-        // console.log('props.card.text: ', props.card.text)
-        // console.log('words: ', words)
+        console.log('props.card.text: ', props.card.text)
+        console.log('words: ', words)
         if ( ( words.length === 1 ) && ( props.card.text.length > 10 ) )
         {
             console.log('test1')

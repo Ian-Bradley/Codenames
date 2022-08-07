@@ -19,13 +19,28 @@ import './App.scss'
 /*================================================
     ANCHOR: REDUX ACTIONS
 ==================================================*/
+
+/*======================================*/
 import {
-    setGameState,
-} from '../redux/features/game.feature'
+    setCards,
+} from '../redux/features/cards.feature.js'
 /*======================================*/
 import {
     setDimensions
-} from '../redux/features/dimensions.feature'
+} from '../redux/features/dimensions.feature.js'
+/*======================================*/
+import {
+    setGameState,
+    setGameClue,
+    setGameGuesses,
+    setGameInstruction,
+    setRound,
+    incrementRound,
+    decrementRound,
+    setUserTotal,
+    incrementUserTotal,
+    decrementUserTotal,
+} from '../redux/features/game.feature.js'
 /*======================================*/
 import {
     setLog,
@@ -39,6 +54,13 @@ import {
     deleteMessage,
     deleteAllMessages,
 } from '../redux/features/messages.feature.js'
+/*======================================*/
+import {
+    setRedCards,
+    setRedGuesses,
+    setBlueCards,
+    setBlueGuesses,
+} from '../redux/features/teams.feature.js'
 /*======================================*/
 import {
     setID,
@@ -66,12 +88,6 @@ import {
     deleteAllUsersHighlights,
 } from '../redux/features/users.feature.js'
 /*======================================*/
-import {
-    setUserTotal,
-    incrementUserTotal,
-    decrementUserTotal,
-} from '../redux/features/userTotal.feature.js'
-/*======================================*/
 
 export default function App ()
 {
@@ -79,34 +95,21 @@ export default function App ()
     /*================================================
         ANCHOR: STATE
     ==================================================*/
+    // const messages = useSelector( ( state ) => { return state['messages'].messages } )
 
     // Redux
-    const user = useSelector( ( state ) => { return state['user'].user } )
-    const users = useSelector( ( state ) => { return state['users'].users } )
-    const cards = useSelector( ( state ) => { return state['cards'].cards } )
-    // const messages = useSelector( ( state ) => { return state['messages'].messages } )
-    const gameState = useSelector( ( state ) => { return state['gameState'].gameState } )
+    const user       = useSelector( ( state ) => { return state['user'].user } )
+    const users      = useSelector( ( state ) => { return state['users'].users } )
+    const cards      = useSelector( ( state ) => { return state['cards'].cards } )
+    const game       = useSelector( ( state ) => { return state['game'].game } )
+    const teamRed    = useSelector( ( state ) => { return state['teams'].teams.red } )
+    const teamBlue   = useSelector( ( state ) => { return state['teams'].teams.blue } )
     const dimensions = useSelector( ( state ) => { return state['dimensions'].dimensions } )
-    const dispatch = useDispatch()
+    const dispatch   = useDispatch()
+
     // Hooks
     const [WSReady, setWSReady] = useState(false)
     const [WS, setWS] = useState(new WebSocket( C.onst.wsURL ))
-
-
-    //         teamRed: {
-    //             name: 'C.onst.red'
-    //             remainingCards: 0,
-    //             remainingGuesses: 0,
-    //         },
-    //         teamBlue: {
-    //             name: 'C.onst.blue'
-    //             remainingCards: 0,
-    //             remainingGuesses: 0,
-    //         },
-        
-    // // State methods - Teams
-    // this.set_team_remaining_cards   = this.set_team_remaining_cards.bind(this)
-    // this.set_team_remaining_guesses = this.set_team_remaining_guesses.bind(this)
 
     /*================================================
         ANCHOR: HOOKS - APP DIMENSIONS
@@ -134,8 +137,8 @@ export default function App ()
         // TODO: Cookies
         // Get current userID (and maybe name/team/color) from cookies
         // If ID is not present, auth page has failed to store cookie
-        // let userID = this.getCookie('user-id')
-        // this.set_user_ID( userID )
+        // let userID = getCookie('user-id')
+        // set_user_ID( userID )
     })
 
     /*================================================
@@ -173,28 +176,38 @@ export default function App ()
                 case 'clientConnected':
                     {
                         // This handler is only fired ONCE when the CURRENT user joins
-                        // console.log('======= HANDLER - clientConnected =======')
+                        console.log('======= HANDLER - clientConnected =======')
         
+                        // Set current user ID
+                        // TODO: returning users will not do this
+                        // they will get id/name from cookies/localStorage OR from here on "return check" (create a new variable)
+                        console.log('> Setting ID')
+                        if ( updateData.userID )
+                        { dispatch( setID( updateData.userID ) ) }
+    
                         // Set cards
                         if ( !( updateData.cards === undefined ) && ( updateData.cards.length ) )
-                        { this.set_cards( updateData.cards ) }
+                        { dispatch( setCards( updateData.cards ) ) }
         
                         // Set users
                         if ( !( updateData.users === undefined ) && ( updateData.users.length ) )
-                        { this.set_users( updateData.users ) }
+                        {
+                            dispatch( setUsers( updateData.users ) )
+                            dispatch( setUserTotal( updateData.users.length + 1 ) )
+                        }
                         
                         // Set log
                         if ( !( updateData.gameLog === undefined ) && ( updateData.gameLog.length ) )
-                        { this.set_log( updateData.gameLog ) }
+                        { dispatch( setLog( updateData.gameLog ) ) }
         
                         // Send current user information to server
                         let newUpdate = {
                             type: 'userConnected',
                             user: user,
                         }
-                        ws.send( JSON.stringify( newUpdate ) )
+                        WS.send( JSON.stringify( newUpdate ) )
                         console.log('>>>>>>>>> Message Sent - userConnected >>>>>>>>>')
-                        // console.log('======= END - HANDLER - clientConnected =======')
+                        console.log('======= END - HANDLER - clientConnected =======')
                         break
                     }
     
@@ -204,10 +217,10 @@ export default function App ()
                 case 'userConnected':
                     {
                         // This handler is only fired when OTHER users join
-                        // console.log('======= HANDLER - userConnected =======')
+                        console.log('======= HANDLER - userConnected =======')
                         dispatch( addUser( updateData.user ) )
-                        // TODO: also update userTotal
-                        // console.log('======= END - HANDLER - userConnected =======')
+                        dispatch( incrementUserTotal() )
+                        console.log('======= END - HANDLER - userConnected =======')
                         break
                     }
     
@@ -217,10 +230,10 @@ export default function App ()
                 case 'clientDisconnected':
                     {
                         // This handler is only fired when OTHER users leave
-                        // console.log('======= HANDLER - clientDisconnected =======')
+                        console.log('======= HANDLER - clientDisconnected =======')
                         dispatch( deleteUser( updateData.userID ) )
-                        // TODO: also update userTotal
-                        // console.log('======= END - HANDLER - clientDisconnected =======')
+                        dispatch( decrementUserTotal() )
+                        console.log('======= END - HANDLER - clientDisconnected =======')
                         break
                     }
     
@@ -230,9 +243,12 @@ export default function App ()
     
                 case 'updateUserName':
                     {
-                        // console.log('======= HANDLER - updateUserName =======')
-                        this.set_user_name( updateData.user, updateData.newName )
-                        // console.log('======= END - HANDLER - updateUserName =======')
+                        console.log('======= HANDLER - updateUserName =======')
+                        if ( updateData.user.id === user.id )
+                        { dispatch( setName( updateData.newName ) ) }
+                        else
+                        { dispatch( setUserName( updateData.user.id, updateData.newName ) ) }
+                        console.log('======= END - HANDLER - updateUserName =======')
                         break
                     }
     
@@ -241,9 +257,12 @@ export default function App ()
     
                 case 'updateUserTeam':
                     {
-                        // console.log('======= HANDLER - updateUserTeam =======')
-                        this.set_user_team( updateData.user, updateData.newTeam )
-                        // console.log('======= END - HANDLER - updateUserTeam =======')
+                        console.log('======= HANDLER - updateUserTeam =======')
+                        if ( updateData.user.id === user.id )
+                        { dispatch( setTeam( updateData.newTeam ) ) }
+                        else
+                        { dispatch( setUserTeam( updateData.user.id, updateData.newTeam ) ) }
+                        console.log('======= END - HANDLER - updateUserTeam =======')
                         break
                     }
     
@@ -252,9 +271,12 @@ export default function App ()
     
                 case 'updateUserPosition':
                     {
-                        // console.log('======= HANDLER - updateUserPosition =======')
-                        this.set_user_position( updateData.user, updateData.newPosition )
-                        // console.log('======= END - HANDLER - updateUserPosition =======')
+                        console.log('======= HANDLER - updateUserPosition =======')
+                        if ( updateData.user.id === user.id )
+                        { dispatch( setPosition( updateData.newPosition ) ) }
+                        else
+                        { dispatch( setUserPosition( updateData.user.id, updateData.newPosition ) ) }
+                        console.log('======= END - HANDLER - updateUserPosition =======')
                         break
                     }
     
@@ -264,7 +286,16 @@ export default function App ()
                 case 'updateUserIsHost':
                     {
                         console.log('======= HANDLER - updateUserIsHost =======')
-                        this.set_user_isHost( updateData.user )
+                        if ( updateData.user.id === user.id )
+                        {
+                            dispatch( setIsHost( true ) )
+                            dispatch( removeUsersIsHost() )
+                        }
+                        else
+                        {
+                            dispatch( setIsHost( false ) )
+                            dispatch( setUserIsHost( updateData.user.id ) )
+                        }
                         console.log('======= END - HANDLER - updateUserIsHost =======')
                         break
                     }
@@ -276,7 +307,10 @@ export default function App ()
                 case 'updateAddHighlight':
                     {
                         console.log('======= HANDLER - updateAddHighlight =======')
-                        this.addHighlight( updateData.user, updateData.index )
+                        if ( updateData.user.id === user.id )
+                        { dispatch( addHighlight( updateData.highlight ) ) }
+                        else
+                        { dispatch( addUserHighlight( updateData.user.id, updateData.highlight ) ) }
                         console.log('======= END - HANDLER - updateAddHighlight =======')
                         break
                     }
@@ -284,17 +318,21 @@ export default function App ()
                 /*======================================*/
                 /*======================================*/
 
-                case 'updateRemoveHighlight':
-                {
-                        console.log('======= HANDLER - updateRemoveHighlight =======')
-                        this.removeHighlight( updateData.user, updateData.index )
-                        console.log('======= END - HANDLER - updateRemoveHighlight =======')
+                case 'updateDeleteHighlight':
+                    {
+                        console.log('======= HANDLER - updateDeleteHighlight =======')
+                        if ( updateData.user.id === user.id )
+                        { dispatch( deleteHighlight( updateData.highlight.index ) ) }
+                        else
+                        { dispatch( deleteUserHighlight( updateData.user.id, updateData.highlight.index ) ) }
+                        console.log('======= END - HANDLER - updateDeleteHighlight =======')
                         break
                     }
 
                 /*======================================*/
                 /*======================================*/
 
+                // TODO: ==> updateClearCardHighlights
                 // case 'updateClearCardHighlights':
                 //     {
                 //         break
@@ -303,6 +341,7 @@ export default function App ()
                 /*======================================*/
                 /*======================================*/
 
+                // TODO: ==> updateClearHighlights
                 // case 'updateClearHighlights':
                 //     {
                 //         break
@@ -312,6 +351,7 @@ export default function App ()
                     ANCHOR: HANDLER - CARD CHOOSING
                 ==================================================*/
 
+                // TODO: ==> updateCardChoose
                 // case 'updateCardChoose':
                 //     {
                 //         break
@@ -364,7 +404,7 @@ export default function App ()
     }, [WS])
 
     /*================================================
-        ANCHOR: WS METHODS - User Info
+        ANCHOR: WS SENDERS - USER INFO
     ==================================================*/
 
     // TODO: ==> sendUserName
@@ -376,7 +416,7 @@ export default function App ()
             user: user,
             newName: newName,
         }
-        this.socket.send( JSON.stringify( newUpdate ))
+        WS.send( JSON.stringify( newUpdate ))
         console.log('>>>>>>>>> Message Sent - updateUserName >>>>>>>>>')
         console.log('===> END - sendUserName')
     }
@@ -393,7 +433,7 @@ export default function App ()
             user: user,
             newTeam: newTeam,
         }
-        this.socket.send( JSON.stringify( newUpdate ))
+        WS.send( JSON.stringify( newUpdate ))
         console.log('>>>>>>>>> Message Sent - updateUserTeam >>>>>>>>>')
         console.log('===> END - sendUserTeam')
     }
@@ -410,13 +450,13 @@ export default function App ()
             user: user,
             newPosition: newPosition,
         }
-        this.socket.send( JSON.stringify( newUpdate ))
+        WS.send( JSON.stringify( newUpdate ))
         console.log('>>>>>>>>> Message Sent - updateUserPosition >>>>>>>>>')
         console.log('===> END - sendUserPosition')
     }
 
     /*================================================
-        ANCHOR: WS METHODS - User Interactions
+        ANCHOR: WS SENDERS - INTERACTIONS
     ==================================================*/
 
     // TODO: ==> sendClue
@@ -432,7 +472,7 @@ export default function App ()
         //     user: {},
         //     clue: clue,
         // }
-        // this.socket.send( JSON.stringify( newUpdate ))
+        // WS.send( JSON.stringify( newUpdate ))
     }
 
     /*======================================*/
@@ -458,101 +498,26 @@ export default function App ()
     {
         if ( !( user.highlights.includes( cardIndex ) ) )
         {
-            this.addHighlight( user, cardIndex )
+            addHighlight( user, cardIndex )
             let newUpdate = {
                 type: 'updateAddHighlight',
                 user: user,
                 index: cardIndex,
             }
-            this.socket.send( JSON.stringify( newUpdate ))
+            WS.send( JSON.stringify( newUpdate ))
             console.log('>>>>>>>>> Message Sent - updateAddHighlight >>>>>>>>>')
         }
         else
         {
-            this.removeHighlight( user, cardIndex )
+            removeHighlight( user, cardIndex )
             let newUpdate = {
                 type: 'updateRemoveHighlight',
                 user: user,
                 index: cardIndex,
             }
-            this.socket.send( JSON.stringify( newUpdate ))
+            WS.send( JSON.stringify( newUpdate ))
             console.log('>>>>>>>>> Message Sent - updateRemoveHighlight >>>>>>>>>')
         }
-    }
-
-    /*================================================
-        ANCHOR: INTERACTION METHODS
-    ==================================================*/
-
-    // TODO: ==> teamSelect
-    const teamSelect = ( positionButton, colorCardTeam ) =>
-    {
-        let colorUserTeam = user.team
-        let positionUser  = user.position
-
-        const isOnTeam          = colorUserTeam
-        const isTeamCardRed     = ( colorCardTeam === C.onst.red )
-        const isTeamCardBlue    = ( colorCardTeam === C.onst.blue )
-        const isSameTeam        = ( colorCardTeam === colorUserTeam )
-        const isUserOperative = ( positionUser === C.onst.operative )
-        const isUserSpymaster = ( positionUser === C.onst.spymaster )
-        const isButtonOperative = ( positionButton === C.onst.operative )
-        const isButtonSpymaster = ( positionButton === C.onst.spymaster )
-
-        // > User does not have a team
-        if ( !isOnTeam && isTeamCardRed && isButtonOperative )
-        { sendUserTeam( user, colorCardTeam ); sendUserPosition( user, positionButton ) }
-        if ( !isOnTeam && isTeamCardRed && isButtonSpymaster )
-        { sendUserTeam( user, colorCardTeam ); sendUserPosition( user, positionButton ) }
-        if ( !isOnTeam && isTeamCardBlue && isButtonOperative )
-        { sendUserTeam( user, colorCardTeam ); sendUserPosition( user, positionButton ) }
-        if ( !isOnTeam && isTeamCardBlue && isButtonSpymaster )
-        { sendUserTeam( user, colorCardTeam ); sendUserPosition( user, positionButton ) }
-
-        // > User is already on a team
-        if ( isOnTeam && isTeamCardRed && isSameTeam && isUserOperative && isButtonSpymaster )
-        { sendUserPosition( user, positionButton ) }
-        if ( isOnTeam && isTeamCardRed && isSameTeam && isUserSpymaster && isButtonOperative )
-        { sendUserPosition( user, positionButton ) }
-        if ( isOnTeam && isTeamCardRed && !isSameTeam && isUserOperative && isButtonOperative )
-        { sendUserTeam( user, colorCardTeam ) }
-        if ( isOnTeam && isTeamCardRed && !isSameTeam && isUserOperative && isButtonSpymaster )
-        { sendUserTeam( user, colorCardTeam ); sendUserPosition( user, positionButton ) }
-        if ( isOnTeam && isTeamCardRed && !isSameTeam && isUserSpymaster && isButtonOperative )
-        { sendUserTeam( user, colorCardTeam ); sendUserPosition( user, positionButton ) }
-        if ( isOnTeam && isTeamCardRed && !isSameTeam && isUserSpymaster && isButtonSpymaster )
-        { sendUserTeam( user, colorCardTeam ) }
-        if ( isOnTeam && isTeamCardBlue && isSameTeam && isUserOperative && isButtonSpymaster )
-        { sendUserPosition( user, positionButton ) }
-        if ( isOnTeam && isTeamCardBlue && isSameTeam && isUserSpymaster && isButtonOperative )
-        { sendUserPosition( user, positionButton ) }
-        if ( isOnTeam && isTeamCardBlue && !isSameTeam && isUserOperative && isButtonOperative )
-        { sendUserTeam( user, colorCardTeam ) }
-        if ( isOnTeam && isTeamCardBlue && !isSameTeam && isUserOperative && isButtonSpymaster )
-        { sendUserTeam( user, colorCardTeam ); sendUserPosition( user, positionButton ) }
-        if ( isOnTeam && isTeamCardBlue && !isSameTeam && isUserSpymaster && isButtonOperative )
-        { sendUserTeam( user, colorCardTeam ); sendUserPosition( user, positionButton ) }
-        if ( isOnTeam && isTeamCardBlue && !isSameTeam && isUserSpymaster && isButtonSpymaster )
-        { sendUserTeam( user, colorCardTeam ) }
-    }
-
-    /*================================================
-        ANCHOR: FUNCTIONAL METHODS - General
-    ==================================================*/
-
-    // TODO: ==> enableInteractions
-    const enableInteractions = () =>
-    {
-        
-    }
-
-    /*======================================*/
-    /*======================================*/
-
-    // TODO: ==> disableInteractions
-    const disableInteractions = () =>
-    {
-        
     }
 
     /*================================================
@@ -583,7 +548,7 @@ export default function App ()
                 if ( C.onst.columns.five.includes(i) )  { positionData.left += ( ( C.onst.cardWidth ) * 4 ) }
 
                 // > Get list of highlighting users
-                let highlights = this.get_card_highlights( cards[i].index )
+                let highlights = get_card_highlights( cards[i].index )
                 if ( !( highlights === undefined ) && ( highlights.length ) )
                 { console.log('==> displayCards > highlights: ', highlights) }
 
@@ -592,10 +557,9 @@ export default function App ()
                         key={i}
                         highlights    ={highlights}
                         positionData  ={positionData}
-                        user          ={user}
                         card          ={cards[i]}
-                        sendCard      ={this.sendCard}
-                        sendHighlight ={this.sendHighlight}
+                        sendCard      ={sendCard}
+                        sendHighlight ={sendHighlight}
                     />
                 )
             }
@@ -607,21 +571,21 @@ export default function App ()
         ANCHOR: DEV TOOLS
     ==================================================*/
 
-    const onDevState = ( state ) => { this.set_game_state( state ) }
-    const on_dev_log = () => { this.set_log( C.onst.fakeLog ) }
-    const on_dev_name = e => { if(e.keyCode === 13) { this.set_user_name( user, e.target.value ) } }
-    const devListUsers = () => {
-        let str = ''
-        for ( let i = 0; i < users.length; i++ )
-        {str += users[i].name; if( users[i].isHost ) { str += '[host]' } str += ', '}
-        return str
-    }
-    const devListHighlights = () => {
-        let str = ''
-        for ( let i = 0; i < user.highlights.length; i++ )
-        {str += user.highlights[i]; str += ', ' }
-        return str
-    }
+    // const onDevState = ( state ) => { set_game_state( state ) }
+    // const on_dev_log = () => { set_log( C.onst.fakeLog ) }
+    // const on_dev_name = e => { if(e.keyCode === 13) { set_user_name( user, e.target.value ) } }
+    // const devListUsers = () => {
+    //     let str = ''
+    //     for ( let i = 0; i < users.length; i++ )
+    //     {str += users[i].name; if( users[i].isHost ) { str += '[host]' } str += ', '}
+    //     return str
+    // }
+    // const devListHighlights = () => {
+    //     let str = ''
+    //     for ( let i = 0; i < user.highlights.length; i++ )
+    //     {str += user.highlights[i]; str += ', ' }
+    //     return str
+    // }
 
     /*================================================
         ANCHOR: COMPONENTS
@@ -629,13 +593,16 @@ export default function App ()
 
     return (
         <main
-            className={'codenames'+' '+gameState+' '+user.position}
-            style={{width: dimensions.appWidth+'px', height: dimensions.appHeight+'px'}}
+            className={'codenames'+' '+game.state+' '+user.position}
+            style={{
+                width: dimensions.appWidth+'px',
+                height: dimensions.appHeight+'px'
+            }}
         >
             <div className='bg-texture-layer'>
                 <div className='scaler' style={{transform: 'scale('+dimensions.appScaler+')'}}>
                     <div className='container-app'>
-
+                        
                         <GameMenu />
 
                         <div className='container-header'>
@@ -645,31 +612,31 @@ export default function App ()
 
                         <div className='container-sidebar sidebar-left'>
                             <TeamCard
-                                team      ={teamRed.name}
-                                teamData  ={teamRed}
-                                teamSelect={this.teamSelect}
+                                team={teamRed}
+                                sendUserName={sendUserName}
+                                sendUserPosition={sendUserPosition}
                             />
                         </div>    
                                                 
                         <div className='container-board'>
                             {displayCards()}
                             <GameInputs
-                                sendClue     ={this.sendClue}
+                                sendClue={sendClue}
                             />
                         </div>
 
                         <div className='container-sidebar sidebar-right'>
                             <TeamCard
-                                team      ={teamBlue.name}
-                                teamData  ={teamBlue}
-                                teamSelect={this.teamSelect}
+                                team={teamBlue}
+                                sendUserName={sendUserName}
+                                sendUserPosition={sendUserPosition}
                             />
                             <GameLog />
                         </div>
 
                         <div className='dev-tools left'>
                             <ul>
-                                <li><span>Game State: </span> {gameState}</li>
+                                <li><span>Game State: </span> {game.state}</li>
                                 <li><span>Users: </span>{devListUsers()}</li>
                                 <li><span>Current User: </span></li>
                                 <li><span>ID: </span>{user.id}</li>

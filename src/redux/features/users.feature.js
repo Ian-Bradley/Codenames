@@ -121,7 +121,7 @@ let usersSlice = createSlice({
 
         addUserHighlight: function ( state, action )
         {
-            // action.payload = user + highlight data (Object {userID: (String), highlight: (Object)})
+            // action.payload = user id + highlight data (Object {userID: (String), highlight: (Object)})
             state.users.map( ( user ) =>
                 {
                     if ( user.id === action.payload.userID )
@@ -136,13 +136,12 @@ let usersSlice = createSlice({
 
         deleteUserHighlight: function ( state, action )
         {
-            // action.payload = user + highlight data (Object {userID: (String), highlightID: (Number)})
-            // hightlight id's are created by using the card index of the clicked card
+            // action.payload = user + highlight/card index (Object {userID: (String), index: (Number)})
             state.users.map( ( user ) =>
                 {
                     if ( user.id === action.payload.userID )
                     {
-                        user.hightlights.filter( hightlight => hightlight.id !== action.payload.highlightID )
+                        user.hightlights.filter( hightlight => hightlight.id !== action.payload.index )
                     }
                 }
             )

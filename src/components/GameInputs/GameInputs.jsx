@@ -12,8 +12,7 @@ export default function GameInputs ( props )
         ANCHOR: STATE
     ==================================================*/
 
-    const clue    = useSelector( ( state ) => { return state['clue'].clue } )
-    const guesses = useSelector( ( state ) => { return state['guesses'].guesses } )
+    const game = useSelector( ( state ) => { return state['game'].game } )
 
     /*================================================
         ANCHOR: INTERACTIONS
@@ -75,7 +74,7 @@ export default function GameInputs ( props )
 
     const displayClue = () =>
     {
-        if ( clue ) { return clue }
+        if ( game.clue ) { return game.clue }
     }
 
     /*======================================*/
@@ -83,7 +82,7 @@ export default function GameInputs ( props )
 
     const displayGuesses = () =>
     {
-        if ( guesses ) { return guesses }
+        if ( game.guesses ) { return game.guesses }
     }
 
     /*================================================

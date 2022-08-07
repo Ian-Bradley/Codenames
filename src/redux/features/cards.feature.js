@@ -6,8 +6,11 @@ const initialState = {
 
 /*
 card (Object)
-    id: (Number)
-
+    index: (Number)
+    text: (String)
+    type: (String)
+    highlighted: (Boolean)
+    chosen: (Boolean)
 */
 
 let cardsSlice = createSlice({

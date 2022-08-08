@@ -1,7 +1,8 @@
 import logReducer from './features/log.feature.js'
+import teamsReducer from './features/teams.feature.js'
 import cardsReducer from './features/cards.feature.js'
 import messagesReducer from './features/messages.feature.js'
-import teamsReducer from './features/teams.feature.js'
+import highlightsReducer from './features/highlights.feature.js'
 
 import userReducer from './features/user.feature.js'
 import usersReducer from './features/users.feature.js'
@@ -18,5 +19,6 @@ const rootReducer = {
     cards: cardsReducer,
     messages: messagesReducer,
     dimensions: dimensionsReducer,
+    highlights: highlightsReducer,
 }
 export default rootReducer

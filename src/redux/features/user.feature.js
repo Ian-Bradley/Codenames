@@ -7,7 +7,6 @@ const initialState = {
         name: H.elper.generateRandomName(true),
         team: '',
         position: '',
-        highlights: [],
         isHost: false,
     }
 }
@@ -55,30 +54,6 @@ let userSlice = createSlice({
         },
         
         /*======================================*/
-
-        addHighlight: function ( state, action )
-        {
-            // action.payload = highlight (Object)
-            state.user.hightlights.push( action.payload )
-        },
-
-        /*======================================*/
-
-        deleteHighlight: function ( state, action )
-        {
-            // action.payload = card index (Number)
-            // hightlight id's are created by using the card index of the clicked card
-            state.user.hightlights.filter( hightlight => hightlight.id !== action.payload )
-        },
-
-        /*======================================*/
-
-        deleteAllHighlight: function ( state, action )
-        {
-            state.user.hightlights = [];
-        },
-
-        /*======================================*/
     }
 })
 export const {
@@ -87,8 +62,5 @@ export const {
     setTeam,
     setPosition,
     setIsHost,
-    addHighlight,
-    deleteHighlight,
-    deleteAllHighlights,
 } = userSlice.actions
 export default userSlice.reducer

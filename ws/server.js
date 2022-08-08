@@ -1,5 +1,12 @@
 /*======================================
-    ANCHOR: CONFIGURATION
+    BLOCK: REQUIRES
+========================================*/
+
+// const C = require('./lib/util/constants.js');
+// const F = require('./lib/util/functions.js');
+
+/*======================================
+    BLOCK: CONFIGURATION
 ========================================*/
 
 const express = require('express')
@@ -10,43 +17,34 @@ const PORT = 3001
 const server = express()
     .use(express.static('public'))
     .listen(PORT, '0.0.0.0', 'localhost', () => console.log(`Listening on ${ PORT }`))
-const wss = new SocketServer.Server({ server })
+const WSS = new SocketServer.Server({ server })
 
 /*================================================
-    ANCHOR: CLASS INITIATION
+    BLOCK: CLASS INITIATION
 ==================================================*/
 
-import Game from './GameClass.js'
-let game = new Game()
+const Game = require( './GameClass.js' )
 
 /*================================================
-    ANCHOR: WS SERVER FUNCTIONS
+    BLOCK: WS SERVER FUNCTIONS
 ==================================================*/
 
-wss.broadcast = ( data, wsClient ) =>
-{
-    wss.clients.forEach( client =>
-    {
-        if ( ( client.readyState === SocketServer.OPEN ) && ( wsClient !== client ) )
-        {
+WSS.broadcast = ( data, wsClient ) => {
+    WSS.clients.forEach( client => {
+        if ( ( client.readyState === SocketServer.OPEN ) && ( wsClient !== client ) ) {
             client.send( data )
         }
     })
 }
 
-wss.broadcast_client = ( data, wsClient ) =>
-{
-    if ( wsClient.readyState === SocketServer.OPEN )
-    {
+WSS.broadcast_client = ( data, wsClient ) => {
+    if ( wsClient.readyState === SocketServer.OPEN ) {
         wsClient.send( data )
     }
-    
 }
 
-wss.broadcast_all = ( data ) =>
-{
-    wss.clients.forEach( client =>
-    {
+WSS.broadcast_all = ( data ) => {
+    WSS.clients.forEach( client => {
         if ( client.readyState === SocketServer.OPEN )
         {
             client.send( data )
@@ -55,240 +53,244 @@ wss.broadcast_all = ( data ) =>
 }
 
 /*================================================
-    ANCHOR: WS SERVER
+    BLOCK: WS SERVER
 ==================================================*/
 
-wss.on('connection', ( wsClient ) =>
-{
+WSS.on('connection', ( wsClient ) => {
 
     /*================================================
-        ANCHOR: INITIAL CONNECTION TO CLIENT
+        INNERBLOCK: > WS - INITIAL CONNECTION TO CLIENT
     ==================================================*/
     
-    // console.log('======= Client Connected =======')
+    console.log('======= Client Connected =======')
  
     // > Set initial client data
     let clientData = {
-        id:          uuidv4(), // message id
-        playerID:    '', // id for disconnecting player removal and determining host
-        type:        'clientConnected',
-        cards:       game.state.cards,
-        players:     game.state.players,
-        gameLog:     game.state.gameLog,
+        id:      uuidv4(), // message id
+        userID:  '', // id for disconnecting user removal and determining host
+        type:    'clientConnected',
+        cards:   Game.state.cards,
+        users:   Game.state.users,
+        gameLog: Game.state.log,
     }
     
-    // TODO: Send team guesses/cards remaining as well (returning players)
+    // TODO: Send team guesses/cards remaining as well (returning users)
     
-    // > Send cards, players on connection for current client
-    wss.broadcast_client( JSON.stringify( clientData ), wsClient )
-    // console.log('>>>>>>>>> Message Sent - Client Data >>>>>>>>>')
-    // console.log('======= END - Client Connected =======')
+    // > Send cards, users on connection for current client
+    WSS.broadcast_client( JSON.stringify( clientData ), wsClient )
+    console.log('>>>>>>>>> Message Sent - Client Data >>>>>>>>>')
+    console.log('======= END - Client Connected =======')
 
 
     /*================================================
-        ANCHOR: HANDLERS
+        INNERBLOCK: > WS - HANDLERS
     ==================================================*/
 
-    wsClient.on('message', function incoming( data )
-    {
+    wsClient.on('message', function incoming( data ) {
         console.log('>>>>>>>>> Message Recieved >>>>>>>>>')
         let updateData = JSON.parse( data )
         console.log('type: ', updateData.type)
 
-        switch ( updateData.type )
-        {
+        switch ( updateData.type ) {
 
-            /*================================================
-                ANCHOR: HANDLER - PLAYER CONNECTION
-            ==================================================*/
+            /*================================================*/
+            /*================================================*/
 
-            case 'userConnected':
-                {
-                    // > Send new player data to all other players
-                    // console.log('======= HANDLER - userConnected =======')
+            // HANDLER: => USER CONNECTED
+            case 'userConnected': {
+                    // > Send new user data to all other users
+                    console.log('======= MESSAGE - userConnected =======')
                     updateData.id = uuidv4()
-                    clientData.playerID = updateData.player.id // set id for disconnecting player removal
-                    game.addPlayer( updateData.player )
-                    wss.broadcast( JSON.stringify( updateData ), wsClient )
-                    // console.log('>>>>>>>>> Message Sent - userConnected >>>>>>>>>')
+                    clientData.userID = updateData.user.id // set id for disconnecting user removal
+                    Game.addUser( updateData.user )
+                    WSS.broadcast( JSON.stringify( updateData ), wsClient )
+                    console.log('>>>>>>>>> Message Sent - userConnected >>>>>>>>>')
 
                     // > Determine/set/send host
-                    if ( !game.state.originalHost )
-                    {
-                        // console.log('> Original Host')
-                        game.setPlayerIsOriginalHost( updateData.player.id )
+                    if ( !Game.state.originalHost ) {
+                        console.log('> Original Host')
+                        Game.setOriginalHost( updateData.user.id )
                     }
 
-                    if ( wss.clients.size === 1 || ( game.state.originalHost === updateData.player.id ) )
-                    {
-                        updateData.player.isHost = game.setPlayerIsHost( updateData.player )
+                    if ( WSS.clients.size === 1 || ( Game.state.originalHost === updateData.user.id ) ) {
+                        updateData.user.isHost = Game.setUserIsHost( updateData.user )
 
                         // Send host data to all
                         updateData.id = uuidv4()
-                        updateData.type = 'updatePlayerIsHost'
-                        wss.broadcast_all( JSON.stringify( updateData ) )
-                        // console.log('>>>>>>>>> Message Sent - updatePlayerIsHost >>>>>>>>>')
+                        updateData.type = 'updateUserIsHost'
+                        WSS.broadcast_all( JSON.stringify( updateData ) )
+                        console.log('>>>>>>>>> Message Sent - updateUserIsHost >>>>>>>>>')
                     }
             
-                    // console.log('======= END HANDLER - userConnected =======')
+                    console.log('======= END MESSAGE - userConnected =======')
                     break
                 }
 
-            /*================================================
-                ANCHOR: HANDLER - PLAYER INFO
-            ==================================================*/
+            /*================================================*/
+            /*================================================*/
 
-            case 'updatePlayerName':
-                {
-                    // console.log('======= HANDLER - updatePlayerName =======')
+            // HANDLER: => USER NAME
+            case 'updateUserName': {
+                    console.log('======= MESSAGE - updateUserName =======')
                     updateData.id = uuidv4()
-                    game.setPlayerName( updateData.player, updateData.newName )
-                    wss.broadcast_all( JSON.stringify( updateData ) )
-                    // console.log('>>>>>>>>> Message Sent - updatePlayerName >>>>>>>>>')
-                    // console.log('======= END HANDLER - updatePlayerName =======')
+                    Game.setUserName( updateData.userID, updateData.newName )
+                    WSS.broadcast_all( JSON.stringify( updateData ) )
+                    console.log('>>>>>>>>> Message Sent - updateUserName >>>>>>>>>')
+                    console.log('======= END MESSAGE - updateUserName =======')
+                    break
+                }
+    
+            /*================================================*/
+            /*================================================*/
+
+            // HANDLER: => USER TEAM
+            case 'updateUserTeam': {
+                    console.log('======= MESSAGE - updateUserTeam =======')
+                    updateData.id = uuidv4()
+                    Game.setUserTeam( updateData.userID, updateData.newTeam )
+                    WSS.broadcast_all( JSON.stringify( updateData ) )
+                    console.log('>>>>>>>>> Message Sent - updateUserTeam >>>>>>>>>')
+                    console.log('======= END MESSAGE - updateUserTeam =======')
                     break
                 }
 
-            /*======================================*/
-            /*======================================*/
+            /*================================================*/
+            /*================================================*/
 
-            case 'updatePlayerTeam':
-                {
-                    // console.log('======= HANDLER - updatePlayerTeam =======')
+            // HANDLER: => USER POSITION
+            case 'updateUserPosition': {
+                    console.log('======= MESSAGE - updateUserPosition =======')
                     updateData.id = uuidv4()
-                    game.setPlayerTeam( updateData.player, updateData.newTeam )
-                    wss.broadcast_all( JSON.stringify( updateData ) )
-                    // console.log('>>>>>>>>> Message Sent - updatePlayerTeam >>>>>>>>>')
-                    // console.log('======= END HANDLER - updatePlayerTeam =======')
+                    Game.setUserPosition( updateData.userID, updateData.newPosition )
+                    WSS.broadcast_all( JSON.stringify( updateData ) )
+                    console.log('>>>>>>>>> Message Sent - updateUserPosition >>>>>>>>>')
+                    console.log('======= END MESSAGE - updateUserPosition =======')
                     break
                 }
 
-            /*======================================*/
-            /*======================================*/
+            /*================================================*/
+            /*================================================*/
 
-            case 'updatePlayerPosition':
-            {
-                // console.log('======= HANDLER - updatePlayerPosition =======')
-                updateData.id = uuidv4()
-                game.setPlayerPosition( updateData.player, updateData.newPosition )
-                wss.broadcast_all( JSON.stringify( updateData ) )
-                // console.log('>>>>>>>>> Message Sent - updatePlayerPosition >>>>>>>>>')
-                // console.log('======= END HANDLER - updatePlayerPosition =======')
-                break
-            }
-
-            /*================================================
-                ANCHOR: HANDLER - HIGHLIGHTS
-            ==================================================*/
-
-            case 'updateAddHighlight':
-                {
-                    // console.log('======= HANDLER - updateAddHighlight =======')
+            // HANDLER: => ADD HIGHLIGHT
+            case 'updateAddHighlight': {
+                    console.log('======= MESSAGE - updateAddHighlight =======')
                     updateData.id = uuidv4()
-                    game.addHighlight( updateData.player, updateData.index )
-                    wss.broadcast( JSON.stringify( updateData ), wsClient )
-                    // console.log('>>>>>>>>> Message Sent - updateAddHighlight >>>>>>>>>')
-                    // console.log('======= END HANDLER - updateAddHighlight =======')
+                    Game.addHighlight( updateData.highlight )
+                    WSS.broadcast( JSON.stringify( updateData ), wsClient )
+                    console.log('>>>>>>>>> Message Sent - updateAddHighlight >>>>>>>>>')
+                    console.log('======= END MESSAGE - updateAddHighlight =======')
                     break
                 }
             
-            /*======================================*/
-            /*======================================*/
+            /*================================================*/
+            /*================================================*/
 
-            case 'updateRemoveHighlight':
-                {
-                    // console.log('======= HANDLER - updateRemoveHighlight =======')
+            // HANDLER: => DELETE HIGHLIGHT
+            case 'updateDeleteHighlight': {
+                    console.log('======= MESSAGE - updateDeleteHighlight =======')
                     updateData.id = uuidv4()
-                    game.deleteHighlight( updateData.player, updateData.index )
-                    wss.broadcast( JSON.stringify( updateData ), wsClient )
-                    // console.log('>>>>>>>>> Message Sent - updateRemoveHighlight >>>>>>>>>')
-                    // console.log('======= END HANDLER - updateRemoveHighlight =======')
+                    Game.deleteHighlight( updateData.userID, updateData.cardIndex )
+                    WSS.broadcast( JSON.stringify( updateData ), wsClient )
+                    console.log('>>>>>>>>> Message Sent - updateDeleteHighlight >>>>>>>>>')
+                    console.log('======= END MESSAGE - updateDeleteHighlight =======')
                     break
                 }
             
-            /*======================================*/
-            /*======================================*/
+            /*================================================*/
+            /*================================================*/
 
-            // case 'updateClearCardHighlights':
-            //     {
-            //         updateData.id = uuidv4()
-            //         game.clear_card_highlights( updateData.index )
-            //         wss.broadcast( JSON.stringify( updateData ), wsClient )
-            //         break
-            //     }
+            // HANDLER: => DELETE USER HIGHLIGHTS
+            // NOTE: will be done on user disconnecting
+            case 'updateDeleteUserHighlights': {
+                    // console.log('======= MESSAGE - updateDeleteUserHighlights =======')
+                    // updateData.id = uuidv4()
+                    // Game.deleteUserHighlights( updateData.userID )
+                    // WSS.broadcast( JSON.stringify( updateData ), wsClient )
+                    // console.log('>>>>>>>>> Message Sent - updateDeleteUserHighlights >>>>>>>>>')
+                    // console.log('======= END MESSAGE - updateDeleteUserHighlights =======')
+                    // break
+                }
                 
+            /*================================================*/
+            /*================================================*/
+
+            // HANDLER: => DELETE CARD HIGHLIGHTS
+            // NOTE: may not need this, will be done on cardChoose
+            case 'updateDeleteCardHighlights': {
+                    // console.log('======= MESSAGE - updateDeleteCardHighlights =======')
+                    // updateData.id = uuidv4()
+                    // Game.deleteCardHighlights( updateData.cardIndex )
+                    // WSS.broadcast( JSON.stringify( updateData ), wsClient )
+                    // console.log('>>>>>>>>> Message Sent - updateDeleteCardHighlights >>>>>>>>>')
+                    // console.log('======= END MESSAGE - updateDeleteCardHighlights =======')
+                    // break
+                }
+
+            /*================================================*/
+            /*================================================*/
+
+            // HANDLER: => DELETE ALL HIGHLIGHTS
+            // NOTE: may not need this, will be done on turn-end (cardChoose condition/result)
+            case 'updateDeleteAllHighlights': {
+                    // console.log('======= MESSAGE - updateDeleteAllHighlights =======')
+                    // updateData.id = uuidv4()
+                    // Game.deleteCardHighlights()
+                    // WSS.broadcast( JSON.stringify( updateData ), wsClient )
+                    // console.log('>>>>>>>>> Message Sent - updateDeleteAllHighlights >>>>>>>>>')
+                    // console.log('======= END MESSAGE - updateDeleteAllHighlights =======')
+                    // break
+                }
+
             /*======================================*/
             /*======================================*/
-
-            // case 'updateClearHighlights':
-            //     {
-            //         updateData.id = uuidv4()
-            //         game.clear_highlights()
-            //         wss.broadcast( JSON.stringify( updateData ), wsClient )
-            //         break
-            //     }
-
-            /*================================================
-                ANCHOR: HANDLER - CARD CHOOSING
-            ==================================================*/
-
-            // case 'updateCardChoose':
-            //     {
-            //         updateData.id = uuidv4()
-            //         wss.broadcast( JSON.stringify( updateData ), wsClient )
-            //         break
-            //     }
 
             default:
         }
     })
 
     /*================================================
-        ANCHOR: CLOSING CONNECTION
+        INNERBLOCK: > WS - CLOSING CONNECTION
     ==================================================*/
 
-    wsClient.on('close', ( wsClient ) =>
-    {
-        // console.log('======= Client Disonnected =======')
+    wsClient.on('close', ( wsClient ) => {
+        console.log('======= Client Disonnected =======')
 
         // > Determine if host
-        // console.log('game.isPlayerHost( clientData.playerID ): ', game.isPlayerHost( clientData.playerID ))
-        let isHost = game.isPlayerHost( clientData.playerID )
+        console.log('Game.isUserHost( clientData.userID ): ', Game.isUserHost( clientData.userID ))
+        let isHost = Game.isUserHost( clientData.userID )
 
-        // TODO: Log players who have left in playersRemoved state array
+        // TODO: Log users who have left in usersRemoved state array
 
-        // > Remove disconnecting player
-        game.removePlayer( clientData.playerID )  
+        // > Remove disconnecting user
+        Game.removeUser( clientData.userID )  
 
-        // > Set host to next player in line if disconnecting player is host
-        if ( ( isHost ) && ( game.state.players.length > 0 ) )
-        {
-            game.setPlayerIsHost( game.state.players[0] )
+        // > Set host to next user in line if disconnecting user is host
+        if ( ( isHost ) && ( Game.state.users.length > 0 ) ) {
+            Game.setUserIsHost( Game.state.users[0] )
 
             // Send new host data to all
             let updateData = {
-                id:     uuidv4(),
-                player: game.state.players[0],
-                type:   'updatePlayerIsHost',
+                id:   uuidv4(),
+                user: Game.state.users[0],
+                type: 'updateUserIsHost',
             }
-            wss.broadcast_all( JSON.stringify( updateData ), wsClient )
-            // console.log('>>>>>>>>> Message Sent - updatePlayerIsHost >>>>>>>>>')
+            WSS.broadcast_all( JSON.stringify( updateData ), wsClient )
+            console.log('>>>>>>>>> Message Sent - updateUserIsHost >>>>>>>>>')
         }
 
-        // > If all players have left, begin session closing countdown
-        if ( game.state.players.length === 0 )
-        {
+        // > If all users have left, begin session closing countdown
+        if ( Game.state.users.length === 0 ) {
             // TODO: start timer for 5-10 minutes then close session
         }
 
         // > Set data for disconnect message
         let updateData = {
-            id:       uuidv4(), // message id
-            playerID: clientData.playerID, // player removal id
-            type:     'clientDisconnected',
+            id:     uuidv4(), // message id
+            userID: clientData.userID, // user removal id
+            type:   'clientDisconnected',
         }
-        wss.broadcast( JSON.stringify( updateData ), wsClient )
-        // console.log('>>>>>>>>> Message Sent - clientDisconnected >>>>>>>>>')
-        // console.log('======= END - Client Disonnected =======')
+        WSS.broadcast( JSON.stringify( updateData ), wsClient )
+        console.log('>>>>>>>>> Message Sent - clientDisconnected >>>>>>>>>')
+        console.log('======= END - Client Disonnected =======')
     })
 })

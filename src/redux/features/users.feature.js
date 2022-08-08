@@ -10,7 +10,6 @@ user (Object)
     name: (String)
     team: (String)
     position: (String)
-    highlights: (Array)
     isHost: (Boolean)
 */
 
@@ -118,61 +117,6 @@ let usersSlice = createSlice({
         },
 
         /*======================================*/
-
-        addUserHighlight: function ( state, action )
-        {
-            // action.payload = user id + highlight data (Object {userID: (String), highlight: (Object)})
-            state.users.map( ( user ) =>
-                {
-                    if ( user.id === action.payload.userID )
-                    {
-                        user.hightlights.push( action.payload.highlight )
-                    }
-                }
-            )
-        },
-
-        /*======================================*/
-
-        deleteUserHighlight: function ( state, action )
-        {
-            // action.payload = user + highlight/card index (Object {userID: (String), index: (Number)})
-            state.users.map( ( user ) =>
-                {
-                    if ( user.id === action.payload.userID )
-                    {
-                        user.hightlights.filter( hightlight => hightlight.id !== action.payload.index )
-                    }
-                }
-            )
-        },
-
-        /*======================================*/
-
-        deleteAllUsersHighlights: function ( state, action )
-        {
-            // action.payload = user id (String)
-            state.users.map( ( user ) =>
-                {
-                    if ( user.id === action.payload )
-                    {
-                        user.hightlights = []
-                    }
-                }
-            )
-        },
-
-        /*======================================*/
-
-        deleteAllHighlights: function ( state, action )
-        {
-            state.users.map( ( user ) =>
-            {
-                user.hightlights = [] 
-            })
-        },
-
-        /*======================================*/
     }
 })
 export const {
@@ -184,9 +128,5 @@ export const {
     setUserPosition,
     setUserIsHost,
     removeUsersIsHost,
-    addUserHighlight,
-    deleteUserHighlight,
-    deleteAllUsersHighlights,
-    deleteAllHighlights,
 } = usersSlice.actions
 export default usersSlice.reducer

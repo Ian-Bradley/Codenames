@@ -1,4 +1,6 @@
 export const onst = {
+    // TODO change to THIS_CASE
+
     dev: true,
     
     wsURL: 'ws://localhost:3001',
@@ -93,7 +95,7 @@ export const onst = {
     ],
 
 
-    lotrNames: [
+    LOTR_NAMES: [
         'Adalgrim Took','Adanedhel','Adanel','Adrahil','Adrahil II','Aegnor','Ælfwine','Aerin','Agarwaen','Aikanáro','Aiwendil','Alatar','Alatáriel','Aldamir','Aldaron',
         'Aldor','Amandil','Amdír','Amlaith','Amras','Amrod','Amroth','Amrothos','Anairë','Anardil','Anárion','Anborn','Ancalagon','Andrast','Andreth','Andróg','Anfauglir',
         'Angbor','Angrod','Annatar','Ar-Abattârik','Ar-Adûnakhôr','Ar-Gimilzôr','Ar-Inziladûn','Ar-Pharazôn','Ar-Sakalthôr','Ar-Zimraphel','Ar-Zimrathôn','Arador','Araglas',

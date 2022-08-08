@@ -11,13 +11,13 @@ import GameInputs from './GameInputs/GameInputs.js'
 import GameHeader from './GameHeader/GameHeader.js'
 import GameInstruction from './GameInstruction/GameInstruction.jsx'
 
-// CSS + GLOBAL CONSTANTS + HELPER FUNCTIONS
+// CSS + GLOBAL CONSTANTS + HELPER FUNCS
 import * as C from '../../helpers/constants.js'
 import * as H from '../../helpers/functions.js'
 import './App.scss'
 
 /*================================================
-    ANCHOR: REDUX ACTIONS
+    BLOCK: REDUX ACTIONS
 ==================================================*/
 
 /*======================================*/
@@ -41,6 +41,15 @@ import {
     incrementUserTotal,
     decrementUserTotal,
 } from '../redux/features/game.feature.js'
+/*======================================*/
+import {
+    setHighlights,
+    addHighlight,
+    deleteHighlight,
+    deleteUserHighlights,
+    deleteCardHighlights,
+    deleteAllHighlights,
+} from '../redux/features/highlights.feature.js'
 /*======================================*/
 import {
     setLog,
@@ -68,9 +77,9 @@ import {
     setTeam,
     setPosition,
     setIsHost,
-    addHighlight,
-    deleteHighlight,
-    deleteAllHighlights,
+    // addHighlight,
+    // deleteHighlight,
+    // deleteAllHighlights,
 } from '../redux/features/user.feature.js'
 /*======================================*/
 import {
@@ -82,18 +91,17 @@ import {
     setUserPosition,
     setUserIsHost,
     removeUsersIsHost,
-    addUserHighlight,
-    deleteUserHighlight,
-    deleteAllUserHighlights,
-    deleteAllUsersHighlights,
+    // addUserHighlight,
+    // deleteUserHighlight,
+    // deleteAllUserHighlights,
+    // deleteAllUsersHighlights,
 } from '../redux/features/users.feature.js'
 /*======================================*/
 
-export default function App ()
-{
+export default function App () {
 
     /*================================================
-        ANCHOR: STATE
+        BLOCK: STATE
     ==================================================*/
     // const messages = useSelector( ( state ) => { return state['messages'].messages } )
 
@@ -104,6 +112,7 @@ export default function App ()
     const game       = useSelector( ( state ) => { return state['game'].game } )
     const teamRed    = useSelector( ( state ) => { return state['teams'].teams.red } )
     const teamBlue   = useSelector( ( state ) => { return state['teams'].teams.blue } )
+    const highlights = useSelector( ( state ) => { return state['highlights'].highlights } )
     const dimensions = useSelector( ( state ) => { return state['dimensions'].dimensions } )
     const dispatch   = useDispatch()
 
@@ -112,28 +121,25 @@ export default function App ()
     const [WS, setWS] = useState(new WebSocket( C.onst.wsURL ))
 
     /*================================================
-        ANCHOR: HOOKS - APP DIMENSIONS
+        BLOCK: HOOKS - APP DIMENSIONS
     ==================================================*/
 
-    useEffect( () =>
-    {
+    useEffect( () => {
         dispatch( setDimensions( { height: window.innerHeight, width: window.innerWidth } ) )
         let debounceResize = H.elper.debounce( dispatch( setDimensions( { height: window.innerHeight, width: window.innerWidth } ) ), C.onst.debounceDelay, false )
         window.addEventListener( 'resize', debounceResize )
 
-        return () =>
-        {
+        return () => {
             let debounceResize = H.elper.debounce( dispatch( setDimensions( { height: window.innerHeight, width: window.innerWidth } ) ), C.onst.debounceDelay, false )
             window.removeEventListener( 'resize', debounceResize )
         }
     })
 
     /*================================================
-        ANCHOR: HOOKS - USER INFO
+        BLOCK: HOOKS - USER INFO
     ==================================================*/
 
-    useEffect( () =>
-    {
+    useEffect( () => {
         // TODO: Cookies
         // Get current userID (and maybe name/team/color) from cookies
         // If ID is not present, auth page has failed to store cookie
@@ -142,41 +148,36 @@ export default function App ()
     })
 
     /*================================================
-        ANCHOR: HOOKS - WEBSOCKET COMMUNICATION
+        BLOCK: HOOKS - WEBSOCKET COMMUNICATION
     ==================================================*/
 
-    useEffect( () =>
-    {
+    useEffect( () => {
         /*================================================
-            ANCHOR: WS - ON OPEN
+            INNERBLOCK: > WS - ON OPEN
         ==================================================*/
 
-        WS.onopen = ( e ) =>
-        {
+        WS.onopen = ( e ) => {
             setWSReady(true)
             console.log('>>>>>>>>> WebSocket Client Connected >>>>>>>>>')
         }
 
         /*================================================
-            ANCHOR: WS - ON MESSAGE
+            INNERBLOCK: > WS - ON MESSAGE
         ==================================================*/
     
-        WS.onmessage = ( messageData ) =>
-        {
+        WS.onmessage = ( messageData ) => {
             const updateData = JSON.parse( messageData.data )
             console.log('>>>>>>>>> Message Recieved - ' + updateData.type + ' >>>>>>>>>')
     
-            switch ( updateData.type )
-            {
-    
-                /*================================================
-                    ANCHOR: HANDLER - PLAYER CONNECTIONS
-                ==================================================*/
-    
-                case 'clientConnected':
-                    {
+            switch ( updateData.type ) {
+
+                /*================================================*/
+                /*================================================*/
+
+                // HANDLER: => CLIENT CONNECTED
+                case 'clientConnected': {
                         // This handler is only fired ONCE when the CURRENT user joins
-                        console.log('======= HANDLER - clientConnected =======')
+                        console.log('======= MESSAGE - clientConnected =======')
         
                         // Set current user ID
                         // TODO: returning users will not do this
@@ -190,8 +191,7 @@ export default function App ()
                         { dispatch( setCards( updateData.cards ) ) }
         
                         // Set users
-                        if ( !( updateData.users === undefined ) && ( updateData.users.length ) )
-                        {
+                        if ( !( updateData.users === undefined ) && ( updateData.users.length ) ) {
                             dispatch( setUsers( updateData.users ) )
                             dispatch( setUserTotal( updateData.users.length + 1 ) )
                         }
@@ -207,162 +207,126 @@ export default function App ()
                         }
                         WS.send( JSON.stringify( newUpdate ) )
                         console.log('>>>>>>>>> Message Sent - userConnected >>>>>>>>>')
-                        console.log('======= END - HANDLER - clientConnected =======')
+                        console.log('======= END - MESSAGE - clientConnected =======')
                         break
                     }
+                    
+                /*================================================*/
+                /*================================================*/
     
-                /*======================================*/
-                /*======================================*/
-    
-                case 'userConnected':
-                    {
+                // HANDLER: => USER CONNECTED
+                case 'userConnected': {
                         // This handler is only fired when OTHER users join
-                        console.log('======= HANDLER - userConnected =======')
+                        console.log('======= MESSAGE - userConnected =======')
                         dispatch( addUser( updateData.user ) )
                         dispatch( incrementUserTotal() )
-                        console.log('======= END - HANDLER - userConnected =======')
+                        console.log('======= END - MESSAGE - userConnected =======')
                         break
                     }
+
+                /*================================================*/
+                /*================================================*/
     
-                /*======================================*/
-                /*======================================*/  
-    
-                case 'clientDisconnected':
-                    {
+                // HANDLER: => CLIENT DISCONNECTED
+                case 'clientDisconnected': {
                         // This handler is only fired when OTHER users leave
-                        console.log('======= HANDLER - clientDisconnected =======')
+                        console.log('======= MESSAGE - clientDisconnected =======')
                         dispatch( deleteUser( updateData.userID ) )
                         dispatch( decrementUserTotal() )
-                        console.log('======= END - HANDLER - clientDisconnected =======')
+                        console.log('======= END - MESSAGE - clientDisconnected =======')
                         break
                     }
     
-                /*================================================
-                    ANCHOR: HANDLER - PLAYERS INFO
-                ==================================================*/
+                /*================================================*/
+                /*================================================*/
     
-                case 'updateUserName':
-                    {
-                        console.log('======= HANDLER - updateUserName =======')
-                        if ( updateData.user.id === user.id )
+                // HANDLER: => USER NAME
+                case 'updateUserName': {
+                        console.log('======= MESSAGE - updateUserName =======')
+                        if ( updateData.userID === user.id )
                         { dispatch( setName( updateData.newName ) ) }
                         else
-                        { dispatch( setUserName( updateData.user.id, updateData.newName ) ) }
-                        console.log('======= END - HANDLER - updateUserName =======')
+                        { dispatch( setUserName( updateData.userID, updateData.newName ) ) }
+                        console.log('======= END - MESSAGE - updateUserName =======')
                         break
                     }
     
-                /*======================================*/
-                /*======================================*/
+                /*================================================*/
+                /*================================================*/
     
-                case 'updateUserTeam':
-                    {
-                        console.log('======= HANDLER - updateUserTeam =======')
-                        if ( updateData.user.id === user.id )
+                // HANDLER: => USER TEAM
+                case 'updateUserTeam': {
+                        console.log('======= MESSAGE - updateUserTeam =======')
+                        if ( updateData.userID === user.id )
                         { dispatch( setTeam( updateData.newTeam ) ) }
                         else
-                        { dispatch( setUserTeam( updateData.user.id, updateData.newTeam ) ) }
-                        console.log('======= END - HANDLER - updateUserTeam =======')
+                        { dispatch( setUserTeam( updateData.userID, updateData.newTeam ) ) }
+                        console.log('======= END - MESSAGE - updateUserTeam =======')
                         break
                     }
     
-                /*======================================*/
-                /*======================================*/
+                /*================================================*/
+                /*================================================*/
     
-                case 'updateUserPosition':
-                    {
-                        console.log('======= HANDLER - updateUserPosition =======')
-                        if ( updateData.user.id === user.id )
+                // HANDLER: => USER POSITION
+                case 'updateUserPosition': {
+                        console.log('======= MESSAGE - updateUserPosition =======')
+                        if ( updateData.userID === user.id )
                         { dispatch( setPosition( updateData.newPosition ) ) }
                         else
-                        { dispatch( setUserPosition( updateData.user.id, updateData.newPosition ) ) }
-                        console.log('======= END - HANDLER - updateUserPosition =======')
+                        { dispatch( setUserPosition( updateData.userID, updateData.newPosition ) ) }
+                        console.log('======= END - MESSAGE - updateUserPosition =======')
                         break
                     }
     
-                /*======================================*/
-                /*======================================*/
-    
-                case 'updateUserIsHost':
-                    {
-                        console.log('======= HANDLER - updateUserIsHost =======')
-                        if ( updateData.user.id === user.id )
-                        {
-                            dispatch( setIsHost( true ) )
-                            dispatch( removeUsersIsHost() )
-                        }
-                        else
-                        {
-                            dispatch( setIsHost( false ) )
-                            dispatch( setUserIsHost( updateData.user.id ) )
-                        }
-                        console.log('======= END - HANDLER - updateUserIsHost =======')
-                        break
-                    }
+                /*================================================*/
+                /*================================================*/
+
+                // HANDLER: => USER HOST
+                // case 'updateUserIsHost': {
+                //         console.log('======= MESSAGE - updateUserIsHost =======')
+                //         if ( updateData.user.id === user.id ) {
+                //             dispatch( setIsHost( true ) )
+                //             dispatch( removeUsersIsHost() )
+                //         }
+                //         else {
+                //             dispatch( setIsHost( false ) )
+                //             dispatch( setUserIsHost( updateData.user.id ) )
+                //         }
+                //         console.log('======= END - MESSAGE - updateUserIsHost =======')
+                //         break
+                //     }
                 
-                /*================================================
-                    ANCHOR: HANDLER - HIGHLIGHTS
-                ==================================================*/
+                /*================================================*/
+                /*================================================*/
 
-                case 'updateAddHighlight':
-                    {
-                        console.log('======= HANDLER - updateAddHighlight =======')
-                        if ( updateData.user.id === user.id )
-                        { dispatch( addHighlight( updateData.highlight ) ) }
-                        else
-                        { dispatch( addUserHighlight( updateData.user.id, updateData.highlight ) ) }
-                        console.log('======= END - HANDLER - updateAddHighlight =======')
+                // HANDLER: => ADD HIGHLIGHT
+                case 'updateAddHighlight': {
+                        console.log('======= MESSAGE - updateAddHighlight =======')
+                        dispatch( addHighlight( updateData.highlight ) )
+                        console.log('======= END - MESSAGE - updateAddHighlight =======')
                         break
                     }
 
-                /*======================================*/
-                /*======================================*/
+                /*================================================*/
+                /*================================================*/
 
-                case 'updateDeleteHighlight':
-                    {
-                        console.log('======= HANDLER - updateDeleteHighlight =======')
-                        if ( updateData.user.id === user.id )
-                        { dispatch( deleteHighlight( updateData.highlight.index ) ) }
+                // HANDLER: => DELETE HIGHLIGHT
+                case 'updateDeleteHighlight': {
+                        console.log('======= MESSAGE - updateDeleteHighlight =======')
+                        if ( updateData.userID === user.id )
+                        { dispatch( deleteHighlight( updateData.cardIndex ) ) }
                         else
-                        { dispatch( deleteUserHighlight( updateData.user.id, updateData.highlight.index ) ) }
-                        console.log('======= END - HANDLER - updateDeleteHighlight =======')
+                        { dispatch( deleteUserHighlight( updateData.userID, updateData.cardIndex ) ) }
+                        console.log('======= END - MESSAGE - updateDeleteHighlight =======')
                         break
                     }
 
-                /*======================================*/
-                /*======================================*/
-
-                // TODO: ==> updateClearCardHighlights
-                // case 'updateClearCardHighlights':
-                //     {
-                //         break
-                //     }
-
-                /*======================================*/
-                /*======================================*/
-
-                // TODO: ==> updateClearHighlights
-                // case 'updateClearHighlights':
-                //     {
-                //         break
-                //     }
-
-                /*================================================
-                    ANCHOR: HANDLER - CARD CHOOSING
-                ==================================================*/
-
-                // TODO: ==> updateCardChoose
-                // case 'updateCardChoose':
-                //     {
-                //         break
-                //     }
+                /*================================================*/
+                /*================================================*/
     
-                /*======================================*/
-                /*======================================*/
-    
-                default:
-                    {
-                        console.log('Unrecognized WebSocket message type')
+                default: {
+                        console.log('Error: WebSocket => Unrecognized message type')
                         break
                     }
     
@@ -370,11 +334,10 @@ export default function App ()
         }
 
         /*================================================
-            ANCHOR: WS - ON CLOSE
+            INNERBLOCK: > WS - ON CLOSE
         ==================================================*/
     
-        WS.onclose = ( e ) =>
-        {
+        WS.onclose = ( e ) => {
             setWSReady(false)
             // TODO: check if neeeded
             setTimeout(() => {
@@ -383,33 +346,30 @@ export default function App ()
         }
 
         /*================================================
-            ANCHOR: WS - ON ERROR
+            INNERBLOCK: > WS - ON ERROR
         ==================================================*/
     
-        WS.onerror = ( err ) =>
-        {
+        WS.onerror = ( err ) => {
             console.log('WebSocket encountered error: ', err.message, ' --> Closing socket')
             setWSReady(false)
             WS.close()
         }
 
         /*================================================
-            ANCHOR: WS - COMPONENT UNMOUNTING
+            INNERBLOCK: > WS - COMPONENT UNMOUNTING
         ==================================================*/
     
-        return () =>
-        {
+        return () => {
             WS.close()
         }
     }, [WS])
 
     /*================================================
-        ANCHOR: WS SENDERS - USER INFO
+        BLOCK: WS SENDERS - USER INFO
     ==================================================*/
 
     // TODO: ==> sendUserName
-    const sendUserName = ( user, newName ) =>
-    {
+    const sendUserName = ( user, newName ) => {
         console.log('===> sendUserName')
         let newUpdate = {
             type: 'updateUserName',
@@ -425,8 +385,7 @@ export default function App ()
     /*======================================*/
 
     // TODO: ==> sendUserTeam
-    const sendUserTeam = ( user, newTeam ) =>
-    {
+    const sendUserTeam = ( user, newTeam ) => {
         console.log('===> sendUserTeam')
         let newUpdate = {
             type: 'updateUserTeam',
@@ -442,8 +401,7 @@ export default function App ()
     /*======================================*/
 
     // TODO: ==> sendUserPosition
-    const sendUserPosition = ( user, newPosition ) =>
-    {
+    const sendUserPosition = ( user, newPosition ) => {
         console.log('===> sendUserPosition')
         let newUpdate = {
             type: 'updateUserPosition',
@@ -456,12 +414,11 @@ export default function App ()
     }
 
     /*================================================
-        ANCHOR: WS SENDERS - INTERACTIONS
+        BLOCK: WS SENDERS - INTERACTIONS
     ==================================================*/
 
     // TODO: ==> sendClue
-    const sendClue = ( clue ) =>
-    {
+    const sendClue = ( clue ) => {
         // ==> update game log
         // ==> 
         // ==> 
@@ -479,8 +436,7 @@ export default function App ()
     /*======================================*/
 
     // TODO: ==> sendCard
-    const sendCard = ( cardIndex ) =>
-    { 
+    const sendCard = ( cardIndex ) => { 
         // use user --> updates from server will arrive as different commands, they will not use sendCard here
         // ==> update game log
         // ==> clear card highlights
@@ -494,10 +450,8 @@ export default function App ()
     /*======================================*/
 
     // TODO: ==> sendHighlight
-    const sendHighlight = ( cardIndex ) =>
-    {
-        if ( !( user.highlights.includes( cardIndex ) ) )
-        {
+    const sendHighlight = ( cardIndex ) => {
+        if ( !( user.highlights.includes( cardIndex ) ) ) {
             addHighlight( user, cardIndex )
             let newUpdate = {
                 type: 'updateAddHighlight',
@@ -507,11 +461,10 @@ export default function App ()
             WS.send( JSON.stringify( newUpdate ))
             console.log('>>>>>>>>> Message Sent - updateAddHighlight >>>>>>>>>')
         }
-        else
-        {
+        else {
             removeHighlight( user, cardIndex )
             let newUpdate = {
-                type: 'updateRemoveHighlight',
+                type: 'updateDeleteHighlight',
                 user: user,
                 index: cardIndex,
             }
@@ -521,18 +474,15 @@ export default function App ()
     }
 
     /*================================================
-        ANCHOR: DISPLAYING
+        BLOCK: DISPLAYING
     ==================================================*/
 
     // TODO: ==> displayCards
-    const displayCards = () =>
-    {
-        if ( !( cards.length === undefined ) && ( cards.length ) )
-        {
+    const displayCards = () => {
+        if ( !( cards.length === undefined ) && ( cards.length ) ) {
             let cardArray  = []
             let positionData = {}
-            for ( let i = 0; i < cards.length; i++ )
-            {
+            for ( let i = 0; i < cards.length; i++ ) {
                 // > Positioning
                 positionData = {
                     top: C.onst.cardTopBase,
@@ -568,7 +518,7 @@ export default function App ()
     }
 
     /*================================================
-        ANCHOR: DEV TOOLS
+        BLOCK: DEV TOOLS
     ==================================================*/
 
     // const onDevState = ( state ) => { set_game_state( state ) }
@@ -588,7 +538,7 @@ export default function App ()
     // }
 
     /*================================================
-        ANCHOR: COMPONENTS
+        BLOCK: COMPONENTS
     ==================================================*/
 
     return (
@@ -613,7 +563,7 @@ export default function App ()
                         <div className='container-sidebar sidebar-left'>
                             <TeamCard
                                 team={teamRed}
-                                sendUserName={sendUserName}
+                                sendUserTeam={sendUserTeam}
                                 sendUserPosition={sendUserPosition}
                             />
                         </div>    
@@ -628,7 +578,7 @@ export default function App ()
                         <div className='container-sidebar sidebar-right'>
                             <TeamCard
                                 team={teamBlue}
-                                sendUserName={sendUserName}
+                                sendUserTeam={sendUserTeam}
                                 sendUserPosition={sendUserPosition}
                             />
                             <GameLog />

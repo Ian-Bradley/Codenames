@@ -1,29 +1,40 @@
-import * as C from '../helpers/constants.js'
-import * as H from '../helpers/functions.js'
-
 /*================================================
-    ANCHOR: CONSTRUCTION METHODS
+    BLOCK: REQUIRES
 ==================================================*/
 
-const createCardIndexes = () =>
-{
-    let indexArray = [];
-    for ( let i = 1; i <= 25; i++ )
-    { indexArray.push(i) }
-    indexArray = H.elper.shuffleArray( indexArray );
-    return indexArray;
+const C = require('./lib/util/constants.js');
+const F = require('./lib/util/functions.js');
+
+// const { setGameState } = require('./modules/game.module.js')
+
+/*================================================
+    BLOCK: HELPERS
+==================================================*/
+
+
+/*================================================
+    BLOCK: CONSTRUCTION METHODS
+==================================================*/
+
+// FUNCTION: => getCodenames
+const getCodenames = () => {
+    return ['butter', 'clock', 'island', 'Paris', 'wish',
+            'soccer', 'crash', 'battery', 'carrot', 'tower',
+            'venus', 'sugar', 'magenta', 'trigger', 'queen',
+            'leg', 'window', 'joint', 'polar', 'machine',
+            'tiger', 'pine', 'anteater', 'pillow', 'aloe']
 }
 
 /*======================================*/
 /*======================================*/
 
-const getCodenames = () =>
-{
-    return ['butter', 'clock', 'island', 'Paris', 'wish',
-            'soccer', 'crash', 'battery', 'carrot', 'tower',
-            'venus', 'sugar', 'magenta', 'trigger', 'queen',
-            'leg', 'window', 'joint', 'polar', 'machine',
-            'tiger', 'pine', 'anteater', 'pillow', 'aloe'];
+// FUNCTION: => createCardIndexes
+const createCardIndexes = () => {
+    let indexArray = []
+    for ( let i = 1; i <= 25; i++ )
+    { indexArray.push(i) }
+    indexArray = F.shuffleArray( indexArray )
+    return indexArray
 }
 
 /*======================================*/
@@ -38,446 +49,459 @@ const getCodenames = () =>
 // [ 10,  9, 25, 14,  4, 24, 16, 11, 19,  3, 22,  5,  7, 17, 13, 18,  2, 21, 15,  1,  6, 20, 12,  8, 23] index (random)
 // [  N,  N,  N,  N,  N,  N,  N,  R,  R,  R,  R,  R,  R,  R,  R,  R,  B,  B,  B,  B,  B,  B,  B,  B, Bl] card-type
 
-const createCards = () =>
-{
-    let codenames = getCodenames();
-    let indexes   = createCardIndexes();
-    let cards     = [];
-    for ( let i = 0; i < codenames.length; i++ )
-    {
-        let cardType = '';
+// FUNCTION: => createCards
+const createCards = () => {
+    let codenames = getCodenames()
+    let indexes   = createCardIndexes()
+    let cards     = []
+    for ( let i = 0; i < codenames.length; i++ ) {
+        let cardType = ''
         if ( 0 <= indexes[i] && indexes[i] <= 6 )
-        { cardType = 'neutral'; }
+        { cardType = 'neutral' }
         if ( 7 <= indexes[i] && indexes[i] <= 15 )
-        { cardType = 'red'; }
+        { cardType = 'red' }
         if ( 16 <= indexes[i] && indexes[i] <= 23 )
-        { cardType = 'blue'; }
+        { cardType = 'blue' }
         if ( indexes[i] === 24 )
-        { cardType = 'black'; }
+        { cardType = 'black' }
         let card = {
             index: indexes[i],
             text: codenames[i],
             type: cardType,
             highlighted: false,
             chosen: false,
-        };
-        cards[i] = card;
+        }
+        cards[i] = card
     }
-    return cards;
+    return cards
 }
 
 /*================================================
-    ANCHOR: GAME CLASS
+    BLOCK: GAME CLASS
 ==================================================*/
 
-export default class Game
-{
-    constructor()
-    {
+module.exports = class Game {
+
+    constructor() {
+
+        /*================================================
+            INNERBLOCK: > STATE
+        ==================================================*/
+
         this.state = {
             // Host
-            originalHost: '',
-            // Game Settings
-            gameState: 'setup',
-            round: 0,
+            originalHost: '', // ID of user
+            host: '', // ID of user
+
+            // Game
+            clue: '',
             cards: createCards(),
+            round: 0,
+            guesses: 0,
+            gameState: C.GAME_STATE_SETUP,
+
             // Teams
             teamRed: {
-                name: C.onst.red,
-                remainingCards: 0,
-                remainingGuesses: 0,
+                name: C.RED,
+                cards: 0,
+                guesses: 0,
             },
             teamBlue: {
-                name: C.onst.blue,
-                remainingCards: 0,
-                remainingGuesses: 0,
+                name: C.BLUE,
+                cards: 0,
+                guesses: 0,
             },
-            // Players
-            players: [],
-            playersDisconnected: [],
-            // Game Log
-            gameLog: [],
-        };
 
-        /*======================================*/
-        /*======================================*/
+            // Users
+            users: [],
+            usersDisconnected: [],
+
+            // Highlights
+            highlights: [],
+
+            // Game Log
+            log: [],
+
+            // Messages
+            messages: [],
+        }
+
+        /*================================================
+            INNERBLOCK: > METHOD BINDING
+        ==================================================*/
 
         // State methods - Host
-        this.isPlayerHost = this.isPlayerHost.bind(this);
+        // TODO: maybe change to getUserIsHost
+        this.isUserHost = this.isUserHost.bind(this)
+        this.setHost    = this.setHost.bind(this)
+        this.setOriginalHost = this.setOriginalHost.bind(this)
 
         // State methods - Game Settings
-        this.setGameState = this.setGameState.bind(this);
-        this.setRound     = this.setRound.bind(this);
+        this.setGameState = this.setGameState.bind(this)
+        this.setGuesses   = this.setGuesses.bind(this)
+        this.setRound     = this.setRound.bind(this)
+        this.setClue      = this.setClue.bind(this)
 
         // State methods - Teams
-        this.setTeamCards   = this.setTeamCards.bind(this);
-        this.setTeamGuesses = this.setTeamGuesses.bind(this);
+        this.setTeamCards   = this.setTeamCards.bind(this)
+        this.setTeamGuesses = this.setTeamGuesses.bind(this)
 
-        // State methods - Players
-        this.addPlayer    = this.addPlayer.bind(this);
-        this.removePlayer = this.removePlayer.bind(this);
+        // State methods - Users
+        this.addUser    = this.addUser.bind(this)
+        this.removeUser = this.removeUser.bind(this)
 
-        // State methods - Player Info
-        this.setPlayerName           = this.setPlayerName.bind(this);
-        this.setPlayerTeam           = this.setPlayerTeam.bind(this);
-        this.setPlayerPosition       = this.setPlayerPosition.bind(this);
-        this.setPlayerIsHost         = this.setPlayerIsHost.bind(this);
-        this.setPlayerIsOriginalHost = this.setPlayerIsOriginalHost.bind(this);
+        // State methods - User Info
+        this.setUserName     = this.setUserName.bind(this)
+        this.setUserTeam     = this.setUserTeam.bind(this)
+        this.setUserPosition = this.setUserPosition.bind(this)
+        this.setUserIsHost   = this.setUserIsHost.bind(this)
 
         // State methods - Highlighting
-        this.addHighlight         = this.addHighlight.bind(this);
-        this.deleteHighlight      = this.deleteHighlight.bind(this);
-        this.deleteCardHighlights = this.deleteCardHighlights.bind(this);
-        this.deleteAllHighlights  = this.deleteAllHighlights.bind(this);
-        // this.deletePlayerHighlights = this.deletePlayerHighlights.bind(this);
+        this.addHighlight         = this.addHighlight.bind(this)
+        this.deleteHighlight      = this.deleteHighlight.bind(this)
+        this.deleteUserHighlights = this.deleteUserHighlights.bind(this)
+        this.deleteCardHighlights = this.deleteCardHighlights.bind(this)
+        this.deleteAllHighlights  = this.deleteAllHighlights.bind(this)
 
         // State methods - Game Log
-        this.addLogItem        = this.addLogItem.bind(this);
-        this.deleteAllLogItems = this.deleteAllLogItems.bind(this);
-
-        // State methods - Player Interactions
-        // this.card_choose = this.card_choose.bind(this);
-        // this.clue_give   = this.clue_give.bind(this);
+        this.addLogItem        = this.addLogItem.bind(this)
+        this.deleteAllLogItems = this.deleteAllLogItems.bind(this)
     }
 
     /*================================================
-        ANCHOR: STATE METHODS - Host
+        BLOCK: STATE METHODS - Host
     ==================================================*/
 
-    isPlayerHost ( playerID )
-    {
-        console.log('===> isPlayerHost: ', playerID);
-        if ( this.state.players.find( player => player.id === playerID ) )
+    // FUNCTION: => isUserHost
+    // TODO
+    isUserHost ( userID ) {
+        console.log('==> isUserHost: ', userID)
+        if ( this.state.users.find( user => user.id === userID ) )
         {
-            console.log('===> END - isPlayerHost - player found');
-            return this.state.players.find( player => player.id === playerID ).isHost;
+            console.log('==> END - isUserHost - user found')
+            return this.state.users.find( user => user.id === userID ).isHost
         }
-        console.log('===> END - isPlayerHost - player not found');
-    }
-
-    /*================================================
-        ANCHOR: STATE METHODS - Game Settings
-    ==================================================*/
-
-    setGameState ( state )
-    {
-        console.log('===> setGameState: ', state);
-        console.log('> BEFORE: ', this.state.gameState);
-        this.state.gameState = state;
-        console.log('> AFTER: ', this.state.gameState);
-        console.log('===> END - setGameState');
+        console.log('==> END - isUserHost - user not found')
     }
 
     /*======================================*/
     /*======================================*/
 
-    setRound ()
-    {
-        console.log('===> setRound');
-        console.log('> BEFORE: ', this.state.round);
-        this.state.round++;
-        console.log('> AFTER: ', this.state.round);
-        console.log('===> END - setRound');
-    }
-
-    /*================================================
-        ANCHOR: STATE METHODS - Team Info
-    ==================================================*/
-
-    setTeamCards ( team, cards )
-    {
-        console.log('===> setTeamCards: ', team, ' ', cards);
-        if ( team === 'red' )
-        {
-            console.log('> BEFORE: ', this.state.teamRed.remainingCards);
-            this.state.teamRed.remainingCards = cards;
-            console.log('> AFTER: ', this.state.teamRed.remainingCards);
-        }
-        if ( team === 'blue' )
-        {
-            console.log('> BEFORE: ', this.state.teamBlue.remainingCards);
-            this.state.teamBlue.remainingCards = cards;
-            console.log('> AFTER: ', this.state.teamBlue.remainingCards);
-        }
-        console.log('===> END - setTeamCards');
-    }
-
-    /*======================================*/
-    /*======================================*/
-
-    setTeamGuesses ( team, guesses )
-    {
-        console.log('===> setTeamGuesses: ', team, ' ', guesses);
-        if ( team === 'red' )
-        {
-            console.log('> BEFORE: ', this.state.teamRed.remainingGuesses);
-            this.state.teamRed.remainingGuesses = guesses;
-            console.log('> AFTER: ', this.state.teamRed.remainingGuesses);
-        }
-        if ( team === 'blue' )
-        {
-            console.log('> BEFORE: ', this.state.teamBlue.remainingGuesses);
-            this.state.teamBlue.remainingGuesses = guesses;
-            console.log('> AFTER: ', this.state.teamBlue.remainingGuesses);
-        }
-        console.log('===> END - setTeamGuesses');
-    }
-
-    /*================================================
-        ANCHOR: STATE METHODS - Players
-    ==================================================*/
-
-    addPlayer ( player )
-    {
-        // console.log('===> addPlayer: ', player);
-        // console.log('> BEFORE: ',this.state.players);
-        this.state.players.push( player );
-        // console.log('> AFTER: ', this.state.players);
-        // console.log('===> END - addPlayer');
-    }
-
-    /*======================================*/
-    /*======================================*/
-
-    removePlayer ( playerID )
-    {
-        // console.log('===> removePlayer: ', playerID);
-        // console.log('> BEFORE: ', this.state.players);
-        this.state.players = this.state.players.filter( player => ( player.id !== playerID ) );
-        // console.log('> AFTER: ', this.state.players);
-        // console.log('===> END - removePlayer');
-    }
-
-    /*================================================
-        ANCHOR: STATE METHODS - Player Info
-    ==================================================*/
-
-    setPlayerName ( player, newName )
-    {
-        // console.log('===> setPlayerName: ', player, ' ', newName);
-        for ( let i = 0; i < this.state.players.length; i++ )
-        {
-            if ( this.state.players[i].id === player.id )
-            {
-                // console.log('> BEFORE: ', this.state.players[i].name);
-                this.state.players[i].name = newName;
-                // console.log('> AFTER: ', this.state.players[i].name);
-            }
-        }
-        // console.log('===> END - setPlayerName');
-    }
-
-    /*======================================*/
-    /*======================================*/
-
-    setPlayerTeam ( player, newTeam )
-    {
-        // console.log('===> setPlayerTeam: ', player, ' ', newTeam);
-        for ( let i = 0; i < this.state.players.length; i++ )
-        {
-            if ( this.state.players[i].id === player.id )
-            {
-                // console.log('> BEFORE: ', this.state.players[i].team);
-                this.state.players[i].team = newTeam;
-                // console.log('> AFTER: ', this.state.players[i].team);
-            }
-        }
-        // console.log('===> END - setPlayerTeam');
-    }
-
-    /*======================================*/
-    /*======================================*/
-
-    setPlayerPosition ( player, newPosition )
-    {
-        // console.log('===> setPlayerPosition: ', player, ' ', newPosition);
-        for ( let i = 0; i < this.state.players.length; i++ )
-        {
-            if ( this.state.players[i].id === player.id )
-            {
-                // console.log('> BEFORE: ', this.state.players[i].position);
-                this.state.players[i].position = newPosition;
-                // console.log('> AFTER: ', this.state.players[i].position);
-            }
-        }
-        // console.log('===> END - setPlayerPosition');
-    }
-
-    /*======================================*/
-    /*======================================*/
-
-    setPlayerIsHost ( player )
-    {
-        console.log('===> setPlayerIsHost: ', player);
-        if ( this.state.players.length )
-        {
-            for ( let i = 0; i < this.state.players.length; i++ )
-            {
-                // Unset any other host player
-                if ( ( this.state.players[i].id !== player.id ) && ( this.state.players[i].isHost ) )
-                {
-                    // console.log('> BEFORE: ', this.state.players[i].isHost); // false
-                    this.state.players[i].isHost = false;
-                    // console.log('> AFTER: ', this.state.players[i].isHost); // true
-                    console.log('> (Other) Player removed as host');
+    // FUNCTION: => setUserIsHost
+    // TODO
+    setHost ( user ) {
+        console.log('==> setUserIsHost: ', user)
+        if ( this.state.users.length ) {
+            for ( let i = 0; i < this.state.users.length; i++ ) {
+                // Unset any other host user
+                if ( ( this.state.users[i].id !== user.id ) && ( this.state.users[i].isHost ) ) {
+                    // console.log('> BEFORE: ', this.state.users[i].isHost) // false
+                    this.state.users[i].isHost = false
+                    // console.log('> AFTER: ', this.state.users[i].isHost) // true
+                    console.log('> (Other) User removed as host')
                 }
 
-                // Set player as host
-                if ( this.state.players[i].id === player.id )
-                {
-                    if ( !this.state.players[i].isHost )
-                    {
-                        // console.log('> BEFORE: ', this.state.players[i].isHost); // false
-                        this.state.players[i].isHost = true;
-                        // console.log('> AFTER: ', this.state.players[i].isHost); // true
-                        console.log('> Player set as host');
-                        console.log('===> END - setPlayerIsHost');
-                        return true;
+                // Set user as host
+                if ( this.state.users[i].id === user.id ) {
+                    if ( !this.state.users[i].isHost ) {
+                        // console.log('> BEFORE: ', this.state.users[i].isHost) // false
+                        this.state.users[i].isHost = true
+                        // console.log('> AFTER: ', this.state.users[i].isHost) // true
+                        console.log('> User set as host')
+                        console.log('==> END - setUserIsHost')
+                        return true
                     }
-                    else
-                    {
-                        console.log('> Player is already host');
-                        console.log('===> END - setPlayerIsHost');
-                        return false;
+                    else {
+                        console.log('> User is already host')
+                        console.log('==> END - setUserIsHost')
+                        return false
                     }
                 }
-                else
-                {
-                    console.log('> Cannot find player');
-                    console.log('===> END - setPlayerIsHost');
-                    return false;
+                else {
+                    console.log('> Cannot find user')
+                    console.log('==> END - setUserIsHost')
+                    return false
                 }
             }
         }
-        else
-        {
-            console.log('> No players');
-            console.log('===> END - setPlayerIsHost');
-            return false;
+        else {
+            console.log('> No users')
+            console.log('==> END - setUserIsHost')
+            return false
         }
     }
 
     /*======================================*/
     /*======================================*/
 
-    setPlayerIsOriginalHost ( playerID )
-    {
-        // console.log('===> setPlayerIsOriginalHost: ', playerID);
-        // console.log('> BEFORE: ', this.state.originalHost);
-        this.state.originalHost = playerID;
-        // console.log('> AFTER: ', this.state.originalHost);
-        // console.log('===> END - setPlayerIsOriginalHost');
+    // FUNCTION: => setOriginalHost
+    // TODO
+    setOriginalHost ( userID ) {
+        console.log('==> setOriginalHost: ', userID)
+        console.log('> BEFORE: ', this.state.originalHost)
+        this.state.originalHost = userID
+        console.log('> AFTER: ', this.state.originalHost)
+        console.log('==> END - setOriginalHost')
+    }
+
+
+    /*================================================
+        BLOCK: STATE METHODS - Game Settings
+    ==================================================*/
+
+    // FUNCTION: => setGameState
+    setGameState ( state ) {
+        console.log('==> setGameState: ', state)
+        console.log('> BEFORE: ', this.state.gameState)
+        this.state.gameState = state
+        console.log('> AFTER: ', this.state.gameState)
+        console.log('==> END - setGameState')
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    // FUNCTION: => setGuesses
+    setGuesses ( guesses ) {
+        console.log('==> setRound')
+        console.log('> BEFORE: ', this.state.guesses)
+        this.state.guesses = guesses
+        console.log('> AFTER: ', this.state.guesses)
+        console.log('==> END - setRound')
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    // FUNCTION: => setRound
+    setRound ( round ) {
+        console.log('==> setRound')
+        console.log('> BEFORE: ', this.state.round)
+        this.state.round = round
+        console.log('> AFTER: ', this.state.round)
+        console.log('==> END - setRound')
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    // FUNCTION: => setRound
+    setClue ( clue ) {
+        console.log('==> setClue')
+        console.log('> BEFORE: ', this.state.clue)
+        this.state.clue = clue
+        console.log('> AFTER: ', this.state.clue)
+        console.log('==> END - setClue')
     }
 
     /*================================================
-        ANCHOR: STATE METHODS - Highlighting
+        BLOCK: STATE METHODS - Team Info
     ==================================================*/
 
-    addHighlight ( player, cardIndex )
+    // FUNCTION: => setTeamCards
+    setTeamCards ( team, cards ) {
+        console.log('==> setTeamCards: ', team, ' ', cards)
+        if ( team === 'red' ) {
+            console.log('> BEFORE: ', this.state.teamRed.cards)
+            this.state.teamRed.cards = cards
+            console.log('> AFTER: ', this.state.teamRed.cards)
+        }
+        if ( team === 'blue' ) {
+            console.log('> BEFORE: ', this.state.teamBlue.cards)
+            this.state.teamBlue.cards = cards
+            console.log('> AFTER: ', this.state.teamBlue.cards)
+        }
+        console.log('==> END - setTeamCards')
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    // FUNCTION: => setTeamGuesses
+    setTeamGuesses ( team, guesses ) {
+        console.log('==> setTeamGuesses: ', team, ' ', guesses)
+        if ( team === 'red' ) {
+            console.log('> BEFORE: ', this.state.teamRed.guesses)
+            this.state.teamRed.guesses = guesses
+            console.log('> AFTER: ', this.state.teamRed.guesses)
+        }
+        if ( team === 'blue' ) {
+            console.log('> BEFORE: ', this.state.teamBlue.guesses)
+            this.state.teamBlue.guesses = guesses
+            console.log('> AFTER: ', this.state.teamBlue.guesses)
+        }
+        console.log('==> END - setTeamGuesses')
+    }
+
+    /*================================================
+        BLOCK: STATE METHODS - Users
+    ==================================================*/
+
+    // FUNCTION: => addUser
+    addUser ( user ) {
+        console.log('==> addUser: ', user)
+        console.log('> BEFORE: ',this.state.users)
+        this.state.users.push( user )
+        console.log('> AFTER: ', this.state.users)
+        console.log('==> END - addUser')
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    // FUNCTION: => removeUser
+    removeUser ( userID )
     {
-        // console.log('===> addHighlight: ', player, ' ', cardIndex);
-        if ( this.state.players.length )
-        {
-            for ( let i = 0; i < this.state.players.length; i++ )
-            {
-                if ( this.state.players[i].id === player.id )
-                {
-                    // console.log('> BEFORE: ', this.state.players[i].highlights);
-                    this.state.players[i].highlights.push(cardIndex);
-                    // console.log('> AFTER: ', this.state.players[i].highlights);
-                }
+        console.log('==> removeUser: ', userID)
+        console.log('> BEFORE: ', this.state.users)
+        this.state.users = this.state.users.filter( user => ( user.id !== userID ) )
+        console.log('> AFTER: ', this.state.users)
+        console.log('==> END - removeUser')
+    }
+
+    /*================================================
+        BLOCK: STATE METHODS - User Info
+    ==================================================*/
+
+    // FUNCTION: => setUserName
+    setUserName ( user, newName )
+    {
+        console.log('==> setUserName: ', user, ' ', newName)
+        for ( let i = 0; i < this.state.users.length; i++ ) {
+            if ( this.state.users[i].id === user.id ) {
+                console.log('> BEFORE: ', this.state.users[i].name)
+                this.state.users[i].name = newName
+                console.log('> AFTER: ', this.state.users[i].name)
             }
         }
-        // console.log('===> END - addHighlight');
+        console.log('==> END - setUserName')
     }
 
     /*======================================*/
     /*======================================*/
 
-    deleteHighlight ( player, cardIndex )
-    {
-        // console.log('===> deleteHighlight: ', player, ' ', cardIndex);
-        if ( this.state.players.length )
-        {
-            for ( let i = 0; i < this.state.players.length; i++ )
-            {
-                if ( this.state.players[i].id === player.id )
-                {
-                    // console.log('> BEFORE: ', this.state.players[i].highlights);
-                    this.state.players[i].highlights = this.state.players[i].highlights.filter(
-                        highlightIndex => ( highlightIndex !== cardIndex )
-                    );
-                    // console.log('> AFTER: ', this.state.players[i].highlights);
-                }
+    // FUNCTION: => setUserTeam
+    setUserTeam ( user, newTeam ) {
+        console.log('==> setUserTeam: ', user, ' ', newTeam)
+        for ( let i = 0; i < this.state.users.length; i++ ) {
+            if ( this.state.users[i].id === user.id ) {
+                console.log('> BEFORE: ', this.state.users[i].team)
+                this.state.users[i].team = newTeam
+                console.log('> AFTER: ', this.state.users[i].team)
             }
         }
-        // console.log('===> END - deleteHighlight');
-
+        console.log('==> END - setUserTeam')
     }
 
     /*======================================*/
     /*======================================*/
 
-    // TODO ===> deleteCardHighlights
-    deleteCardHighlights ( cardIndex )
-    {
-        console.log('===> deleteCardHighlights: ', cardIndex);
-        console.log('===> END - deleteCardHighlights');
-
-    }
-
-    /*======================================*/
-    /*======================================*/
-
-    // TODO ===> deleteAllHighlights
-    deleteAllHighlights ()
-    {
-        console.log('===> deleteAllHighlights');
-        console.log('===> END - deleteAllHighlights');
+    // FUNCTION: => setUserPosition
+    setUserPosition ( user, newPosition ) {
+        console.log('==> setUserPosition: ', user, ' ', newPosition)
+        for ( let i = 0; i < this.state.users.length; i++ ) {
+            if ( this.state.users[i].id === user.id ) {
+                console.log('> BEFORE: ', this.state.users[i].position)
+                this.state.users[i].position = newPosition
+                console.log('> AFTER: ', this.state.users[i].position)
+            }
+        }
+        console.log('==> END - setUserPosition')
     }
 
     /*================================================
-        ANCHOR: STATE METHODS - Game Log
+        BLOCK: STATE METHODS - Highlighting
     ==================================================*/
 
-    // TODO ===> addLogItem
-    addLogItem ( logItem )
-    {
-        console.log('===> addLogItem: ', logItem);
-        console.log('> BEFORE: ', this.state.gameLog);
-        this.state.gameLog.push( logItem );
-        console.log('> AFTER: ', this.state.gameLog);
-        console.log('===> END - addLogItem');
+    // FUNCTION: => addHighlight
+    // TODO
+    addHighlight ( highlight ) {
+        console.log('==> addHighlight: ', highlight)
+        console.log('> BEFORE: ', this.state.highlights)
+        this.state.highlights.push( highlight )
+        console.log('> AFTER: ', this.state.highlights)
+        console.log('==> END - addHighlight')
     }
 
     /*======================================*/
     /*======================================*/
 
-    // TODO ===> deleteAllLogItems
-    deleteAllLogItems ()
-    {
-        console.log('===> deleteAllLogItems');
-        this.state.gameLog = [];
-        console.log('===> END - deleteAllLogItems');
+    // FUNCTION: => deleteHighlight
+    // TODO
+    deleteHighlight ( userID, cardIndex ) {
+        console.log('==> deleteHighlight: ', userID, ' ', cardIndex)
+        console.log('> BEFORE: ', this.state.highlights)
+        this.state.highlights.filter( highlight => (
+                    ( highlight.cardIndex !== cardIndex )
+                    &&
+                    ( highlight.userID !== userID )
+                )
+            )
+        console.log('> AFTER: ', this.state.highlights)
+        console.log('==> END - deleteHighlight')
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    // FUNCTION: => deleteUserHighlight
+    // TODO
+    deleteUserHighlights ( userID ) {
+        console.log('==> deleteCardHighlights: ', userID)
+        console.log('> BEFORE: ', this.state.highlights)
+        this.state.highlights.filter( highlight => highlight.userID !== userID )
+        console.log('> AFTER: ', this.state.highlights)
+        console.log('==> END - deleteCardHighlights')
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    // FUNCTION: => deleteCardHighlight
+    // TODO
+    deleteCardHighlights ( cardIndex ) {
+        console.log('==> deleteCardHighlights: ', cardIndex)
+        console.log('> BEFORE: ', this.state.highlights)
+        this.state.highlights.filter( highlight => highlight.cardIndex !== cardIndex )
+        console.log('> AFTER: ', this.state.highlights)
+        console.log('==> END - deleteCardHighlights')
+    }
+
+    /*======================================*/
+    /*======================================*/
+
+    // FUNCTION: => deleteAllHighlights
+    // TODO
+    deleteAllHighlights () {
+        console.log('==> deleteAllHighlights')
+        console.log('> BEFORE: ', this.state.highlights)
+        this.state.highlights = []
+        console.log('> AFTER: ', this.state.highlights)
+        console.log('==> END - deleteAllHighlights')
     }
 
     /*================================================
-        ANCHOR: STATE METHODS - Player Interactions
+        BLOCK: STATE METHODS - Game Log
     ==================================================*/
 
-    // // TODO ===> card_choose
-    // card_choose ( cardIndex )
-    // { 
+    // FUNCTION: => addLogItem
+    // TODO
+    addLogItem ( logItem ) {
+        console.log('==> addLogItem: ', logItem)
+        console.log('> BEFORE: ', this.state.log)
+        this.state.log.push( logItem )
+        console.log('> AFTER: ', this.state.log)
+        console.log('==> END - addLogItem')
+    }
 
-    // }
+    /*======================================*/
+    /*======================================*/
 
-    // /*======================================*/
-    // /*======================================*/
-
-    // // TODO ===> clue_give
-    // clue_give ( clue )
-    // {
-
-    // }
-
+    // FUNCTION: => deleteAllLogItems
+    // TODO
+    deleteAllLogItems () {
+        console.log('==> deleteAllLogItems')
+        this.state.log = []
+        console.log('==> END - deleteAllLogItems')
+    }
 }

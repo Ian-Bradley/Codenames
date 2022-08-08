@@ -1,7 +1,6 @@
 import * as C from './constants.js'
 export const elper = {
     /*======================================*/
-
     generateRandomID: function ()
     {
         let randomID = ''
@@ -10,9 +9,7 @@ export const elper = {
         {randomID += characters.charAt(Math.floor(Math.random() * characters.length))}
         return randomID
     },
-
     /*======================================*/
-
     generateRandomName: function ( withNumbers )
     {
         let randomName = ''
@@ -22,12 +19,10 @@ export const elper = {
         randomNumber += '-'
         for (let i=0; i < 7; i++)
         {randomNumber += numbers.charAt(Math.floor(Math.random() * numbers.length))}}
-        randomName += C.onst.lotrNames[(Math.floor(Math.random() * C.onst.lotrNames.length))]
+        randomName += C.onst.LOTR_NAMES[(Math.floor(Math.random() * C.onst.LOTR_NAMES.length))]
         return (randomName + randomNumber)
     },
-
     /*======================================*/
-
     debounce: function ( func, wait, immediate )
     {
         var timeout
@@ -43,9 +38,7 @@ export const elper = {
             if (callNow) func.apply(context, args)
         }
     },
-
     /*======================================*/
-
     setCookie: function ( name, value, days )
     {
         var expires = ''
@@ -57,9 +50,7 @@ export const elper = {
         }
         document.cookie = name + '=' + ( value || '' )  + expires + ' path=/'
     },
-
     /*======================================*/
-
     getCookie: function ( name )
     {
         var nameEQ = name + '='
@@ -74,21 +65,5 @@ export const elper = {
         }
         return null
     },
-
     /*======================================*/
-
-    shuffleArray: function ( array )
-    {
-        var tmp, current, top = array.length;
-        if( top ) while( --top ) {
-            current = Math.floor( Math.random() * ( top + 1 ) );
-            tmp = array[current];
-            array[current] = array[top];
-            array[top] = tmp;
-        }
-        return array;
-    }
-
-    /*======================================*/
-
 }

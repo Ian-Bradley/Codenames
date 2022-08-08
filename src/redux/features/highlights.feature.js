@@ -1,8 +1,8 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    highlights: []
-}
+    highlights: [],
+};
 
 /*
 highlight (Object)
@@ -20,57 +20,64 @@ let highlightsSlice = createSlice({
 
         setHighlights: function (state, action) {
             // action.payload = highlights (Array of highlight Objects)
-            state.highlights = action.payload
+            state.highlights = action.payload;
         },
-        
+
+        /*======================================*/
+
+        getCardHighlights: function (state, action) {
+            // action.payload = card index (Number)
+            state.highlights.map((highlight) => highlight.cardIndex === action.payload);
+        },
+
         /*======================================*/
 
         addHighlight: function (state, action) {
             // action.payload = highlight (Object)
-            state.highlights.push( action.payload )
+            state.highlights.push(action.payload);
         },
 
         /*======================================*/
 
         deleteHighlight: function (state, action) {
             // action.payload = highlight data (Object {cardIndex: (Number), userID: (String)})
-            state.highlights.filter( highlight => (
-                        ( highlight.cardIndex !== action.payload.cardIndex )
-                        &&
-                        ( highlight.userID !== action.payload.userID )
-                    )
-                )
+            state.highlights.filter(
+                (highlight) =>
+                    highlight.cardIndex !== action.payload.cardIndex &&
+                    highlight.userID !== action.payload.userID
+            );
         },
 
         /*======================================*/
 
         deleteUserHighlight: function (state, action) {
             // action.payload = user id (String)
-            state.highlights.filter( highlight => highlight.userID !== action.payload )
+            state.highlights.filter((highlight) => highlight.userID !== action.payload);
         },
 
         /*======================================*/
 
         deleteCardHighlight: function (state, action) {
-            // action.payload = card index (String)
-            state.highlights.filter( highlight => highlight.cardIndex !== action.payload )
+            // action.payload = card index (Number)
+            state.highlights.filter((highlight) => highlight.cardIndex !== action.payload);
         },
 
         /*======================================*/
 
         deleteAllHighlights: function (state, action) {
-            state.highlights = []
+            state.highlights = [];
         },
 
         /*======================================*/
-    }
-})
+    },
+});
 export const {
     setHighlights,
+    getCardHighlights,
     addHighlight,
     deleteHighlight,
     deleteUserHighlights,
     deleteCardHighlights,
     deleteAllHighlights,
-} = highlightsSlice.actions
-export default highlightsSlice.reducer
+} = highlightsSlice.actions;
+export default highlightsSlice.reducer;

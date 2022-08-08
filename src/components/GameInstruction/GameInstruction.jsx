@@ -1,17 +1,18 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import './GameInstruction.scss'
+import React from 'react';
+import { useSelector } from 'react-redux';
+import './GameInstruction.scss';
 
-export default function GameInstruction ( props ) {
-    
+export default function GameInstruction(props) {
     /*================================================
-        ANCHOR: STATE
+        BLOCK: STATE
     ==================================================*/
 
-    const instruction = useSelector( ( state ) => { return state['game'].game.instruction } )
-    
+    const instruction = useSelector((state) => {
+        return state['game'].game.instruction;
+    });
+
     /*================================================
-        ANCHOR: COMPONENTS
+        BLOCK: COMPONENTS
     ==================================================*/
 
     return (
@@ -20,5 +21,5 @@ export default function GameInstruction ( props ) {
                 <span>{instruction}</span>
             </div>
         </div>
-    )
+    );
 }

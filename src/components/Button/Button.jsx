@@ -1,5 +1,5 @@
-import React from 'react'
-import './Button.scss'
+import React from 'react';
+import './Button.scss';
 
 /**
  * @props btnIcon (string)           File destinaton to find image
@@ -11,73 +11,76 @@ import './Button.scss'
  * @props btnDisplayClasses (string) Classes for modifying button display (ex: hide/show or disable interactions)
  */
 
-export default function Button ( props ) {
-
+export default function Button(props) {
     /*================================================
-        ANCHOR: INTERACTIONS
+        BLOCK: INTERACTIONS
     ==================================================*/
 
-    const onButtonClick = e => {
+    const onButtonClick = (e) => {
         // e.preventDefault()
-        if( e.target.getAttribute('data-value') ) {
-            props.btnFunction( e.target.getAttribute('data-value') )
+        if (e.target.getAttribute('data-value')) {
+            props.btnFunction(e.target.getAttribute('data-value'));
+        } else {
+            props.btnFunction();
         }
-        else {
-            props.btnFunction()
-        }
-    }
+    };
 
     /*================================================
-        ANCHOR: DISPLAYING
+        BLOCK: DISPLAYING
     ==================================================*/
 
     const displayClasses = () => {
-        let displayClasses = 'button-container'
-        if ( props.btnDisplayClasses ) {
-            displayClasses += ' ' + props.btnDisplayClasses
+        let displayClasses = 'button-container';
+        if (props.btnDisplayClasses) {
+            displayClasses += ' ' + props.btnDisplayClasses;
         }
-        return displayClasses
-    }
+        return displayClasses;
+    };
 
     /*======================================*/
     /*======================================*/
 
     const displayButtonClasses = () => {
-        let buttonClasses = 'game-button'
-        if ( props.btnIcon && ( !props.btnText && !props.btnData ) ) {
-            buttonClasses += ' btn-icon-only'
+        let buttonClasses = 'game-button';
+        if (props.btnIcon && !props.btnText && !props.btnData) {
+            buttonClasses += ' btn-icon-only';
         }
-        if ( props.btnClasses ) {
-            buttonClasses += ' ' + props.btnClasses
+        if (props.btnClasses) {
+            buttonClasses += ' ' + props.btnClasses;
         }
-        return buttonClasses
-    }
+        return buttonClasses;
+    };
 
     /*======================================*/
     /*======================================*/
 
     const displayButtonIcon = () => {
-        if ( props.btnIcon ) {
-            let iconClasses = 'btn-icon'
-            if ( props.btnText ) { iconClasses += ' btn-m-left' }
-            if ( props.btnData ) { iconClasses += ' btn-m-right' }
-            return <img src={props.btnIcon} className={iconClasses}/>
+        if (props.btnIcon) {
+            let iconClasses = 'btn-icon';
+            if (props.btnText) {
+                iconClasses += ' btn-m-left';
+            }
+            if (props.btnData) {
+                iconClasses += ' btn-m-right';
+            }
+            return <img src={props.btnIcon} className={iconClasses} />;
         }
-    }
+    };
 
     /*================================================
-        ANCHOR: COMPONENTS
+        BLOCK: COMPONENTS
     ==================================================*/
 
     return (
         <div className={displayClasses()}>
             <button
-                type       ='button'
-                data-value ={props.btnValue}
-                className  ={displayButtonClasses()}
-                onClick    ={onButtonClick}>
+                type='button'
+                data-value={props.btnValue}
+                className={displayButtonClasses()}
+                onClick={onButtonClick}
+            >
                 {props.btnText} {displayButtonIcon()} {props.btnData}
             </button>
         </div>
-    )
+    );
 }

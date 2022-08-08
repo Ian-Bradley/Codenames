@@ -11,31 +11,27 @@ const F = require('./lib/util/functions.js');
     BLOCK: HELPERS
 ==================================================*/
 
-
 /*================================================
     BLOCK: CONSTRUCTION METHODS
 ==================================================*/
 
 // FUNCTION: => getCodenames
 const getCodenames = () => {
-    return ['butter', 'clock', 'island', 'Paris', 'wish',
-            'soccer', 'crash', 'battery', 'carrot', 'tower',
-            'venus', 'sugar', 'magenta', 'trigger', 'queen',
-            'leg', 'window', 'joint', 'polar', 'machine',
-            'tiger', 'pine', 'anteater', 'pillow', 'aloe']
-}
+    return C.FAKE_CARD_NAMES;
+};
 
 /*======================================*/
 /*======================================*/
 
 // FUNCTION: => createCardIndexes
 const createCardIndexes = () => {
-    let indexArray = []
-    for ( let i = 1; i <= 25; i++ )
-    { indexArray.push(i) }
-    indexArray = F.shuffleArray( indexArray )
-    return indexArray
-}
+    let indexArray = [];
+    for (let i = 1; i <= 25; i++) {
+        indexArray.push(i);
+    }
+    indexArray = F.shuffleArray(indexArray);
+    return indexArray;
+};
 
 /*======================================*/
 /*======================================*/
@@ -51,43 +47,41 @@ const createCardIndexes = () => {
 
 // FUNCTION: => createCards
 const createCards = () => {
-    let codenames = getCodenames()
-    let indexes   = createCardIndexes()
-    let cards     = []
-    for ( let i = 0; i < codenames.length; i++ ) {
-        let cardType = ''
-        if ( 0 <= indexes[i] && indexes[i] <= 6 ) {
-            cardType = 'neutral'
+    let codenames = getCodenames();
+    let indexes = createCardIndexes();
+    let cards = [];
+    for (let i = 0; i < codenames.length; i++) {
+        let cardType = '';
+        if (0 <= indexes[i] && indexes[i] <= 6) {
+            cardType = 'neutral';
         }
-        if ( 7 <= indexes[i] && indexes[i] <= 15 ) {
-            cardType = 'red'
+        if (7 <= indexes[i] && indexes[i] <= 15) {
+            cardType = 'red';
         }
-        if ( 16 <= indexes[i] && indexes[i] <= 23 ) {
-            cardType = 'blue'
+        if (16 <= indexes[i] && indexes[i] <= 23) {
+            cardType = 'blue';
         }
-        if ( indexes[i] === 24 ) {
-            cardType = 'black'
+        if (indexes[i] === 24) {
+            cardType = 'black';
         }
         let card = {
-            index:  indexes[i],
-            text:   codenames[i],
-            type:   cardType,
+            index: indexes[i],
+            text: codenames[i],
+            type: cardType,
             chosen: false,
             highlighted: false,
-        }
-        cards[i] = card
+        };
+        cards[i] = card;
     }
-    return cards
-}
+    return cards;
+};
 
 /*================================================
     BLOCK: GAME CLASS
 ==================================================*/
 
 module.exports = class Game {
-
     constructor() {
-
         /*================================================
             INNERBLOCK: > STATE
         ==================================================*/
@@ -129,7 +123,7 @@ module.exports = class Game {
 
             // Messages
             messages: [],
-        }
+        };
 
         /*================================================
             INNERBLOCK: > METHOD BINDING
@@ -137,39 +131,39 @@ module.exports = class Game {
 
         // State methods - Host
         // TODO: maybe change to getUserIsHost
-        this.isUserHost      = this.isUserHost.bind(this)
-        this.setHost         = this.setHost.bind(this)
-        this.setOriginalHost = this.setOriginalHost.bind(this)
+        this.isUserHost = this.isUserHost.bind(this);
+        this.setHost = this.setHost.bind(this);
+        this.setOriginalHost = this.setOriginalHost.bind(this);
 
         // State methods - Game Settings
-        this.setGameState = this.setGameState.bind(this)
-        this.setGuesses   = this.setGuesses.bind(this)
-        this.setRound     = this.setRound.bind(this)
-        this.setClue      = this.setClue.bind(this)
+        this.setGameState = this.setGameState.bind(this);
+        this.setGuesses = this.setGuesses.bind(this);
+        this.setRound = this.setRound.bind(this);
+        this.setClue = this.setClue.bind(this);
 
         // State methods - Teams
-        this.setTeamCards   = this.setTeamCards.bind(this)
-        this.setTeamGuesses = this.setTeamGuesses.bind(this)
+        this.setTeamCards = this.setTeamCards.bind(this);
+        this.setTeamGuesses = this.setTeamGuesses.bind(this);
 
         // State methods - Users
-        this.addUser    = this.addUser.bind(this)
-        this.removeUser = this.removeUser.bind(this)
+        this.addUser = this.addUser.bind(this);
+        this.removeUser = this.removeUser.bind(this);
 
         // State methods - User Info
-        this.setUserName     = this.setUserName.bind(this)
-        this.setUserTeam     = this.setUserTeam.bind(this)
-        this.setUserPosition = this.setUserPosition.bind(this)
+        this.setUserName = this.setUserName.bind(this);
+        this.setUserTeam = this.setUserTeam.bind(this);
+        this.setUserPosition = this.setUserPosition.bind(this);
 
         // State methods - Highlighting
-        this.addHighlight         = this.addHighlight.bind(this)
-        this.deleteHighlight      = this.deleteHighlight.bind(this)
-        this.deleteUserHighlights = this.deleteUserHighlights.bind(this)
-        this.deleteCardHighlights = this.deleteCardHighlights.bind(this)
-        this.deleteAllHighlights  = this.deleteAllHighlights.bind(this)
+        this.addHighlight = this.addHighlight.bind(this);
+        this.deleteHighlight = this.deleteHighlight.bind(this);
+        this.deleteUserHighlights = this.deleteUserHighlights.bind(this);
+        this.deleteCardHighlights = this.deleteCardHighlights.bind(this);
+        this.deleteAllHighlights = this.deleteAllHighlights.bind(this);
 
         // State methods - Game Log
-        this.addLogItem        = this.addLogItem.bind(this)
-        this.deleteAllLogItems = this.deleteAllLogItems.bind(this)
+        this.addLogItem = this.addLogItem.bind(this);
+        this.deleteAllLogItems = this.deleteAllLogItems.bind(this);
     }
 
     /*================================================
@@ -178,14 +172,14 @@ module.exports = class Game {
 
     // FUNCTION: => isUserHost
     // TODO
-    isUserHost ( userID ) {
-        console.log('==> isUserHost: ', userID)
-        if ( this.state.host === userID ) {
-            console.log('==> END - isUserHost - user found')
-            return true
+    isUserHost(userID) {
+        console.log('==> isUserHost: ', userID);
+        if (this.state.host === userID) {
+            console.log('==> END - isUserHost - user found');
+            return true;
         }
-        console.log('==> END - isUserHost - user not found')
-        return false
+        console.log('==> END - isUserHost - user not found');
+        return false;
     }
 
     /*======================================*/
@@ -193,45 +187,42 @@ module.exports = class Game {
 
     // FUNCTION: => setUserIsHost
     // TODO
-    setHost ( user ) {
-        console.log('==> setUserIsHost: ', user)
-        if ( this.state.users.length ) {
-            for ( let i = 0; i < this.state.users.length; i++ ) {
+    setHost(user) {
+        console.log('==> setUserIsHost: ', user);
+        if (this.state.users.length) {
+            for (let i = 0; i < this.state.users.length; i++) {
                 // Unset any other host user
-                if ( ( this.state.users[i].id !== user.id ) && ( this.state.users[i].isHost ) ) {
+                if (this.state.users[i].id !== user.id && this.state.users[i].isHost) {
                     // console.log('> BEFORE: ', this.state.users[i].isHost) // false
-                    this.state.users[i].isHost = false
+                    this.state.users[i].isHost = false;
                     // console.log('> AFTER: ', this.state.users[i].isHost) // true
-                    console.log('> (Other) User removed as host')
+                    console.log('> (Other) User removed as host');
                 }
 
                 // Set user as host
-                if ( this.state.users[i].id === user.id ) {
-                    if ( !this.state.users[i].isHost ) {
+                if (this.state.users[i].id === user.id) {
+                    if (!this.state.users[i].isHost) {
                         // console.log('> BEFORE: ', this.state.users[i].isHost) // false
-                        this.state.users[i].isHost = true
+                        this.state.users[i].isHost = true;
                         // console.log('> AFTER: ', this.state.users[i].isHost) // true
-                        console.log('> User set as host')
-                        console.log('==> END - setHost')
-                        return true
+                        console.log('> User set as host');
+                        console.log('==> END - setHost');
+                        return true;
+                    } else {
+                        console.log('> User is already host');
+                        console.log('==> END - setHost');
+                        return false;
                     }
-                    else {
-                        console.log('> User is already host')
-                        console.log('==> END - setHost')
-                        return false
-                    }
-                }
-                else {
-                    console.log('> Cannot find user')
-                    console.log('==> END - setHost')
-                    return false
+                } else {
+                    console.log('> Cannot find user');
+                    console.log('==> END - setHost');
+                    return false;
                 }
             }
-        }
-        else {
-            console.log('> No users')
-            console.log('==> END - setHost')
-            return false
+        } else {
+            console.log('> No users');
+            console.log('==> END - setHost');
+            return false;
         }
     }
 
@@ -240,12 +231,12 @@ module.exports = class Game {
 
     // FUNCTION: => setOriginalHost
     // TODO
-    setOriginalHost ( userID ) {
-        console.log('==> setOriginalHost: ', userID)
-        console.log('> BEFORE: ', this.state.originalHost)
-        this.state.originalHost = userID
-        console.log('> AFTER: ', this.state.originalHost)
-        console.log('==> END - setOriginalHost')
+    setOriginalHost(userID) {
+        console.log('==> setOriginalHost: ', userID);
+        console.log('> BEFORE: ', this.state.originalHost);
+        this.state.originalHost = userID;
+        console.log('> AFTER: ', this.state.originalHost);
+        console.log('==> END - setOriginalHost');
     }
 
     /*================================================
@@ -253,48 +244,48 @@ module.exports = class Game {
     ==================================================*/
 
     // FUNCTION: => setGameState
-    setGameState ( state ) {
-        console.log('==> setGameState: ', state)
-        console.log('> BEFORE: ', this.state.gameState)
-        this.state.gameState = state
-        console.log('> AFTER: ', this.state.gameState)
-        console.log('==> END - setGameState')
+    setGameState(state) {
+        console.log('==> setGameState: ', state);
+        console.log('> BEFORE: ', this.state.gameState);
+        this.state.gameState = state;
+        console.log('> AFTER: ', this.state.gameState);
+        console.log('==> END - setGameState');
     }
 
     /*======================================*/
     /*======================================*/
 
     // FUNCTION: => setGuesses
-    setGuesses ( guesses ) {
-        console.log('==> setRound')
-        console.log('> BEFORE: ', this.state.guesses)
-        this.state.guesses = guesses
-        console.log('> AFTER: ', this.state.guesses)
-        console.log('==> END - setRound')
+    setGuesses(guesses) {
+        console.log('==> setRound');
+        console.log('> BEFORE: ', this.state.guesses);
+        this.state.guesses = guesses;
+        console.log('> AFTER: ', this.state.guesses);
+        console.log('==> END - setRound');
     }
 
     /*======================================*/
     /*======================================*/
 
     // FUNCTION: => setRound
-    setRound ( round ) {
-        console.log('==> setRound')
-        console.log('> BEFORE: ', this.state.round)
-        this.state.round = round
-        console.log('> AFTER: ', this.state.round)
-        console.log('==> END - setRound')
+    setRound(round) {
+        console.log('==> setRound');
+        console.log('> BEFORE: ', this.state.round);
+        this.state.round = round;
+        console.log('> AFTER: ', this.state.round);
+        console.log('==> END - setRound');
     }
 
     /*======================================*/
     /*======================================*/
 
     // FUNCTION: => setRound
-    setClue ( clue ) {
-        console.log('==> setClue')
-        console.log('> BEFORE: ', this.state.clue)
-        this.state.clue = clue
-        console.log('> AFTER: ', this.state.clue)
-        console.log('==> END - setClue')
+    setClue(clue) {
+        console.log('==> setClue');
+        console.log('> BEFORE: ', this.state.clue);
+        this.state.clue = clue;
+        console.log('> AFTER: ', this.state.clue);
+        console.log('==> END - setClue');
     }
 
     /*================================================
@@ -302,38 +293,38 @@ module.exports = class Game {
     ==================================================*/
 
     // FUNCTION: => setTeamCards
-    setTeamCards ( team, cards ) {
-        console.log('==> setTeamCards: ', team, ' ', cards)
-        if ( team === 'red' ) {
-            console.log('> BEFORE: ', this.state.teamRed.cards)
-            this.state.teamRed.cards = cards
-            console.log('> AFTER: ', this.state.teamRed.cards)
+    setTeamCards(team, cards) {
+        console.log('==> setTeamCards: ', team, ' ', cards);
+        if (team === 'red') {
+            console.log('> BEFORE: ', this.state.teamRed.cards);
+            this.state.teamRed.cards = cards;
+            console.log('> AFTER: ', this.state.teamRed.cards);
         }
-        if ( team === 'blue' ) {
-            console.log('> BEFORE: ', this.state.teamBlue.cards)
-            this.state.teamBlue.cards = cards
-            console.log('> AFTER: ', this.state.teamBlue.cards)
+        if (team === 'blue') {
+            console.log('> BEFORE: ', this.state.teamBlue.cards);
+            this.state.teamBlue.cards = cards;
+            console.log('> AFTER: ', this.state.teamBlue.cards);
         }
-        console.log('==> END - setTeamCards')
+        console.log('==> END - setTeamCards');
     }
 
     /*======================================*/
     /*======================================*/
 
     // FUNCTION: => setTeamGuesses
-    setTeamGuesses ( team, guesses ) {
-        console.log('==> setTeamGuesses: ', team, ' ', guesses)
-        if ( team === 'red' ) {
-            console.log('> BEFORE: ', this.state.teamRed.guesses)
-            this.state.teamRed.guesses = guesses
-            console.log('> AFTER: ', this.state.teamRed.guesses)
+    setTeamGuesses(team, guesses) {
+        console.log('==> setTeamGuesses: ', team, ' ', guesses);
+        if (team === 'red') {
+            console.log('> BEFORE: ', this.state.teamRed.guesses);
+            this.state.teamRed.guesses = guesses;
+            console.log('> AFTER: ', this.state.teamRed.guesses);
         }
-        if ( team === 'blue' ) {
-            console.log('> BEFORE: ', this.state.teamBlue.guesses)
-            this.state.teamBlue.guesses = guesses
-            console.log('> AFTER: ', this.state.teamBlue.guesses)
+        if (team === 'blue') {
+            console.log('> BEFORE: ', this.state.teamBlue.guesses);
+            this.state.teamBlue.guesses = guesses;
+            console.log('> AFTER: ', this.state.teamBlue.guesses);
         }
-        console.log('==> END - setTeamGuesses')
+        console.log('==> END - setTeamGuesses');
     }
 
     /*================================================
@@ -341,25 +332,24 @@ module.exports = class Game {
     ==================================================*/
 
     // FUNCTION: => addUser
-    addUser ( user ) {
-        console.log('==> addUser: ', user)
-        console.log('> BEFORE: ',this.state.users)
-        this.state.users.push( user )
-        console.log('> AFTER: ', this.state.users)
-        console.log('==> END - addUser')
+    addUser(user) {
+        console.log('==> addUser: ', user);
+        console.log('> BEFORE: ', this.state.users);
+        this.state.users.push(user);
+        console.log('> AFTER: ', this.state.users);
+        console.log('==> END - addUser');
     }
 
     /*======================================*/
     /*======================================*/
 
     // FUNCTION: => removeUser
-    removeUser ( userID )
-    {
-        console.log('==> removeUser: ', userID)
-        console.log('> BEFORE: ', this.state.users)
-        this.state.users = this.state.users.filter( user => ( user.id !== userID ) )
-        console.log('> AFTER: ', this.state.users)
-        console.log('==> END - removeUser')
+    removeUser(userID) {
+        console.log('==> removeUser: ', userID);
+        console.log('> BEFORE: ', this.state.users);
+        this.state.users = this.state.users.filter((user) => user.id !== userID);
+        console.log('> AFTER: ', this.state.users);
+        console.log('==> END - removeUser');
     }
 
     /*================================================
@@ -367,49 +357,48 @@ module.exports = class Game {
     ==================================================*/
 
     // FUNCTION: => setUserName
-    setUserName ( user, newName )
-    {
-        console.log('==> setUserName: ', user, ' ', newName)
-        for ( let i = 0; i < this.state.users.length; i++ ) {
-            if ( this.state.users[i].id === user.id ) {
-                console.log('> BEFORE: ', this.state.users[i].name)
-                this.state.users[i].name = newName
-                console.log('> AFTER: ', this.state.users[i].name)
+    setUserName(user, newName) {
+        console.log('==> setUserName: ', user, ' ', newName);
+        for (let i = 0; i < this.state.users.length; i++) {
+            if (this.state.users[i].id === user.id) {
+                console.log('> BEFORE: ', this.state.users[i].name);
+                this.state.users[i].name = newName;
+                console.log('> AFTER: ', this.state.users[i].name);
             }
         }
-        console.log('==> END - setUserName')
+        console.log('==> END - setUserName');
     }
 
     /*======================================*/
     /*======================================*/
 
     // FUNCTION: => setUserTeam
-    setUserTeam ( user, newTeam ) {
-        console.log('==> setUserTeam: ', user, ' ', newTeam)
-        for ( let i = 0; i < this.state.users.length; i++ ) {
-            if ( this.state.users[i].id === user.id ) {
-                console.log('> BEFORE: ', this.state.users[i].team)
-                this.state.users[i].team = newTeam
-                console.log('> AFTER: ', this.state.users[i].team)
+    setUserTeam(user, newTeam) {
+        console.log('==> setUserTeam: ', user, ' ', newTeam);
+        for (let i = 0; i < this.state.users.length; i++) {
+            if (this.state.users[i].id === user.id) {
+                console.log('> BEFORE: ', this.state.users[i].team);
+                this.state.users[i].team = newTeam;
+                console.log('> AFTER: ', this.state.users[i].team);
             }
         }
-        console.log('==> END - setUserTeam')
+        console.log('==> END - setUserTeam');
     }
 
     /*======================================*/
     /*======================================*/
 
     // FUNCTION: => setUserPosition
-    setUserPosition ( user, newPosition ) {
-        console.log('==> setUserPosition: ', user, ' ', newPosition)
-        for ( let i = 0; i < this.state.users.length; i++ ) {
-            if ( this.state.users[i].id === user.id ) {
-                console.log('> BEFORE: ', this.state.users[i].position)
-                this.state.users[i].position = newPosition
-                console.log('> AFTER: ', this.state.users[i].position)
+    setUserPosition(user, newPosition) {
+        console.log('==> setUserPosition: ', user, ' ', newPosition);
+        for (let i = 0; i < this.state.users.length; i++) {
+            if (this.state.users[i].id === user.id) {
+                console.log('> BEFORE: ', this.state.users[i].position);
+                this.state.users[i].position = newPosition;
+                console.log('> AFTER: ', this.state.users[i].position);
             }
         }
-        console.log('==> END - setUserPosition')
+        console.log('==> END - setUserPosition');
     }
 
     /*================================================
@@ -418,12 +407,12 @@ module.exports = class Game {
 
     // FUNCTION: => addHighlight
     // TODO
-    addHighlight ( highlight ) {
-        console.log('==> addHighlight: ', highlight)
-        console.log('> BEFORE: ', this.state.highlights)
-        this.state.highlights.push( highlight )
-        console.log('> AFTER: ', this.state.highlights)
-        console.log('==> END - addHighlight')
+    addHighlight(highlight) {
+        console.log('==> addHighlight: ', highlight);
+        console.log('> BEFORE: ', this.state.highlights);
+        this.state.highlights.push(highlight);
+        console.log('> AFTER: ', this.state.highlights);
+        console.log('==> END - addHighlight');
     }
 
     /*======================================*/
@@ -431,17 +420,14 @@ module.exports = class Game {
 
     // FUNCTION: => deleteHighlight
     // TODO
-    deleteHighlight ( userID, cardIndex ) {
-        console.log('==> deleteHighlight: ', userID, ' ', cardIndex)
-        console.log('> BEFORE: ', this.state.highlights)
-        this.state.highlights.filter( highlight => (
-                    ( highlight.cardIndex !== cardIndex )
-                    &&
-                    ( highlight.userID !== userID )
-                )
-            )
-        console.log('> AFTER: ', this.state.highlights)
-        console.log('==> END - deleteHighlight')
+    deleteHighlight(userID, cardIndex) {
+        console.log('==> deleteHighlight: ', userID, ' ', cardIndex);
+        console.log('> BEFORE: ', this.state.highlights);
+        this.state.highlights.filter(
+            (highlight) => highlight.cardIndex !== cardIndex && highlight.userID !== userID
+        );
+        console.log('> AFTER: ', this.state.highlights);
+        console.log('==> END - deleteHighlight');
     }
 
     /*======================================*/
@@ -449,12 +435,12 @@ module.exports = class Game {
 
     // FUNCTION: => deleteUserHighlight
     // TODO
-    deleteUserHighlights ( userID ) {
-        console.log('==> deleteCardHighlights: ', userID)
-        console.log('> BEFORE: ', this.state.highlights)
-        this.state.highlights.filter( highlight => highlight.userID !== userID )
-        console.log('> AFTER: ', this.state.highlights)
-        console.log('==> END - deleteCardHighlights')
+    deleteUserHighlights(userID) {
+        console.log('==> deleteCardHighlights: ', userID);
+        console.log('> BEFORE: ', this.state.highlights);
+        this.state.highlights.filter((highlight) => highlight.userID !== userID);
+        console.log('> AFTER: ', this.state.highlights);
+        console.log('==> END - deleteCardHighlights');
     }
 
     /*======================================*/
@@ -462,12 +448,12 @@ module.exports = class Game {
 
     // FUNCTION: => deleteCardHighlight
     // TODO
-    deleteCardHighlights ( cardIndex ) {
-        console.log('==> deleteCardHighlights: ', cardIndex)
-        console.log('> BEFORE: ', this.state.highlights)
-        this.state.highlights.filter( highlight => highlight.cardIndex !== cardIndex )
-        console.log('> AFTER: ', this.state.highlights)
-        console.log('==> END - deleteCardHighlights')
+    deleteCardHighlights(cardIndex) {
+        console.log('==> deleteCardHighlights: ', cardIndex);
+        console.log('> BEFORE: ', this.state.highlights);
+        this.state.highlights.filter((highlight) => highlight.cardIndex !== cardIndex);
+        console.log('> AFTER: ', this.state.highlights);
+        console.log('==> END - deleteCardHighlights');
     }
 
     /*======================================*/
@@ -475,12 +461,12 @@ module.exports = class Game {
 
     // FUNCTION: => deleteAllHighlights
     // TODO
-    deleteAllHighlights () {
-        console.log('==> deleteAllHighlights')
-        console.log('> BEFORE: ', this.state.highlights)
-        this.state.highlights = []
-        console.log('> AFTER: ', this.state.highlights)
-        console.log('==> END - deleteAllHighlights')
+    deleteAllHighlights() {
+        console.log('==> deleteAllHighlights');
+        console.log('> BEFORE: ', this.state.highlights);
+        this.state.highlights = [];
+        console.log('> AFTER: ', this.state.highlights);
+        console.log('==> END - deleteAllHighlights');
     }
 
     /*================================================
@@ -489,12 +475,12 @@ module.exports = class Game {
 
     // FUNCTION: => addLogItem
     // TODO
-    addLogItem ( logItem ) {
-        console.log('==> addLogItem: ', logItem)
-        console.log('> BEFORE: ', this.state.log)
-        this.state.log.push( logItem )
-        console.log('> AFTER: ', this.state.log)
-        console.log('==> END - addLogItem')
+    addLogItem(logItem) {
+        console.log('==> addLogItem: ', logItem);
+        console.log('> BEFORE: ', this.state.log);
+        this.state.log.push(logItem);
+        console.log('> AFTER: ', this.state.log);
+        console.log('==> END - addLogItem');
     }
 
     /*======================================*/
@@ -502,9 +488,9 @@ module.exports = class Game {
 
     // FUNCTION: => deleteAllLogItems
     // TODO
-    deleteAllLogItems () {
-        console.log('==> deleteAllLogItems')
-        this.state.log = []
-        console.log('==> END - deleteAllLogItems')
+    deleteAllLogItems() {
+        console.log('==> deleteAllLogItems');
+        this.state.log = [];
+        console.log('==> END - deleteAllLogItems');
     }
-}
+};

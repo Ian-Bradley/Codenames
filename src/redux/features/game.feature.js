@@ -1,16 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit"
-import { default as C } from '../../util/constants.js'
+import { createSlice } from '@reduxjs/toolkit';
+import { GAME_STATE_SETUP, TEXT_GAME_SETUP } from '../../util/constants.js';
 
 const initialState = {
     game: {
-        state: C.GAME_STATE_SETUP,
+        state: GAME_STATE_SETUP, // TODO: change to auth
         clue: '',
         guesses: 0,
-        instruction: '',
+        instruction: TEXT_GAME_SETUP,
         round: 0,
         userTotal: 1,
     },
-}
+};
 
 let gameSlice = createSlice({
     name: 'game',
@@ -20,81 +20,81 @@ let gameSlice = createSlice({
 
         setGameState: function (state, action) {
             // action.payload = game state (String)
-            state.game.state = action.payload
+            state.game.state = action.payload;
         },
 
         /*======================================*/
 
-        setGameClue: function (state, action) {
+        setClue: function (state, action) {
             // action.payload = clue (String)
-            state.game.clue = action.payload
+            state.game.clue = action.payload;
         },
 
         /*======================================*/
-        
-        setGameGuesses: function (state, action) {
+
+        seGuesses: function (state, action) {
             // action.payload = guesses (String)
-            state.game.guesses = action.payload
+            state.game.guesses = action.payload;
         },
 
         /*======================================*/
 
-        setGameInstruction: function (state, action) {
+        setInstruction: function (state, action) {
             // action.payload = instruction (String)
-            state.game.instruction = action.payload
+            state.game.instruction = action.payload;
         },
 
         /*======================================*/
 
         setRound: function (state, action) {
             // action.payload = round (Number)
-            state.game.round = action.payload
+            state.game.round = action.payload;
         },
 
         /*======================================*/
 
         incrementRound: function (state, action) {
-            state.game.round = state.game.round + 1
+            state.game.round = state.game.round + 1;
         },
 
         /*======================================*/
 
         decrementRound: function (state, action) {
-            state.game.round = state.game.round - 1
+            state.game.round = state.game.round - 1;
         },
 
         /*======================================*/
 
         setUserTotal: function (state, action) {
             // action.payload = amount/count/total (Number)
-            state.game.userTotal = action.payload
+            state.game.userTotal = action.payload;
         },
 
         /*======================================*/
 
         incrementUserTotal: function (state, action) {
-            state.game.userTotal = state.game.userTotal + 1
+            state.game.userTotal = state.game.userTotal + 1;
         },
 
         /*======================================*/
 
         decrementUserTotal: function (state, action) {
-            state.game.userTotal = state.game.userTotal - 1
+            state.game.userTotal = state.game.userTotal - 1;
         },
 
         /*======================================*/
-    }
-})
+    },
+});
 export const {
     setGameState,
-    setGameClue,
-    setGameGuesses,
-    setGameInstruction,
+    setClue,
+    seGuesses,
+    setInstruction,
     setRound,
     incrementRound,
     decrementRound,
     setUserTotal,
     incrementUserTotal,
     decrementUserTotal,
-} = gameSlice.actions
-export default gameSlice.reducer
+} = gameSlice.actions;
+export default gameSlice.reducer;

@@ -1,61 +1,55 @@
-import { createSlice } from '@reduxjs/toolkit'
-import { default as F } from '../../util/functions.js'
+import { createSlice } from '@reduxjs/toolkit';
+import { generateRandomName } from '../../util/functions.js';
 
 const initialState = {
     user: {
         id: '1',
-        name: F.generateRandomName(true),
+        name: generateRandomName(true),
         team: '',
         position: '',
         isHost: false,
-    }
-}
+    },
+};
 
 let userSlice = createSlice({
     name: 'user',
     initialState: initialState,
     reducers: {
-        setID: function ( state, action ) {
+        setID: function (state, action) {
             // action.payload = id (String)
-            state.user.id = action.payload
+            state.user.id = action.payload;
         },
 
         /*======================================*/
 
-        setName: function ( state, action ) {
+        setName: function (state, action) {
             // action.payload = name (String)
-            state.user.name = action.payload
+            state.user.name = action.payload;
         },
 
         /*======================================*/
 
-        setTeam: function ( state, action ) {
+        setTeam: function (state, action) {
             // action.payload = team (String)
-            state.user.team = action.payload
+            state.user.team = action.payload;
         },
 
         /*======================================*/
 
-        setPosition: function ( state, action ) {
+        setPosition: function (state, action) {
             // action.payload = position (String)
-            state.user.position = action.payload
+            state.user.position = action.payload;
         },
 
         /*======================================*/
 
-        setIsHost: function ( state, action ) {
+        setIsHost: function (state, action) {
             // action.payload = host state (Boolean)
-            state.user.IsHost = action.payload
+            state.user.IsHost = action.payload;
         },
-        
+
         /*======================================*/
-    }
-})
-export const {
-    setID,
-    setName,
-    setTeam,
-    setPosition,
-    setIsHost,
-} = userSlice.actions
-export default userSlice.reducer
+    },
+});
+export const { setID, setName, setTeam, setPosition, setIsHost } = userSlice.actions;
+export default userSlice.reducer;

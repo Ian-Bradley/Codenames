@@ -1,8 +1,8 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    users: []
-}
+    users: [],
+};
 
 /*
 user (Object)
@@ -19,88 +19,82 @@ let usersSlice = createSlice({
     reducers: {
         /*======================================*/
 
-        addUser: function ( state, action ) {
+        addUser: function (state, action) {
             // action.payload = user (Object)
-            state.users.push( action.payload )
+            state.users.push(action.payload);
         },
 
         /*======================================*/
 
-        removeUser: function ( state, action ) {
+        removeUser: function (state, action) {
             // action.payload = ID (Number)
-            state.users.filter( user => user.id !== action.payload )
+            state.users.filter((user) => user.id !== action.payload);
         },
 
         /*======================================*/
 
-        setUsers: function ( state, action ) {
+        setUsers: function (state, action) {
             // action.payload = users (Array of user Objects)
-            state.users = action.payload
+            state.users = action.payload;
         },
 
         /*======================================*/
 
-        setUserName: function ( state, action ) {
+        setUserName: function (state, action) {
             // action.payload = user data (Object {id: (String), name: (String)})
-            state.users.map( ( user ) => {
-                    if ( user.id === action.payload.id ) {
-                        user.name = action.payload.name
-                    }
+            state.users.map((user) => {
+                if (user.id === action.payload.id) {
+                    user.name = action.payload.name;
                 }
-            )
+            });
         },
 
         /*======================================*/
 
-        setUserTeam: function ( state, action ) {
+        setUserTeam: function (state, action) {
             // action.payload = user data (Object {id: (String), team: (String)})
-            state.users.map( ( user ) => {
-                    if ( user.id === action.payload.id ) {
-                        user.team = action.payload.team
-                    }
+            state.users.map((user) => {
+                if (user.id === action.payload.id) {
+                    user.team = action.payload.team;
                 }
-            )
+            });
         },
 
         /*======================================*/
 
-        setUserPosition: function ( state, action ) {
+        setUserPosition: function (state, action) {
             // action.payload = user data (Object {id: (String), position: (String)})
-            state.users.map( ( user ) => {
-                    if ( user.id === action.payload.id ) {
-                        user.position = action.payload.position
-                    }
+            state.users.map((user) => {
+                if (user.id === action.payload.id) {
+                    user.position = action.payload.position;
                 }
-            )
+            });
         },
 
         /*======================================*/
 
-        setUserIsHost: function ( state, action ) {
+        setUserIsHost: function (state, action) {
             // action.payload = user id (String)
-            state.users.map( ( user ) => {
-                    if ( user.id === action.payload ) {
-                        user.IsHost = true
-                    }
-                    else {
-                        user.IsHost = false
-                    }
+            state.users.map((user) => {
+                if (user.id === action.payload) {
+                    user.IsHost = true;
+                } else {
+                    user.IsHost = false;
                 }
-            )
+            });
         },
 
         /*======================================*/
-        
-        removeUsersIsHost: function ( state, action ) {
-            state.users.map( ( user ) => {
-                    user.IsHost = false
-                }
-            )
+
+        removeUsersIsHost: function (state, action) {
+            state.users.map((user) => {
+                user.IsHost = false;
+            });
         },
 
         /*======================================*/
-    }
-})
+    },
+});
 export const {
     addUser,
     deleteUser,
@@ -110,5 +104,5 @@ export const {
     setUserPosition,
     setUserIsHost,
     removeUsersIsHost,
-} = usersSlice.actions
-export default usersSlice.reducer
+} = usersSlice.actions;
+export default usersSlice.reducer;

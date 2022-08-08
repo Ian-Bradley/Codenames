@@ -1,8 +1,8 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    cards: []
-}
+    cards: [],
+};
 
 /*
 card (Object)
@@ -19,15 +19,13 @@ let cardsSlice = createSlice({
     reducers: {
         /*======================================*/
 
-        setCards: function ( state, action ) {
+        setCards: function (state, action) {
             // action.payload = cards (Array of card Objects)
-            state.cards = action.payload
+            state.cards = action.payload;
         },
 
         /*======================================*/
-    }
-})
-export const {
-    setCards,
-} = cardsSlice.actions
-export default cardsSlice.reducer
+    },
+});
+export const { setCards } = cardsSlice.actions;
+export default cardsSlice.reducer;

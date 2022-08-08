@@ -1,20 +1,20 @@
-import { createSlice } from "@reduxjs/toolkit"
-import { default as C } from '../../util/constants.js'
+import { createSlice } from '@reduxjs/toolkit';
+import { COLOR_RED, COLOR_BLUE } from '../../util/constants.js';
 
 const initialState = {
     teams: {
         red: {
-            name: C.RED,
+            name: COLOR_RED,
             cards: 0,
             guesses: 0,
         },
         blue: {
-            name: C.BLUE,
+            name: COLOR_BLUE,
             cards: 0,
             guesses: 0,
         },
     },
-}
+};
 
 let teamsSlice = createSlice({
     name: 'teams',
@@ -24,37 +24,32 @@ let teamsSlice = createSlice({
 
         setRedCards: function (state, action) {
             // action.payload = cards (Number)
-            state.teams.cards = action.payload
+            state.teams.cards = action.payload;
         },
 
         /*======================================*/
 
         setRedGuesses: function (state, action) {
             // action.payload = guesses (Number)
-            state.teams.guesses = action.payload
+            state.teams.guesses = action.payload;
         },
 
         /*======================================*/
-        
+
         setBlueCards: function (state, action) {
             // action.payload = cards (Number)
-            state.teams.cards = action.payload
+            state.teams.cards = action.payload;
         },
 
         /*======================================*/
 
         setBlueGuesses: function (state, action) {
             // action.payload = guesses (Number)
-            state.teams.guesses = action.payload
+            state.teams.guesses = action.payload;
         },
 
         /*======================================*/
-    }
-})
-export const {
-    setRedCards,
-    setRedGuesses,
-    setBlueCards,
-    setBlueGuesses,
-} = teamsSlice.actions
-export default teamsSlice.reducer
+    },
+});
+export const { setRedCards, setRedGuesses, setBlueCards, setBlueGuesses } = teamsSlice.actions;
+export default teamsSlice.reducer;

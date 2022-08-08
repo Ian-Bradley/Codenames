@@ -1,14 +1,14 @@
-import logReducer from './features/log.feature.js'
-import teamsReducer from './features/teams.feature.js'
-import cardsReducer from './features/cards.feature.js'
-import messagesReducer from './features/messages.feature.js'
-import highlightsReducer from './features/highlights.feature.js'
+import logReducer from './features/log.feature.js';
+import teamsReducer from './features/teams.feature.js';
+import cardsReducer from './features/cards.feature.js';
+import messagesReducer from './features/messages.feature.js';
+import highlightsReducer from './features/highlights.feature.js';
 
-import userReducer from './features/user.feature.js'
-import usersReducer from './features/users.feature.js'
+import userReducer from './features/user.feature.js';
+import usersReducer from './features/users.feature.js';
 
-import gameReducer from './features/game.feature.js'
-import dimensionsReducer from './features/dimensions.feature.js'
+import gameReducer from './features/game.feature.js';
+import dimensionsReducer from './features/dimensions.feature.js';
 
 const rootReducer = {
     log: logReducer,
@@ -20,5 +20,5 @@ const rootReducer = {
     messages: messagesReducer,
     dimensions: dimensionsReducer,
     highlights: highlightsReducer,
-}
-export default rootReducer
+};
+export default rootReducer;

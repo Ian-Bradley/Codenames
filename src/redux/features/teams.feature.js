@@ -1,15 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit"
-import * as C from '../../../helpers/constants.js'
+import { default as C } from '../../util/constants.js'
 
 const initialState = {
     teams: {
         red: {
-            name: C.onst.red,
+            name: C.RED,
             cards: 0,
             guesses: 0,
         },
         blue: {
-            name: C.onst.blue,
+            name: C.BLUE,
             cards: 0,
             guesses: 0,
         },
@@ -22,32 +22,28 @@ let teamsSlice = createSlice({
     reducers: {
         /*======================================*/
 
-        setRedCards: function (state, action)
-        {
+        setRedCards: function (state, action) {
             // action.payload = cards (Number)
             state.teams.cards = action.payload
         },
 
         /*======================================*/
 
-        setRedGuesses: function (state, action)
-        {
+        setRedGuesses: function (state, action) {
             // action.payload = guesses (Number)
             state.teams.guesses = action.payload
         },
 
         /*======================================*/
         
-        setBlueCards: function (state, action)
-        {
+        setBlueCards: function (state, action) {
             // action.payload = cards (Number)
             state.teams.cards = action.payload
         },
 
         /*======================================*/
 
-        setBlueGuesses: function (state, action)
-        {
+        setBlueGuesses: function (state, action) {
             // action.payload = guesses (Number)
             state.teams.guesses = action.payload
         },

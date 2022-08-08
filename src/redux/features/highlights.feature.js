@@ -18,27 +18,23 @@ let highlightsSlice = createSlice({
     reducers: {
         /*======================================*/
 
-        setHighlights: function (state, action)
-        {
+        setHighlights: function (state, action) {
             // action.payload = highlights (Array of highlight Objects)
             state.highlights = action.payload
         },
         
         /*======================================*/
 
-        addHighlight: function (state, action)
-        {
+        addHighlight: function (state, action) {
             // action.payload = highlight (Object)
             state.highlights.push( action.payload )
         },
 
         /*======================================*/
 
-        deleteHighlight: function (state, action)
-        {
+        deleteHighlight: function (state, action) {
             // action.payload = highlight data (Object {cardIndex: (Number), userID: (String)})
-            state.highlights.filter( highlight => 
-                    (
+            state.highlights.filter( highlight => (
                         ( highlight.cardIndex !== action.payload.cardIndex )
                         &&
                         ( highlight.userID !== action.payload.userID )
@@ -48,24 +44,21 @@ let highlightsSlice = createSlice({
 
         /*======================================*/
 
-        deleteUserHighlight: function (state, action)
-        {
+        deleteUserHighlight: function (state, action) {
             // action.payload = user id (String)
             state.highlights.filter( highlight => highlight.userID !== action.payload )
         },
 
         /*======================================*/
 
-        deleteCardHighlight: function (state, action)
-        {
+        deleteCardHighlight: function (state, action) {
             // action.payload = card index (String)
             state.highlights.filter( highlight => highlight.cardIndex !== action.payload )
         },
 
         /*======================================*/
 
-        deleteAllHighlights: function (state, action)
-        {
+        deleteAllHighlights: function (state, action) {
             state.highlights = []
         },
 

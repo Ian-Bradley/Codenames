@@ -1,8 +1,9 @@
 import React from 'react'
-import './GameMessage.scss'
+import { useSelector } from 'react-redux'
+import './GameInstruction.scss'
 
-export default function GameMessage ( props )
-{
+export default function GameInstruction ( props ) {
+    
     /*================================================
         ANCHOR: STATE
     ==================================================*/

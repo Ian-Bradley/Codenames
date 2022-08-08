@@ -1,14 +1,15 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import Button from '../Button/Button.jsx'
-import * as C from '../../../helpers/constants.js'
+import { default as C } from '../../util/constants.js'
 import './GameMenu.scss'
 
 /**
  * @props menuAction (function) Handler function for menu buttons
  */
 
-export default function GameMenu ( props )
-{
+export default function GameMenu ( props ) {
+
     /*================================================
         ANCHOR: STATE
     ==================================================*/
@@ -21,8 +22,7 @@ export default function GameMenu ( props )
         ANCHOR: INTERACTIONS
     ==================================================*/
 
-    const onRandomizeTeams = () =>
-    {
+    const onRandomizeTeams = () => {
         console.log('==> onRandomizeTeams')
         // props.menuAction()
         console.log('==> END - onRandomizeTeams')
@@ -31,8 +31,7 @@ export default function GameMenu ( props )
     /*======================================*/
     /*======================================*/
 
-    const onResetTeams = () =>
-    {
+    const onResetTeams = () => {
         console.log('===> onResetTeams')
         // props.menuAction()
         console.log('===> END - onResetTeams')
@@ -41,8 +40,7 @@ export default function GameMenu ( props )
     /*======================================*/
     /*======================================*/
 
-    const onStartNewGame = () =>
-    {
+    const onStartNewGame = () => {
         console.log('===> onStartNewGame')
         // props.menuAction()
         console.log('===> END - onStartNewGame')
@@ -52,13 +50,10 @@ export default function GameMenu ( props )
         ANCHOR: DISPLAYING
     ==================================================*/
 
-    const displayMenu = () =>
-    {
-        if ( gameState === C.onst.gameState_setup )
-        {
+    const displayMenu = () => {
+        if ( gameState === C.GAME_STATE_SETUP ) {
             let buttons = [];
-            if ( isUserHost )
-            {
+            if ( isUserHost ) {
                 buttons = [
                     (<Button
                         key         ={0}

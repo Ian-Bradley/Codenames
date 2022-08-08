@@ -18,24 +18,21 @@ let logSlice = createSlice({
     reducers: {
         /*======================================*/
 
-        setLog: function ( state, action )
-        {
+        setLog: function ( state, action ) {
             // action.payload = log (Array of logItem Objects)
             state.log = action.payload
         },
 
         /*======================================*/
 
-        addLogItem: function ( state, action )
-        {
+        addLogItem: function ( state, action ) {
             // action.payload = log item (Object)
             state.log.push( action.payload )
         },
 
         /*======================================*/
 
-        deleteAllLogItems: function ( state, action )
-        {
+        deleteAllLogItems: function ( state, action ) {
             state.log = []
         },
 

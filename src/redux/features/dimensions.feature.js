@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import * as C from '../../../helpers/constants.js'
+import { default as C } from '../../util/constants.js'
 
 const initialState = {
     dimensions: {
@@ -15,12 +15,11 @@ let userTotalSlice = createSlice({
     reducers: {
         /*======================================*/
 
-        setDimensions: function ( state, action )
-        {
+        setDimensions: function ( state, action ) {
             // action.payload = dimension data (Object {height: (Number), width: (Number)})
             state.dimensions.appWidth  = action.payload.height
             state.dimensions.appHeight = action.payload.width
-            state.dimensions.appScaler = ( action.payload.height / C.onst.appHeight )
+            state.dimensions.appScaler = ( action.payload.height / C.APP_HEIGHT )
         },
 
         /*======================================*/

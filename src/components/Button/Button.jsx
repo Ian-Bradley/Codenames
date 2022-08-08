@@ -11,22 +11,18 @@ import './Button.scss'
  * @props btnDisplayClasses (string) Classes for modifying button display (ex: hide/show or disable interactions)
  */
 
-export default function Button ( props )
-{
+export default function Button ( props ) {
 
     /*================================================
         ANCHOR: INTERACTIONS
     ==================================================*/
 
-    const onButtonClick = e =>
-    {
+    const onButtonClick = e => {
         // e.preventDefault()
-        if( e.target.getAttribute('data-value') )
-        {
+        if( e.target.getAttribute('data-value') ) {
             props.btnFunction( e.target.getAttribute('data-value') )
         }
-        else
-        {
+        else {
             props.btnFunction()
         }
     }
@@ -35,11 +31,9 @@ export default function Button ( props )
         ANCHOR: DISPLAYING
     ==================================================*/
 
-    const displayClasses = () =>
-    {
+    const displayClasses = () => {
         let displayClasses = 'button-container'
-        if ( props.btnDisplayClasses )
-        {
+        if ( props.btnDisplayClasses ) {
             displayClasses += ' ' + props.btnDisplayClasses
         }
         return displayClasses
@@ -48,15 +42,12 @@ export default function Button ( props )
     /*======================================*/
     /*======================================*/
 
-    const displayButtonClasses = () =>
-    {
+    const displayButtonClasses = () => {
         let buttonClasses = 'game-button'
-        if ( props.btnIcon && ( !props.btnText && !props.btnData ) )
-        {
+        if ( props.btnIcon && ( !props.btnText && !props.btnData ) ) {
             buttonClasses += ' btn-icon-only'
         }
-        if ( props.btnClasses )
-        {
+        if ( props.btnClasses ) {
             buttonClasses += ' ' + props.btnClasses
         }
         return buttonClasses
@@ -65,10 +56,8 @@ export default function Button ( props )
     /*======================================*/
     /*======================================*/
 
-    const displayButtonIcon = () =>
-    {
-        if ( props.btnIcon )
-        {
+    const displayButtonIcon = () => {
+        if ( props.btnIcon ) {
             let iconClasses = 'btn-icon'
             if ( props.btnText ) { iconClasses += ' btn-m-left' }
             if ( props.btnData ) { iconClasses += ' btn-m-right' }

@@ -19,8 +19,7 @@ let cardsSlice = createSlice({
     reducers: {
         /*======================================*/
 
-        setCards: function ( state, action )
-        {
+        setCards: function ( state, action ) {
             // action.payload = cards (Array of card Objects)
             state.cards = action.payload
         },

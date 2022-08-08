@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit"
-import * as C from '../../../helpers/constants.js'
+import { default as C } from '../../util/constants.js'
 
 const initialState = {
     game: {
-        state: C.onst.game_setup,
+        state: C.GAME_STATE_SETUP,
         clue: '',
-        guesses: '',
+        guesses: 0,
         instruction: '',
         round: 0,
         userTotal: 1,
@@ -18,77 +18,67 @@ let gameSlice = createSlice({
     reducers: {
         /*======================================*/
 
-        setGameState: function (state, action)
-        {
+        setGameState: function (state, action) {
             // action.payload = game state (String)
             state.game.state = action.payload
         },
 
         /*======================================*/
 
-        setGameClue: function (state, action)
-        {
+        setGameClue: function (state, action) {
             // action.payload = clue (String)
             state.game.clue = action.payload
         },
 
         /*======================================*/
         
-        setGameGuesses: function (state, action)
-        {
+        setGameGuesses: function (state, action) {
             // action.payload = guesses (String)
             state.game.guesses = action.payload
         },
 
         /*======================================*/
 
-        setGameInstruction: function (state, action)
-        {
+        setGameInstruction: function (state, action) {
             // action.payload = instruction (String)
             state.game.instruction = action.payload
         },
 
         /*======================================*/
 
-        setRound: function (state, action)
-        {
+        setRound: function (state, action) {
             // action.payload = round (Number)
             state.game.round = action.payload
         },
 
         /*======================================*/
 
-        incrementRound: function (state, action)
-        {
+        incrementRound: function (state, action) {
             state.game.round = state.game.round + 1
         },
 
         /*======================================*/
 
-        decrementRound: function (state, action)
-        {
+        decrementRound: function (state, action) {
             state.game.round = state.game.round - 1
         },
 
         /*======================================*/
 
-        setUserTotal: function (state, action)
-        {
+        setUserTotal: function (state, action) {
             // action.payload = amount/count/total (Number)
             state.game.userTotal = action.payload
         },
 
         /*======================================*/
 
-        incrementUserTotal: function (state, action)
-        {
+        incrementUserTotal: function (state, action) {
             state.game.userTotal = state.game.userTotal + 1
         },
 
         /*======================================*/
 
-        decrementUserTotal: function (state, action)
-        {
+        decrementUserTotal: function (state, action) {
             state.game.userTotal = state.game.userTotal - 1
         },
 

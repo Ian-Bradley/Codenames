@@ -1,4 +1,5 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import Button from '../Button/Button.jsx'
 import './GameInputs.scss'
 
@@ -6,20 +7,20 @@ import './GameInputs.scss'
  * @props sendClue (function) Handler function for menu buttons
  */
 
-export default function GameInputs ( props )
-{
+export default function GameInputs ( props ) {
+
     /*================================================
         ANCHOR: STATE
     ==================================================*/
 
-    const game = useSelector( ( state ) => { return state['game'].game } )
+    const clue    = useSelector( ( state ) => { return state['game'].game.clue } )
+    const guesses = useSelector( ( state ) => { return state['game'].game.guesses } )
 
     /*================================================
         ANCHOR: INTERACTIONS
     ==================================================*/
 
-    const onInputChange = () =>
-    {
+    const onInputChange = () => {
         console.log('===> onInputChange')
         console.log('===> END - onInputChange')
     }
@@ -27,8 +28,7 @@ export default function GameInputs ( props )
     /*======================================*/
     /*======================================*/
 
-    const onSelectGuesses = () =>
-    {
+    const onSelectGuesses = () => {
         console.log('===> onSelectGuesses')
         console.log('===> END - onSelectGuesses')
     }
@@ -36,8 +36,7 @@ export default function GameInputs ( props )
     /*======================================*/
     /*======================================*/
 
-    const onGiveClue = () =>
-    {
+    const onGiveClue = () => {
         console.log('===> onGiveClue')
         // props.sendClue()
         console.log('===> END - onGiveClue')
@@ -46,8 +45,7 @@ export default function GameInputs ( props )
     /*======================================*/
     /*======================================*/
 
-    const onEndGuessing = () =>
-    {
+    const onEndGuessing = () => {
         console.log('===> onEndGuessing')
         console.log('===> END - onEndGuessing')
     }
@@ -56,8 +54,7 @@ export default function GameInputs ( props )
         ANCHOR: DISPLAYING
     ==================================================*/
 
-    const displaySelectOptions = () =>
-    {
+    const displaySelectOptions = () => {
         // if()
 
         // teamRed
@@ -67,22 +64,23 @@ export default function GameInputs ( props )
         // {
 
         // }
+        return null;
     }
 
     /*======================================*/
     /*======================================*/
 
-    const displayClue = () =>
-    {
-        if ( game.clue ) { return game.clue }
+    const displayClue = () => {
+        if ( clue ) { return clue }
+        return null;
     }
 
     /*======================================*/
     /*======================================*/
 
-    const displayGuesses = () =>
-    {
-        if ( game.guesses ) { return game.guesses }
+    const displayGuesses = () => {
+        if ( guesses ) { return guesses }
+        return null;
     }
 
     /*================================================
@@ -108,7 +106,7 @@ export default function GameInputs ( props )
                         defaultValue =''
                         onClick      ={onSelectGuesses}
                     />
-                    {displaySelectOptions()}
+                    {/* {displaySelectOptions} */}
                 </div>
                 
                 <Button
@@ -120,18 +118,18 @@ export default function GameInputs ( props )
             </div>
             <div className='clue-container'>
                 <div className='clue'>
-                    {displayClue}
+                    {/* {displayClue} */}
                 </div>
                 <div className='guess-amount'>
-                    {displayGuesses}
+                    {/* {displayGuesses} */}
                 </div>
             </div>
             <div className='clue-end-container'>
                 <Button
-                        btnClasses  ={'end-guessing button-yellow'}
-                        btnFunction ={onEndGuessing}
-                        btnText     ={'End Guessing'}
-                    />
+                    btnClasses  ={'end-guessing button-yellow'}
+                    btnFunction ={onEndGuessing}
+                    btnText     ={'End Guessing'}
+                />
             </div>
         </div>
     )

@@ -56,20 +56,24 @@ const createCards = () => {
     let cards     = []
     for ( let i = 0; i < codenames.length; i++ ) {
         let cardType = ''
-        if ( 0 <= indexes[i] && indexes[i] <= 6 )
-        { cardType = 'neutral' }
-        if ( 7 <= indexes[i] && indexes[i] <= 15 )
-        { cardType = 'red' }
-        if ( 16 <= indexes[i] && indexes[i] <= 23 )
-        { cardType = 'blue' }
-        if ( indexes[i] === 24 )
-        { cardType = 'black' }
+        if ( 0 <= indexes[i] && indexes[i] <= 6 ) {
+            cardType = 'neutral'
+        }
+        if ( 7 <= indexes[i] && indexes[i] <= 15 ) {
+            cardType = 'red'
+        }
+        if ( 16 <= indexes[i] && indexes[i] <= 23 ) {
+            cardType = 'blue'
+        }
+        if ( indexes[i] === 24 ) {
+            cardType = 'black'
+        }
         let card = {
-            index: indexes[i],
-            text: codenames[i],
-            type: cardType,
-            highlighted: false,
+            index:  indexes[i],
+            text:   codenames[i],
+            type:   cardType,
             chosen: false,
+            highlighted: false,
         }
         cards[i] = card
     }
@@ -101,6 +105,7 @@ module.exports = class Game {
             gameState: C.GAME_STATE_SETUP,
 
             // Teams
+            // TODO: maybe combine
             teamRed: {
                 name: C.RED,
                 cards: 0,
@@ -132,8 +137,8 @@ module.exports = class Game {
 
         // State methods - Host
         // TODO: maybe change to getUserIsHost
-        this.isUserHost = this.isUserHost.bind(this)
-        this.setHost    = this.setHost.bind(this)
+        this.isUserHost      = this.isUserHost.bind(this)
+        this.setHost         = this.setHost.bind(this)
         this.setOriginalHost = this.setOriginalHost.bind(this)
 
         // State methods - Game Settings
@@ -154,7 +159,6 @@ module.exports = class Game {
         this.setUserName     = this.setUserName.bind(this)
         this.setUserTeam     = this.setUserTeam.bind(this)
         this.setUserPosition = this.setUserPosition.bind(this)
-        this.setUserIsHost   = this.setUserIsHost.bind(this)
 
         // State methods - Highlighting
         this.addHighlight         = this.addHighlight.bind(this)
@@ -176,12 +180,12 @@ module.exports = class Game {
     // TODO
     isUserHost ( userID ) {
         console.log('==> isUserHost: ', userID)
-        if ( this.state.users.find( user => user.id === userID ) )
-        {
+        if ( this.state.host === userID ) {
             console.log('==> END - isUserHost - user found')
-            return this.state.users.find( user => user.id === userID ).isHost
+            return true
         }
         console.log('==> END - isUserHost - user not found')
+        return false
     }
 
     /*======================================*/
@@ -208,25 +212,25 @@ module.exports = class Game {
                         this.state.users[i].isHost = true
                         // console.log('> AFTER: ', this.state.users[i].isHost) // true
                         console.log('> User set as host')
-                        console.log('==> END - setUserIsHost')
+                        console.log('==> END - setHost')
                         return true
                     }
                     else {
                         console.log('> User is already host')
-                        console.log('==> END - setUserIsHost')
+                        console.log('==> END - setHost')
                         return false
                     }
                 }
                 else {
                     console.log('> Cannot find user')
-                    console.log('==> END - setUserIsHost')
+                    console.log('==> END - setHost')
                     return false
                 }
             }
         }
         else {
             console.log('> No users')
-            console.log('==> END - setUserIsHost')
+            console.log('==> END - setHost')
             return false
         }
     }
@@ -243,7 +247,6 @@ module.exports = class Game {
         console.log('> AFTER: ', this.state.originalHost)
         console.log('==> END - setOriginalHost')
     }
-
 
     /*================================================
         BLOCK: STATE METHODS - Game Settings

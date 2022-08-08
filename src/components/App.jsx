@@ -2,18 +2,18 @@ import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 // COMPONENETS
-import Button from './Button/Button.js'
-import GameLog from './GameLog/GameLog.js'
-import GameMenu from './GameMenu/GameMenu.js'
-import TeamCard from './TeamCard/TeamCard.js'
-import GameCard from './GameCard/GameCard.js'
-import GameInputs from './GameInputs/GameInputs.js'
-import GameHeader from './GameHeader/GameHeader.js'
+import Button from './Button/Button.jsx'
+import GameLog from './GameLog/GameLog.jsx'
+import GameMenu from './GameMenu/GameMenu.jsx'
+import TeamCard from './TeamCard/TeamCard.jsx'
+import GameCard from './GameCard/GameCard.jsx'
+import GameInputs from './GameInputs/GameInputs.jsx'
+import GameHeader from './GameHeader/GameHeader.jsx'
 import GameInstruction from './GameInstruction/GameInstruction.jsx'
 
 // CSS + GLOBAL CONSTANTS + HELPER FUNCS
-import * as C from '../../helpers/constants.js'
-import * as H from '../../helpers/functions.js'
+import { default as C } from '../util/constants.js'
+import { default as F } from '../util/functions.js'
 import './App.scss'
 
 /*================================================
@@ -76,10 +76,6 @@ import {
     setName,
     setTeam,
     setPosition,
-    setIsHost,
-    // addHighlight,
-    // deleteHighlight,
-    // deleteAllHighlights,
 } from '../redux/features/user.feature.js'
 /*======================================*/
 import {
@@ -89,12 +85,6 @@ import {
     setUserName,
     setUserTeam,
     setUserPosition,
-    setUserIsHost,
-    removeUsersIsHost,
-    // addUserHighlight,
-    // deleteUserHighlight,
-    // deleteAllUserHighlights,
-    // deleteAllUsersHighlights,
 } from '../redux/features/users.feature.js'
 /*======================================*/
 
@@ -118,7 +108,7 @@ export default function App () {
 
     // Hooks
     const [WSReady, setWSReady] = useState(false)
-    const [WS, setWS] = useState(new WebSocket( C.onst.wsURL ))
+    const [WS, setWS] = useState(new WebSocket( C.WS_URL ))
 
     /*================================================
         BLOCK: HOOKS - APP DIMENSIONS
@@ -126,11 +116,11 @@ export default function App () {
 
     useEffect( () => {
         dispatch( setDimensions( { height: window.innerHeight, width: window.innerWidth } ) )
-        let debounceResize = H.elper.debounce( dispatch( setDimensions( { height: window.innerHeight, width: window.innerWidth } ) ), C.onst.debounceDelay, false )
+        let debounceResize = F.debounce( dispatch( setDimensions( { height: window.innerHeight, width: window.innerWidth } ) ), C.DEBOUNCE_DELAY, false )
         window.addEventListener( 'resize', debounceResize )
 
         return () => {
-            let debounceResize = H.elper.debounce( dispatch( setDimensions( { height: window.innerHeight, width: window.innerWidth } ) ), C.onst.debounceDelay, false )
+            let debounceResize = F.debounce( dispatch( setDimensions( { height: window.innerHeight, width: window.innerWidth } ) ), C.DEBOUNCE_DELAY, false )
             window.removeEventListener( 'resize', debounceResize )
         }
     })
@@ -176,160 +166,156 @@ export default function App () {
 
                 // HANDLER: => CLIENT CONNECTED
                 case 'clientConnected': {
-                        // This handler is only fired ONCE when the CURRENT user joins
-                        console.log('======= MESSAGE - clientConnected =======')
-        
-                        // Set current user ID
-                        // TODO: returning users will not do this
-                        // they will get id/name from cookies/localStorage OR from here on "return check" (create a new variable)
-                        console.log('> Setting ID')
-                        if ( updateData.userID )
-                        { dispatch( setID( updateData.userID ) ) }
+                    // This handler is only fired ONCE when the CURRENT user joins
+                    console.log('======= MESSAGE - clientConnected =======')
     
-                        // Set cards
-                        if ( !( updateData.cards === undefined ) && ( updateData.cards.length ) )
-                        { dispatch( setCards( updateData.cards ) ) }
-        
-                        // Set users
-                        if ( !( updateData.users === undefined ) && ( updateData.users.length ) ) {
-                            dispatch( setUsers( updateData.users ) )
-                            dispatch( setUserTotal( updateData.users.length + 1 ) )
-                        }
-                        
-                        // Set log
-                        if ( !( updateData.gameLog === undefined ) && ( updateData.gameLog.length ) )
-                        { dispatch( setLog( updateData.gameLog ) ) }
-        
-                        // Send current user information to server
-                        let newUpdate = {
-                            type: 'userConnected',
-                            user: user,
-                        }
-                        WS.send( JSON.stringify( newUpdate ) )
-                        console.log('>>>>>>>>> Message Sent - userConnected >>>>>>>>>')
-                        console.log('======= END - MESSAGE - clientConnected =======')
-                        break
+                    // ==> Set current user ID
+                    // TODO: returning users will not do this
+                    // they will get id/name from cookies/localStorage OR from here on "return check" (create a new variable)
+                    console.log('> Setting ID')
+                    if ( updateData.userID )
+                    { dispatch( setID( updateData.userID ) ) }
+
+                    // ==> Set cards
+                    if ( !( updateData.cards === undefined ) && ( updateData.cards.length ) )
+                    { dispatch( setCards( updateData.cards ) ) }
+    
+                    // ==> Set users
+                    if ( !( updateData.users === undefined ) && ( updateData.users.length ) ) {
+                        dispatch( setUsers( updateData.users ) )
+                        dispatch( setUserTotal( updateData.users.length + 1 ) )
                     }
+                    
+                    // ==> Set log
+                    if ( !( updateData.gameLog === undefined ) && ( updateData.gameLog.length ) )
+                    { dispatch( setLog( updateData.gameLog ) ) }
+    
+                    // ==> Send current user information to server
+                    let newUpdate = {
+                        type: 'userConnected',
+                        user: user,
+                    }
+                    WS.send( JSON.stringify( newUpdate ) )
+                    console.log('>>>>>>>>> Message Sent - userConnected >>>>>>>>>')
+                    console.log('======= END - MESSAGE - clientConnected =======')
+                    break
+                }
                     
                 /*================================================*/
                 /*================================================*/
     
                 // HANDLER: => USER CONNECTED
                 case 'userConnected': {
-                        // This handler is only fired when OTHER users join
-                        console.log('======= MESSAGE - userConnected =======')
-                        dispatch( addUser( updateData.user ) )
-                        dispatch( incrementUserTotal() )
-                        console.log('======= END - MESSAGE - userConnected =======')
-                        break
-                    }
+                    // This handler is only fired when OTHER users join
+                    console.log('======= MESSAGE - userConnected =======')
+                    dispatch( addUser( updateData.user ) )
+                    dispatch( incrementUserTotal() )
+                    console.log('======= END - MESSAGE - userConnected =======')
+                    break
+                }
 
                 /*================================================*/
                 /*================================================*/
     
                 // HANDLER: => CLIENT DISCONNECTED
                 case 'clientDisconnected': {
-                        // This handler is only fired when OTHER users leave
-                        console.log('======= MESSAGE - clientDisconnected =======')
-                        dispatch( deleteUser( updateData.userID ) )
-                        dispatch( decrementUserTotal() )
-                        console.log('======= END - MESSAGE - clientDisconnected =======')
-                        break
-                    }
+                    // This handler is only fired when OTHER users leave
+                    console.log('======= MESSAGE - clientDisconnected =======')
+                    dispatch( deleteUser( updateData.userID ) )
+                    dispatch( decrementUserTotal() )
+                    console.log('======= END - MESSAGE - clientDisconnected =======')
+                    break
+                }
     
                 /*================================================*/
                 /*================================================*/
     
                 // HANDLER: => USER NAME
                 case 'updateUserName': {
-                        console.log('======= MESSAGE - updateUserName =======')
-                        if ( updateData.userID === user.id )
-                        { dispatch( setName( updateData.newName ) ) }
-                        else
-                        { dispatch( setUserName( updateData.userID, updateData.newName ) ) }
-                        console.log('======= END - MESSAGE - updateUserName =======')
-                        break
-                    }
+                    console.log('======= MESSAGE - updateUserName =======')
+                    if ( updateData.userID === user.id )
+                    { dispatch( setName( updateData.newName ) ) }
+                    else
+                    { dispatch( setUserName( updateData.userID, updateData.newName ) ) }
+                    console.log('======= END - MESSAGE - updateUserName =======')
+                    break
+                }
     
                 /*================================================*/
                 /*================================================*/
     
                 // HANDLER: => USER TEAM
                 case 'updateUserTeam': {
-                        console.log('======= MESSAGE - updateUserTeam =======')
-                        if ( updateData.userID === user.id )
-                        { dispatch( setTeam( updateData.newTeam ) ) }
-                        else
-                        { dispatch( setUserTeam( updateData.userID, updateData.newTeam ) ) }
-                        console.log('======= END - MESSAGE - updateUserTeam =======')
-                        break
-                    }
+                    console.log('======= MESSAGE - updateUserTeam =======')
+                    if ( updateData.userID === user.id )
+                    { dispatch( setTeam( updateData.newTeam ) ) }
+                    else
+                    { dispatch( setUserTeam( updateData.userID, updateData.newTeam ) ) }
+                    console.log('======= END - MESSAGE - updateUserTeam =======')
+                    break
+                }
     
                 /*================================================*/
                 /*================================================*/
     
                 // HANDLER: => USER POSITION
                 case 'updateUserPosition': {
-                        console.log('======= MESSAGE - updateUserPosition =======')
-                        if ( updateData.userID === user.id )
-                        { dispatch( setPosition( updateData.newPosition ) ) }
-                        else
-                        { dispatch( setUserPosition( updateData.userID, updateData.newPosition ) ) }
-                        console.log('======= END - MESSAGE - updateUserPosition =======')
-                        break
-                    }
+                    console.log('======= MESSAGE - updateUserPosition =======')
+                    if ( updateData.userID === user.id )
+                    { dispatch( setPosition( updateData.newPosition ) ) }
+                    else
+                    { dispatch( setUserPosition( updateData.userID, updateData.newPosition ) ) }
+                    console.log('======= END - MESSAGE - updateUserPosition =======')
+                    break
+                }
     
                 /*================================================*/
                 /*================================================*/
 
                 // HANDLER: => USER HOST
                 // case 'updateUserIsHost': {
-                //         console.log('======= MESSAGE - updateUserIsHost =======')
-                //         if ( updateData.user.id === user.id ) {
-                //             dispatch( setIsHost( true ) )
-                //             dispatch( removeUsersIsHost() )
-                //         }
-                //         else {
-                //             dispatch( setIsHost( false ) )
-                //             dispatch( setUserIsHost( updateData.user.id ) )
-                //         }
-                //         console.log('======= END - MESSAGE - updateUserIsHost =======')
-                //         break
+                //     console.log('======= MESSAGE - updateUserIsHost =======')
+                //     if ( updateData.user.id === user.id ) {
+                //         dispatch( setIsHost( true ) )
+                //         dispatch( removeUsersIsHost() )
                 //     }
+                //     else {
+                //         dispatch( setIsHost( false ) )
+                //         dispatch( setUserIsHost( updateData.user.id ) )
+                //     }
+                //     console.log('======= END - MESSAGE - updateUserIsHost =======')
+                //     break
+                // }
                 
                 /*================================================*/
                 /*================================================*/
 
                 // HANDLER: => ADD HIGHLIGHT
                 case 'updateAddHighlight': {
-                        console.log('======= MESSAGE - updateAddHighlight =======')
-                        dispatch( addHighlight( updateData.highlight ) )
-                        console.log('======= END - MESSAGE - updateAddHighlight =======')
-                        break
-                    }
+                    console.log('======= MESSAGE - updateAddHighlight =======')
+                    dispatch( addHighlight( updateData.highlight ) )
+                    console.log('======= END - MESSAGE - updateAddHighlight =======')
+                    break
+                }
 
                 /*================================================*/
                 /*================================================*/
 
                 // HANDLER: => DELETE HIGHLIGHT
                 case 'updateDeleteHighlight': {
-                        console.log('======= MESSAGE - updateDeleteHighlight =======')
-                        if ( updateData.userID === user.id )
-                        { dispatch( deleteHighlight( updateData.cardIndex ) ) }
-                        else
-                        { dispatch( deleteUserHighlight( updateData.userID, updateData.cardIndex ) ) }
-                        console.log('======= END - MESSAGE - updateDeleteHighlight =======')
-                        break
-                    }
+                    console.log('======= MESSAGE - updateDeleteHighlight =======')
+                    dispatch( deleteHighlight( updateData.userID, updateData.cardIndex ) )
+                    console.log('======= END - MESSAGE - updateDeleteHighlight =======')
+                    break
+                }
 
                 /*================================================*/
                 /*================================================*/
     
                 default: {
-                        console.log('Error: WebSocket => Unrecognized message type')
-                        break
-                    }
-    
+                    console.log('Error: WebSocket => Unrecognized message type')
+                    break
+                }
             }
         }
 
@@ -341,7 +327,7 @@ export default function App () {
             setWSReady(false)
             // TODO: check if neeeded
             setTimeout(() => {
-                setWS(new WebSocket( C.onst.wsURL ))
+                setWS(new WebSocket( C.WS_URL ))
             }, 1000)
         }
 
@@ -451,26 +437,26 @@ export default function App () {
 
     // TODO: ==> sendHighlight
     const sendHighlight = ( cardIndex ) => {
+        console.log('===> sendHighlight')
         if ( !( user.highlights.includes( cardIndex ) ) ) {
-            addHighlight( user, cardIndex )
             let newUpdate = {
                 type: 'updateAddHighlight',
-                user: user,
-                index: cardIndex,
+                userID: user,
+                cardIndex: cardIndex,
             }
             WS.send( JSON.stringify( newUpdate ))
             console.log('>>>>>>>>> Message Sent - updateAddHighlight >>>>>>>>>')
         }
         else {
-            removeHighlight( user, cardIndex )
             let newUpdate = {
                 type: 'updateDeleteHighlight',
-                user: user,
-                index: cardIndex,
+                userID: user,
+                cardIndex: cardIndex,
             }
             WS.send( JSON.stringify( newUpdate ))
             console.log('>>>>>>>>> Message Sent - updateRemoveHighlight >>>>>>>>>')
         }
+        console.log('===> END - sendHighlight')
     }
 
     /*================================================
@@ -485,17 +471,17 @@ export default function App () {
             for ( let i = 0; i < cards.length; i++ ) {
                 // > Positioning
                 positionData = {
-                    top: C.onst.cardTopBase,
-                    left: C.onst.cardLeftBase,
+                    top: C.CARD_BASE_TOP,
+                    left: C.CARD_BASE_LEFT,
                 }
-                if ( C.onst.row.two.includes(i) )       { positionData.top += ( ( C.onst.cardHeight ) * 1 ) }
-                if ( C.onst.row.three.includes(i) )     { positionData.top += ( ( C.onst.cardHeight ) * 2 ) }
-                if ( C.onst.row.four.includes(i) )      { positionData.top += ( ( C.onst.cardHeight ) * 3 ) }
-                if ( C.onst.row.five.includes(i) )      { positionData.top += ( ( C.onst.cardHeight ) * 4 ) }
-                if ( C.onst.columns.two.includes(i) )   { positionData.left += ( ( C.onst.cardWidth ) * 1 ) }
-                if ( C.onst.columns.three.includes(i) ) { positionData.left += ( ( C.onst.cardWidth ) * 2 ) }
-                if ( C.onst.columns.four.includes(i) )  { positionData.left += ( ( C.onst.cardWidth ) * 3 ) }
-                if ( C.onst.columns.five.includes(i) )  { positionData.left += ( ( C.onst.cardWidth ) * 4 ) }
+                if ( C.ROWS.TWO.includes(i) )      { positionData.top += ( ( C.CARD_HEIGHT ) * 1 ) }
+                if ( C.ROWS.THREE.includes(i) )    { positionData.top += ( ( C.CARD_HEIGHT ) * 2 ) }
+                if ( C.ROWS.FOUR.includes(i) )     { positionData.top += ( ( C.CARD_HEIGHT ) * 3 ) }
+                if ( C.ROWS.FIVE.includes(i) )     { positionData.top += ( ( C.CARD_HEIGHT ) * 4 ) }
+                if ( C.COLUMNS.TWO.includes(i) )   { positionData.left += ( ( C.CARD_WIDTH ) * 1 ) }
+                if ( C.COLUMNS.THREE.includes(i) ) { positionData.left += ( ( C.CARD_WIDTH ) * 2 ) }
+                if ( C.COLUMNS.FOUR.includes(i) )  { positionData.left += ( ( C.CARD_WIDTH ) * 3 ) }
+                if ( C.COLUMNS.FIVE.includes(i) )  { positionData.left += ( ( C.CARD_WIDTH ) * 4 ) }
 
                 // > Get list of highlighting users
                 let highlights = get_card_highlights( cards[i].index )
@@ -521,21 +507,15 @@ export default function App () {
         BLOCK: DEV TOOLS
     ==================================================*/
 
-    // const onDevState = ( state ) => { set_game_state( state ) }
-    // const on_dev_log = () => { set_log( C.onst.fakeLog ) }
-    // const on_dev_name = e => { if(e.keyCode === 13) { set_user_name( user, e.target.value ) } }
-    // const devListUsers = () => {
-    //     let str = ''
-    //     for ( let i = 0; i < users.length; i++ )
-    //     {str += users[i].name; if( users[i].isHost ) { str += '[host]' } str += ', '}
-    //     return str
-    // }
-    // const devListHighlights = () => {
-    //     let str = ''
-    //     for ( let i = 0; i < user.highlights.length; i++ )
-    //     {str += user.highlights[i]; str += ', ' }
-    //     return str
-    // }
+    const onDevState  = ( state ) => { dispatch( setGameState( state ) ) } // TODO: change to send function for WS
+    const on_dev_log  = ()        => { dispatch( setLog( C.FAKE_LOG ) ) }
+    const on_dev_name = e         => { if(e.keyCode === 13) { sendUserName( user.id, e.target.value ) } }
+    const devListUsers = () => {
+        let str = ''
+        for ( let i = 0; i < users.length; i++ )
+        {str += users[i].name; if( users[i].isHost ) { str += '[host]' } str += ', '}
+        return str
+    }
 
     /*================================================
         BLOCK: COMPONENTS
@@ -545,8 +525,8 @@ export default function App () {
         <main
             className={'codenames'+' '+game.state+' '+user.position}
             style={{
-                width: dimensions.appWidth+'px',
-                height: dimensions.appHeight+'px'
+                width: dimensions.APP_WIDTH+'px',
+                height: dimensions.APP_HEIGHT+'px'
             }}
         >
             <div className='bg-texture-layer'>
@@ -593,7 +573,6 @@ export default function App () {
                                 <li><span>Name: </span> {user.name}</li>
                                 <li><span>Team: </span>{user.team}</li>
                                 <li><span>Position: </span> {user.position}</li>
-                                <li><span>Highlights: </span> {devListHighlights()}</li>
                                 <li><span>Host: </span> {user.isHost.toString()}</li>
                             </ul>
                         </div>

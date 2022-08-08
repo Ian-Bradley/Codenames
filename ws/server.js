@@ -23,7 +23,8 @@ const WSS = new SocketServer.Server({ server })
     BLOCK: CLASS INITIATION
 ==================================================*/
 
-const Game = require( './GameClass.js' )
+const GameClass = require( './GameClass.js' )
+const Game = new GameClass();
 
 /*================================================
     BLOCK: WS SERVER FUNCTIONS

@@ -1,65 +1,59 @@
-export const onst = {
+export default Object.freeze({
     // TODO change to THIS_CASE
 
-    dev: true,
-    
-    wsURL: 'ws://localhost:3001',
+    MODE_DEV: true,
+    WS_URL: 'ws://localhost:3001',
 
-    debounceDelay: 200,
+    DEBOUNCE_DELAY: 200,
 
-    columns: {two:[ 1, 6,11,16,21],three:[ 2, 7,12,17,22],four:[ 3, 8,13,18,23],five:[ 4, 9,14,19,24],},
-    row:     {two:[ 5, 6, 7, 8, 9],three:[10,11,12,13,14],four:[15,16,17,18,19],five:[20,21,22,23,24],},
+    COLUMNS: {TWO:[ 1, 6,11,16,21],THREE:[ 2, 7,12,17,22],FOUR:[ 3, 8,13,18,23],FIVE:[ 4, 9,14,19,24],},
+    ROWS:    {TWO:[ 5, 6, 7, 8, 9],THREE:[10,11,12,13,14],FOUR:[15,16,17,18,19],FIVE:[20,21,22,23,24],},
 
-    maxOperatives: 5,
-    maxSpymasters: 2,
-    maxPlayers:    12,
+    MAX_OPERATIVES: 5,
+    MAX_SPYMASTERS: 2,
+    MAX_PLAYERS:    14,
 
-    appWidth:      1920,
-    appHeight:     1080,
+    APP_WIDTH: 1920,
+    APP_HEIGHT: 1080,
 
-    cardWidth:     214.32, // 208.32(Card) + 6(Margin)
-    cardHeight:    140.4, // 134.4(Card) + 6(Margin)
-    cardLeftBase:  425, // 340(Sidebar) + 85(Margin)
-    cardTopBase:   0,
-    cardTextSpacing1: 0.16,
-    cardTextSpacing2: 0.16,
+    CARD_WIDTH:     214.32, // 208.32 (Card) + 6(Margin)
+    CARD_HEIGHT:    140.4,  // 134.4  (Card) + 6(Margin)
+    CARD_BASE_LEFT: 425,    // 340 (Sidebar) + 85(Margin)
+    CARD_BASE_TOP:  0,
+    CARD_TEXT_RAISER_1: 0.16,
+    CARD_TEXT_RAISER_2: 0.16,
 
-    cardTotal:        25, // 5x5 board
-    cardTotalNeutral: 7,
-    cardTotalBlue:    8,
-    cardTotalRed:     9,
-    cardTotalBlack:   1,
+    TRANSITION_DURATION_FADE:  200,
+    TRANSITION_DURATION_STATE: 2000,
 
-    transitionTime__fade:        200,
-    transitionTime__stateChange: 2000,
+    CLASS_ACTIVE:      'active',
+    CLASS_DISABLED:    'disabled',
+    CLASS_HIDDEN:      'hidden',
+    CLASS_HIGHLIGHTED: 'highlighted',
+    CLASS_CHOSEN:      'chosen',
 
-    classActive:      'active',
-    classDisabled:    'disabled',
-    classHidden:      'hidden',
-    classHighlighted: 'highlighted',
-    classChosen:      'chosen',
+    SPYMASTER: 'spymaster',
+    OPERATIVE: 'operative',
 
-    spymaster: 'spymaster',
-    operative: 'operative',
+    TAN:   'tan',
+    RED:   'red',
+    BLUE:  'blue',
+    BLACK: 'black',
+    GREEN: 'green',
 
-    tan:   'tan',
-    red:   'red',
-    blue:  'blue',
-    black: 'black',
-    green: 'green',
+    CARD_NEUTRAL: 'card-neutral',
+    CARD_RED:     'card-red',
+    CARD_BLUE:    'card-blue',
+    CARD_BLACK:   'card-black',
+    CARD_GREEN:   'card-green',
 
-    cardNeutral: 'card-neutral',
-    cardRed:     'card-red',
-    cardBlue:    'card-blue',
-    cardBlack:   'card-black',
-    cardGreen:   'card-green',
-
-    gameState_setup:          'setup',
-    gameState_redSpymaster:   'red-spymaster',
-    gameState_redOperatives:  'red-operatives',
-    gameState_blueSpymaster:  'blue-spymaster',
-    gameState_blueOperatives: 'blue-operatives',
-    gameState_end:            'end',
+    GAME_STATE_AUTH:           'auth',
+    GAME_STATE_SETUP:          'setup',
+    GAME_STATE_SPYMASTER_RED:  'spymaster-red',
+    GAME_STATE_OPERATIVE_RED:  'operative-red',
+    GAME_STATE_SPYMASTER_BLUE: 'spymaster-blue',
+    GAME_STATE_OPERATIVE_BLUE: 'operative-blue',
+    GAME_STATE_END:            'end',
 
     messageOpponent__waitingSpymaster:  'The opponent spymaster is playing, wait for your turn...',
     messageOpponent__waitingOperatives: 'The opponent operatives are playing, wait for your turn...',
@@ -71,7 +65,7 @@ export const onst = {
     messageGame__endRed:                'Red team wins!',
     messageGame__endBlue:               'Blue team wins!',
 
-    fakeLog: [
+    FAKE_LOG: [
         { team: 'red',  name: 'Chilled',       type: 'clue',   clueText: 'Food' },
         { team: 'blue', name: 'Platy',         type: 'choose', cardText: 'Tower' },
         { team: 'red',  name: 'Tom Fawkes',    type: 'choose', cardText: 'Spring' },
@@ -143,4 +137,4 @@ export const onst = {
         'Vána','Varda','Vardamir Nólimon','Vidugavia','Vidumavi','Vinyarion','Vorondil the Hunter','Voronwë','Walda','Watcher in the Water','Wídfara','Will Whitfoot',
         'Witch-king of Angmar','Wormtongue','Wulf','Yavanna','Yávien'
         ],
-}
+})

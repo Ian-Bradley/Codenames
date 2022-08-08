@@ -1,6 +1,8 @@
-import * as C from './constants.js'
-export const elper = {
+
+import { default as C } from './constants.js'
+export default Object.freeze({
     /*======================================*/
+    // FUNCTION: => generateRandomID
     generateRandomID: function ()
     {
         let randomID = ''
@@ -10,6 +12,7 @@ export const elper = {
         return randomID
     },
     /*======================================*/
+    // FUNCTION: => generateRandomName
     generateRandomName: function ( withNumbers )
     {
         let randomName = ''
@@ -19,10 +22,11 @@ export const elper = {
         randomNumber += '-'
         for (let i=0; i < 7; i++)
         {randomNumber += numbers.charAt(Math.floor(Math.random() * numbers.length))}}
-        randomName += C.onst.LOTR_NAMES[(Math.floor(Math.random() * C.onst.LOTR_NAMES.length))]
+        randomName += C.LOTR_NAMES[(Math.floor(Math.random() * C.LOTR_NAMES.length))]
         return (randomName + randomNumber)
     },
     /*======================================*/
+    // FUNCTION: => debounce
     debounce: function ( func, wait, immediate )
     {
         var timeout
@@ -39,6 +43,7 @@ export const elper = {
         }
     },
     /*======================================*/
+    // FUNCTION: => setCookie
     setCookie: function ( name, value, days )
     {
         var expires = ''
@@ -51,6 +56,7 @@ export const elper = {
         document.cookie = name + '=' + ( value || '' )  + expires + ' path=/'
     },
     /*======================================*/
+    // FUNCTION: => getCookie
     getCookie: function ( name )
     {
         var nameEQ = name + '='
@@ -66,4 +72,4 @@ export const elper = {
         return null
     },
     /*======================================*/
-}
+})

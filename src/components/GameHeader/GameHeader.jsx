@@ -1,4 +1,5 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 
 // COMPONENTS
 import Button from '../Button/Button.jsx'
@@ -8,24 +9,23 @@ import IconQuestion from '../../images/icons/question.svg'
 import IconStopwatch from '../../images/icons/stopwatch.svg'
 
 // CSS + GLOBAL CONSTANTS
-import * as C from '../../../helpers/constants.js'
+import { default as C } from '../../util/constants.js'
 import './GameHeader.scss'
 
-export default function GameHeader ( props )
-{
+export default function GameHeader ( props ) {
+
     /*================================================
         ANCHOR: STATES
     ==================================================*/
 
     const user      = useSelector( ( state ) => { return state['user'].user } )
-    const userTotal = useSelector( ( state ) => { return state['userTotal'].userTotal } )
+    const userTotal = useSelector( ( state ) => { return state['game'].game.userTotal } )
 
     /*================================================
         ANCHOR: INTERACTIONS
     ==================================================*/
 
-    const onGameUsers = () =>
-    {
+    const onGameUsers = () => {
         console.log('===> onGameUsers')
         console.log('===> END - onGameUsers')
     }
@@ -33,8 +33,7 @@ export default function GameHeader ( props )
     /*======================================*/
     /*======================================*/
 
-    const onGameTimer = () =>
-    {
+    const onGameTimer = () => {
         console.log('===> onGameTimer')
         console.log('===> END - onGameTimer')
     }
@@ -42,8 +41,7 @@ export default function GameHeader ( props )
     /*======================================*/
     /*======================================*/
 
-    const onGameInfo = () =>
-    {
+    const onGameInfo = () => {
         console.log('===> onGameInfo')
         console.log('===> END - onGameInfo')
     }
@@ -51,8 +49,7 @@ export default function GameHeader ( props )
     /*======================================*/
     /*======================================*/
 
-    const onGameReset = () =>
-    {
+    const onGameReset = () => {
         console.log('===> onGameReset')
         console.log('===> END - onGameReset')
     }
@@ -60,8 +57,7 @@ export default function GameHeader ( props )
     /*======================================*/
     /*======================================*/
     
-    const onGameCurrentUser = () =>
-    {
+    const onGameCurrentUser = () => {
         console.log('===> onGameCurrentUser')
         console.log('===> END - onGameCurrentUser')
     }
@@ -70,10 +66,8 @@ export default function GameHeader ( props )
         ANCHOR: DISPLAYING
     ==================================================*/
 
-    const displayButtonReset = () =>
-    {
-        if ( user.isHost )
-        {
+    const displayButtonReset = () => {
+        if ( user.isHost ) {
             return (
                 <Button
                     btnClasses  ={'game-reset'}
@@ -99,7 +93,7 @@ export default function GameHeader ( props )
                     btnData     ={userTotal}
                 />
                 <Button
-                    btnDisplayClasses ={C.onst.classDisabled}
+                    btnDisplayClasses ={C.CLASS_DISABLED}
                     btnClasses        ={'game-timer'}
                     btnFunction       ={onGameTimer}
                     btnIcon           ={IconStopwatch}

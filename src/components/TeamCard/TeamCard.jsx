@@ -61,76 +61,100 @@ export default function TeamCard(props) {
 
     // FUNCTION: => onSelectPosition
     const onSelectPosition = (positionButton) => {
+        console.log('=== ON SELECT POSITION');
+
+        console.log('user.team: ', user.team);
+        console.log('user.position: ', user.position);
+
+        console.log('props.team.name: ', props.team.name);
+        console.log('positionButton: ', positionButton);
+
         let colorUserTeam = user.team;
         let positionUser = user.position;
 
         const isOnTeam = colorUserTeam;
-        const isTeamCardRed = props.team === COLOR_RED;
-        const isTeamCardBlue = props.team === COLOR_BLUE;
-        const isSameTeam = props.team === colorUserTeam;
+        const isTeamCardRed = props.team.name === COLOR_RED;
+        const isTeamCardBlue = props.team.name === COLOR_BLUE;
+        const isSameTeam = props.team.name === colorUserTeam;
         const isUserOperative = positionUser === OPERATIVE;
         const isUserSpymaster = positionUser === SPYMASTER;
         const isButtonOperative = positionButton === OPERATIVE;
         const isButtonSpymaster = positionButton === SPYMASTER;
 
+        console.log('colorUserTeam: ', colorUserTeam);
+        console.log('positionUser: ', positionUser);
+        
+        console.log('isOnTeam: ', isOnTeam);
+        console.log('isTeamCardRed: ', isTeamCardRed);
+        console.log('isTeamCardBlue: ', isTeamCardBlue);
+        console.log('isSameTeam: ', isSameTeam);
+        console.log('isUserOperative: ', isUserOperative);
+        console.log('isUserSpymaster: ', isUserSpymaster);
+        console.log('isButtonOperative: ', isButtonOperative);
+        console.log('isButtonSpymaster: ', isButtonSpymaster);
+
         // > User does not have a team
         if (!isOnTeam && isTeamCardRed && isButtonOperative) {
-            props.sendUserTeam(user, props.team);
-            props.sendUserPosition(user, positionButton);
+            console.log('=== SEND USER');
+            props.sendUserTeam(user.id, props.team.name);
+            props.sendUserPosition(user.id, positionButton);
         }
         if (!isOnTeam && isTeamCardRed && isButtonSpymaster) {
-            props.sendUserTeam(user, props.team);
-            props.sendUserPosition(user, positionButton);
+            console.log('=== SEND USER');
+            props.sendUserTeam(user.id, props.team.name);
+            props.sendUserPosition(user.id, positionButton);
         }
         if (!isOnTeam && isTeamCardBlue && isButtonOperative) {
-            props.sendUserTeam(user, props.team);
-            props.sendUserPosition(user, positionButton);
+            console.log('=== SEND USER');
+            props.sendUserTeam(user.id, props.team.name);
+            props.sendUserPosition(user.id, positionButton);
         }
         if (!isOnTeam && isTeamCardBlue && isButtonSpymaster) {
-            props.sendUserTeam(user, props.team);
-            props.sendUserPosition(user, positionButton);
+            console.log('=== SEND USER');
+            props.sendUserTeam(user.id, props.team.name);
+            props.sendUserPosition(user.id, positionButton);
         }
 
         // > User is already on a team
         if (isOnTeam && isTeamCardRed && isSameTeam && isUserOperative && isButtonSpymaster) {
-            props.sendUserPosition(user, positionButton);
+            props.sendUserPosition(user.id, positionButton);
         }
         if (isOnTeam && isTeamCardRed && isSameTeam && isUserSpymaster && isButtonOperative) {
-            props.sendUserPosition(user, positionButton);
+            props.sendUserPosition(user.id, positionButton);
         }
         if (isOnTeam && isTeamCardRed && !isSameTeam && isUserOperative && isButtonOperative) {
-            props.sendUserTeam(user, props.team);
+            props.sendUserTeam(user.id, props.team.name);
         }
         if (isOnTeam && isTeamCardRed && !isSameTeam && isUserOperative && isButtonSpymaster) {
-            props.sendUserTeam(user, props.team);
-            props.sendUserPosition(user, positionButton);
+            props.sendUserTeam(user.id, props.team.name);
+            props.sendUserPosition(user.id, positionButton);
         }
         if (isOnTeam && isTeamCardRed && !isSameTeam && isUserSpymaster && isButtonOperative) {
-            props.sendUserTeam(user, props.team);
-            props.sendUserPosition(user, positionButton);
+            props.sendUserTeam(user.id, props.team.name);
+            props.sendUserPosition(user.id, positionButton);
         }
         if (isOnTeam && isTeamCardRed && !isSameTeam && isUserSpymaster && isButtonSpymaster) {
-            props.sendUserTeam(user, props.team);
+            props.sendUserTeam(user.id, props.team.name);
         }
         if (isOnTeam && isTeamCardBlue && isSameTeam && isUserOperative && isButtonSpymaster) {
-            props.sendUserPosition(user, positionButton);
+            props.sendUserPosition(user.id, positionButton);
         }
         if (isOnTeam && isTeamCardBlue && isSameTeam && isUserSpymaster && isButtonOperative) {
-            props.sendUserPosition(user, positionButton);
+            props.sendUserPosition(user.id, positionButton);
         }
         if (isOnTeam && isTeamCardBlue && !isSameTeam && isUserOperative && isButtonOperative) {
-            props.sendUserTeam(user, props.team);
+            props.sendUserTeam(user.id, props.team.name);
         }
         if (isOnTeam && isTeamCardBlue && !isSameTeam && isUserOperative && isButtonSpymaster) {
-            props.sendUserTeam(user, props.team);
-            props.sendUserPosition(user, positionButton);
+            props.sendUserTeam(user.id, props.team.name);
+            props.sendUserPosition(user.id, positionButton);
         }
         if (isOnTeam && isTeamCardBlue && !isSameTeam && isUserSpymaster && isButtonOperative) {
-            props.sendUserTeam(user, props.team);
-            props.sendUserPosition(user, positionButton);
+            props.sendUserTeam(user.id, props.team.name);
+            props.sendUserPosition(user.id, positionButton);
         }
         if (isOnTeam && isTeamCardBlue && !isSameTeam && isUserSpymaster && isButtonSpymaster) {
-            props.sendUserTeam(user, props.team);
+            props.sendUserTeam(user.id, props.team.name);
         }
     };
 

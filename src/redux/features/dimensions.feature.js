@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { APP_HEIGHT } from '../../util/constants.js';
+import { APP_HEIGHT, APP_WIDTH } from '../../util/constants.js';
 
 const initialState = {
     dimensions: {
@@ -20,6 +20,7 @@ let userTotalSlice = createSlice({
             state.dimensions.appWidth = action.payload.width;
             state.dimensions.appHeight = action.payload.height;
             state.dimensions.appScaler = action.payload.height / APP_HEIGHT;
+            // state.dimensions.appScaler = ((action.payload.height / APP_HEIGHT) < 0.7407) ? (action.payload.height / APP_HEIGHT) : (0.7407);
         },
 
         /*======================================*/

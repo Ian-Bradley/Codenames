@@ -173,57 +173,60 @@ module.exports = class Game {
     // FUNCTION: => isUserHost
     // TODO
     isUserHost(userID) {
-        console.log('==> isUserHost: ', userID);
+        // console.log('==> isUserHost: ', userID);
         if (this.state.host === userID) {
-            console.log('==> END - isUserHost - user found');
+            // console.log('==> END - isUserHost - user found');
             return true;
         }
-        console.log('==> END - isUserHost - user not found');
+        // console.log('==> END - isUserHost - user not found');
         return false;
     }
 
     /*======================================*/
     /*======================================*/
 
-    // FUNCTION: => setUserIsHost
+    // FUNCTION: => setHost
     // TODO
-    setHost(user) {
-        console.log('==> setUserIsHost: ', user);
-        if (this.state.users.length) {
-            for (let i = 0; i < this.state.users.length; i++) {
-                // Unset any other host user
-                if (this.state.users[i].id !== user.id && this.state.users[i].isHost) {
-                    // console.log('> BEFORE: ', this.state.users[i].isHost) // false
-                    this.state.users[i].isHost = false;
-                    // console.log('> AFTER: ', this.state.users[i].isHost) // true
-                    console.log('> (Other) User removed as host');
-                }
+    // setHost(user) {
+    setHost(userID) {
+        this.state.host = userID;
 
-                // Set user as host
-                if (this.state.users[i].id === user.id) {
-                    if (!this.state.users[i].isHost) {
-                        // console.log('> BEFORE: ', this.state.users[i].isHost) // false
-                        this.state.users[i].isHost = true;
-                        // console.log('> AFTER: ', this.state.users[i].isHost) // true
-                        console.log('> User set as host');
-                        console.log('==> END - setHost');
-                        return true;
-                    } else {
-                        console.log('> User is already host');
-                        console.log('==> END - setHost');
-                        return false;
-                    }
-                } else {
-                    console.log('> Cannot find user');
-                    console.log('==> END - setHost');
-                    return false;
-                }
-            }
-        } else {
-            console.log('> No users');
-            console.log('==> END - setHost');
-            return false;
-        }
+        // // console.log('==> setUserIsHost: ', user);
+        // if (this.state.users.length) {
+        //     for (let i = 0; i < this.state.users.length; i++) {
+        //         // Unset any other host user
+        //         if (this.state.users[i].id !== user.id && this.state.users[i].isHost) {
+        //             // console.log('> BEFORE: ', this.state.users[i].isHost) // false
+        //             this.state.users[i].isHost = false;
+        //             // console.log('> AFTER: ', this.state.users[i].isHost) // true
+        //             // console.log('> (Other) User removed as host');
+        //         }
+
+        //         // Set user as host
+        //         if (this.state.users[i].id === user.id) {
+        //             if (!this.state.users[i].isHost) {
+        //                 // console.log('> BEFORE: ', this.state.users[i].isHost) // false
+        //                 this.state.users[i].isHost = true;
+        //                 // console.log('> AFTER: ', this.state.users[i].isHost) // true
+        //                 // console.log('> User set as host');
+        //                 // console.log('==> END - setHost');
+        //                 return true;
+        //             } else {
+        //                 // console.log('> User is already host');
+        //                 // console.log('==> END - setHost');
+        //                 return false;
+        //             }
+        //         } else {
+        //             // console.log('> Cannot find user');
+        //             // console.log('==> END - setHost');
+        //             return false;
+        //         }
+        //     }
+        // } else {
+        //     // console.log('> No users');
+        //     // console.log('==> END - setHost');
+        //     return false;
+        // }
     }
 
     /*======================================*/
@@ -232,11 +235,11 @@ module.exports = class Game {
     // FUNCTION: => setOriginalHost
     // TODO
     setOriginalHost(userID) {
-        console.log('==> setOriginalHost: ', userID);
-        console.log('> BEFORE: ', this.state.originalHost);
+        // console.log('==> setOriginalHost: ', userID);
+        // console.log('> BEFORE: ', this.state.originalHost);
         this.state.originalHost = userID;
-        console.log('> AFTER: ', this.state.originalHost);
-        console.log('==> END - setOriginalHost');
+        // console.log('> AFTER: ', this.state.originalHost);
+        // console.log('==> END - setOriginalHost');
     }
 
     /*================================================
@@ -357,10 +360,10 @@ module.exports = class Game {
     ==================================================*/
 
     // FUNCTION: => setUserName
-    setUserName(user, newName) {
-        console.log('==> setUserName: ', user, ' ', newName);
+    setUserName(userID, newName) {
+        console.log('==> setUserName: ', userID, ' ', newName);
         for (let i = 0; i < this.state.users.length; i++) {
-            if (this.state.users[i].id === user.id) {
+            if (this.state.users[i].id === userID) {
                 console.log('> BEFORE: ', this.state.users[i].name);
                 this.state.users[i].name = newName;
                 console.log('> AFTER: ', this.state.users[i].name);
@@ -373,10 +376,10 @@ module.exports = class Game {
     /*======================================*/
 
     // FUNCTION: => setUserTeam
-    setUserTeam(user, newTeam) {
-        console.log('==> setUserTeam: ', user, ' ', newTeam);
+    setUserTeam(userID, newTeam) {
+        console.log('==> setUserTeam: ', userID, ' ', newTeam);
         for (let i = 0; i < this.state.users.length; i++) {
-            if (this.state.users[i].id === user.id) {
+            if (this.state.users[i].id === userID) {
                 console.log('> BEFORE: ', this.state.users[i].team);
                 this.state.users[i].team = newTeam;
                 console.log('> AFTER: ', this.state.users[i].team);
@@ -389,10 +392,10 @@ module.exports = class Game {
     /*======================================*/
 
     // FUNCTION: => setUserPosition
-    setUserPosition(user, newPosition) {
-        console.log('==> setUserPosition: ', user, ' ', newPosition);
+    setUserPosition(userID, newPosition) {
+        console.log('==> setUserPosition: ', userID, ' ', newPosition);
         for (let i = 0; i < this.state.users.length; i++) {
-            if (this.state.users[i].id === user.id) {
+            if (this.state.users[i].id === userID) {
                 console.log('> BEFORE: ', this.state.users[i].position);
                 this.state.users[i].position = newPosition;
                 console.log('> AFTER: ', this.state.users[i].position);

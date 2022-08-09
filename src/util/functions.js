@@ -75,3 +75,93 @@ export const getCookie = (name) => {
 };
 /*======================================*/
 /*======================================*/
+
+
+
+
+
+
+/*======================================*/
+// FUNCTION: => shuffleArray
+const shuffleArray = ( arr ) => {
+    let tmp, current, top = arr.length;
+    if( top ) while( --top ) {
+        current = Math.floor( Math.random() * ( top + 1 ) );
+        tmp = arr[current];
+        arr[current] = arr[top];
+        arr[top] = tmp;
+    }
+    return arr;
+};
+/*======================================*/
+// FUNCTION: => getCodenames
+const getCodenames = () => {
+    return [
+        'butter',
+        'clock',
+        'island',
+        'Paris',
+        'wish',
+        'soccer',
+        'crash',
+        'battery',
+        'carrot',
+        'tower',
+        'venus',
+        'sugar',
+        'magenta',
+        'trigger',
+        'queen',
+        'leg',
+        'window',
+        'joint',
+        'polar',
+        'machine',
+        'tiger',
+        'pine',
+        'anteater',
+        'pillow',
+        'aloe',
+    ];
+};
+/*======================================*/
+// FUNCTION: => createCardIndexes
+const createCardIndexes = () => {
+    let indexArray = [];
+    for (let i = 1; i <= 25; i++) {
+        indexArray.push(i);
+    }
+    indexArray = shuffleArray(indexArray);
+    return indexArray;
+};
+/*======================================*/
+// FUNCTION: => createCards
+export const createCards = () => {
+    let codenames = getCodenames();
+    let indexes = createCardIndexes();
+    let cards = [];
+    for (let i = 0; i < codenames.length; i++) {
+        let cardType = '';
+        if (0 <= indexes[i] && indexes[i] <= 6) {
+            cardType = 'neutral';
+        }
+        if (7 <= indexes[i] && indexes[i] <= 15) {
+            cardType = 'red';
+        }
+        if (16 <= indexes[i] && indexes[i] <= 23) {
+            cardType = 'blue';
+        }
+        if (indexes[i] === 24) {
+            cardType = 'black';
+        }
+        let card = {
+            index: indexes[i],
+            text: codenames[i],
+            type: cardType,
+            chosen: false,
+            highlighted: false,
+        };
+        cards.push(card);
+    }
+    return cards;
+};

@@ -25,13 +25,6 @@ let highlightsSlice = createSlice({
 
         /*======================================*/
 
-        getCardHighlights: function (state, action) {
-            // action.payload = card index (Number)
-            state.highlights.map((highlight) => highlight.cardIndex === action.payload);
-        },
-
-        /*======================================*/
-
         addHighlight: function (state, action) {
             // action.payload = highlight (Object)
             state.highlights.push(action.payload);
@@ -73,7 +66,6 @@ let highlightsSlice = createSlice({
 });
 export const {
     setHighlights,
-    getCardHighlights,
     addHighlight,
     deleteHighlight,
     deleteUserHighlights,

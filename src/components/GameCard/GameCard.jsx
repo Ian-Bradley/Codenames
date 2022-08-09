@@ -140,8 +140,8 @@ export default function GameCard(props) {
 
     const displayText = () => {
         let words = props.card.text.split(' ');
-        console.log('props.card.text: ', props.card.text);
-        console.log('words: ', words);
+        // console.log('props.card.text: ', props.card.text);
+        // console.log('words: ', words);
         if (words.length === 1 && props.card.text.length > 10) {
             console.log('test1');
         }

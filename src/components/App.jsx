@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+const WS = new WebSocket(WS_URL);
 
 // COMPONENTS
 import Button from './Button/Button.jsx';
@@ -23,8 +24,10 @@ import {
     CARD_BASE_LEFT,
     DEBOUNCE_DELAY,
 } from '../util/constants.js';
-import { debounce } from '../util/functions.js';
+import { debounce, createCards } from '../util/functions.js';
 import './App.scss';
+
+const FAKE_CARDS = createCards();
 
 /*================================================
     BLOCK: REDUX ACTIONS
@@ -50,7 +53,6 @@ import {
 /*======================================*/
 import {
     setHighlights,
-    getCardHighlights,
     addHighlight,
     deleteHighlight,
     deleteUserHighlights,
@@ -117,69 +119,56 @@ export default function App() {
     const dimensions = useSelector((state) => {
         return state['dimensions'].dimensions;
     });
-    const dispatch = useDispatch();
 
     // Hooks
     const [WSReady, setWSReady] = useState(false);
-    const [WS, setWS] = useState(new WebSocket(WS_URL));
+    const dispatch = useDispatch();
 
     /*================================================
         BLOCK: HOOKS - APP DIMENSIONS
     ==================================================*/
 
     useEffect(() => {
-        dispatch(
-            setDimensions({
-                height: window.innerHeight,
-                width: window.innerWidth,
-            })
-        );
-        let debounceResize = debounce(
+        console.log('---------- USE-EFFECT - App Dimensions ----------');
+        let dispatchSetDimensions = () => {
             dispatch(
                 setDimensions({
                     height: window.innerHeight,
                     width: window.innerWidth,
                 })
-            ),
-            DEBOUNCE_DELAY,
-            false
-        );
+            );
+        };
+        dispatchSetDimensions();
+
+        let debounceResize = debounce(dispatchSetDimensions, DEBOUNCE_DELAY, false);
         window.addEventListener('resize', debounceResize);
 
         return () => {
-            let debounceResize = debounce(
-                dispatch(
-                    setDimensions({
-                        height: window.innerHeight,
-                        width: window.innerWidth,
-                    })
-                ),
-                DEBOUNCE_DELAY,
-                false
-            );
+            console.log('----RETURN');
+            let debounceResize = debounce(dispatchSetDimensions, DEBOUNCE_DELAY, false);
             window.removeEventListener('resize', debounceResize);
         };
-    });
+    }, []);
 
     /*================================================
         BLOCK: HOOKS - USER INFO
     ==================================================*/
 
-    // useEffect(() => {
-    //     TODO: Cookies
-    //     Get current userID (and maybe name/team/color) from cookies
-    //     If ID is not present, auth page has failed to store cookie
-    //     let userID = getCookie('user-id')
-    //     set_user_ID( userID )
-    // });
+    useEffect(() => {
+        console.log('---------- USE-EFFECT - User Info ----------');
+        // TODO: Cookies
+        // Get current userID (and maybe name/team/color) from cookies
+        // If ID is not present, auth page has failed to store cookie
+        // let userID = getCookie('user-id')
+        // set_user_ID( userID )
+    }, []);
 
     /*================================================
         BLOCK: HOOKS - WEBSOCKET COMMUNICATION
     ==================================================*/
 
     useEffect(() => {
-
-        console.log('>>>>>>>>> USE-EFFECT - WebSocket >>>>>>>>>');
+        console.log('---------- USE-EFFECT - WebSocket ----------');
 
         /*================================================
             INNERBLOCK: > WS - ON OPEN
@@ -187,7 +176,7 @@ export default function App() {
 
         WS.onopen = (e) => {
             console.log('>>>>>>>>> WebSocket Client Connected >>>>>>>>>');
-            setWSReady(true);
+            // setWSReady(true);
         };
 
         /*================================================
@@ -212,6 +201,7 @@ export default function App() {
                     // they will get id/name from cookies/localStorage OR from here on "return check" (create a new variable)
                     console.log('> Setting ID');
                     if (updateData.userID) {
+                        console.log('within - ID');
                         dispatch(setID(updateData.userID));
                     }
 
@@ -231,6 +221,7 @@ export default function App() {
                         dispatch(setLog(updateData.gameLog));
                     }
 
+                    // TODO: =>>>>>>>> AWAIT/ASYNC BEFORE SENDING THIS
                     // ==> Send current user information to server
                     let newUpdate = {
                         type: 'userConnected',
@@ -368,9 +359,8 @@ export default function App() {
         ==================================================*/
 
         WS.onclose = (e) => {
-
-            console.log('>>>>>>>>> WS CLOSING  >>>>>>>>>');
-            setWSReady(false);
+            console.log('>>>>>>>>> WebSocket - onClose - CLOSING SOCKET  >>>>>>>>>');
+            // setWSReady(false);
             // TODO: check if neeeded
             // setTimeout(() => {
             //     setWS(new WebSocket(WS_URL));
@@ -383,7 +373,6 @@ export default function App() {
 
         WS.onerror = (err) => {
             console.log('>>>>>>>>> WebSocket encountered error: ', err, ' --> Closing socket');
-            setWSReady(false);
             WS.close();
         };
 
@@ -392,6 +381,7 @@ export default function App() {
         ==================================================*/
 
         return () => {
+            console.log('>>>>>>>>> WebSocket - return - CLOSING SOCKET  >>>>>>>>>');
             WS.close();
         };
     }, [WS]);
@@ -402,11 +392,11 @@ export default function App() {
 
     // FUNCTION: ==> sendUserName
     // TODO
-    const sendUserName = (user, newName) => {
+    const sendUserName = (userID, newName) => {
         console.log('===> sendUserName');
         let newUpdate = {
             type: 'updateUserName',
-            user: user,
+            userID: userID,
             newName: newName,
         };
         WS.send(JSON.stringify(newUpdate));
@@ -419,11 +409,11 @@ export default function App() {
 
     // FUNCTION: ==> sendUserTeam
     // TODO
-    const sendUserTeam = (user, newTeam) => {
+    const sendUserTeam = (userID, newTeam) => {
         console.log('===> sendUserTeam');
         let newUpdate = {
             type: 'updateUserTeam',
-            user: user,
+            userID: userID,
             newTeam: newTeam,
         };
         WS.send(JSON.stringify(newUpdate));
@@ -436,11 +426,11 @@ export default function App() {
 
     // FUNCTION: ==> sendUserPosition
     // TODO
-    const sendUserPosition = (user, newPosition) => {
+    const sendUserPosition = (userID, newPosition) => {
         console.log('===> sendUserPosition');
         let newUpdate = {
             type: 'updateUserPosition',
-            user: user,
+            userID: userID,
             newPosition: newPosition,
         };
         WS.send(JSON.stringify(newUpdate));
@@ -516,11 +506,11 @@ export default function App() {
     // FUNCTION: ==> displayCards
     // TODO
     const displayCards = () => {
-        if (!(cards.length === undefined) && cards.length) {
+        if (!(cards === undefined) && cards.length) {
             let cardArray = [];
             let positionData = {};
             for (let i = 0; i < cards.length; i++) {
-                // > Positioning
+
                 positionData = {
                     top: CARD_BASE_TOP,
                     left: CARD_BASE_LEFT,
@@ -550,16 +540,23 @@ export default function App() {
                     positionData.left += CARD_WIDTH * 4;
                 }
 
-                // > Get list of highlighting users
-                let highlights = dispatch(getCardHighlights(cards[i].index));
+                let highlightList = [];
                 if (!(highlights === undefined) && highlights.length) {
-                    console.log('==> displayCards > highlights: ', highlights);
+                    for(let i = 0; i< highlights.length; i++) {
+                        if( highlights[i].cardIndex === cards[i].index ) {
+                            highlightList.push(highlights[i]);
+                        }
+                    }
+                }
+                // TODO: REMOVE ONCE CONFIRMED
+                if (!(highlightList === undefined) && highlightList.length) {
+                    console.log('==> displayCards > highlights: ', highlightList);
                 }
 
                 cardArray.push(
                     <GameCard
                         key={i}
-                        highlights={highlights}
+                        highlights={highlightList}
                         positionData={positionData}
                         card={cards[i]}
                         sendCard={sendCard}
@@ -569,6 +566,7 @@ export default function App() {
             }
             return cardArray;
         }
+        return null;
     };
 
     /*================================================
@@ -604,11 +602,13 @@ export default function App() {
     const devListHighlights = () => {
         // TODO highlights
         let highlightsList = [];
-        highlights.forEach((highlight) => {
-            highlightsList.push(
-                <li>{highlight.cardIndex + ' ' + highlight.name + ' ' + highlight.team}</li>
-            );
-        });
+        if (!(highlights === undefined) && highlights.length) {
+            highlights.forEach((highlight) => {
+                highlightsList.push(
+                    <li>{highlight.cardIndex + ' ' + highlight.name + ' ' + highlight.team}</li>
+                );
+            });
+        }
         return highlightsList;
     };
 

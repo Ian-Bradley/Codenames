@@ -66,7 +66,7 @@ WSS.on('connection', (wsClient) => {
     // > Set initial client data
     let clientData = {
         id: uuidv4(), // message id
-        userID: '', // id for disconnecting user removal and determining host
+        userID: uuidv4(), // id for disconnecting user removal and determining host
         type: 'clientConnected',
         cards: Game.state.cards,
         users: Game.state.users,
@@ -110,7 +110,7 @@ WSS.on('connection', (wsClient) => {
                 }
 
                 if (WSS.clients.size === 1 || Game.state.originalHost === updateData.user.id) {
-                    updateData.user.isHost = Game.setUserIsHost(updateData.user);
+                    updateData.user.isHost = Game.setHost(updateData.user.id);
 
                     // Send host data to all
                     updateData.id = uuidv4();
@@ -263,7 +263,7 @@ WSS.on('connection', (wsClient) => {
 
         // > Set host to next user in line if disconnecting user is host
         if (isHost && Game.state.users.length > 0) {
-            Game.setUserIsHost(Game.state.users[0]);
+            Game.setHost(Game.state.users[0].id);
 
             // Send new host data to all
             let updateData = {

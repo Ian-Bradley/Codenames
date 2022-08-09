@@ -58,13 +58,11 @@ WSS.broadcast_all = (data) => {
 
 WSS.on('connection', (wsClient) => {
     /*================================================
-        INNERBLOCK: > WS - INITIAL CONNECTION TO CLIENT
+        INNERBLOCK: > WS - INITIAL CONNECTION
     ==================================================*/
 
-    console.log('======= Client Connected =======');
-
-    // > Set initial client data
-    let clientData = {
+    console.log('======= START - Client Connected =======');
+    const clientData = {
         id: uuidv4(), // message id
         userID: uuidv4(), // id for disconnecting user removal and determining host
         type: 'clientConnected',
@@ -73,11 +71,9 @@ WSS.on('connection', (wsClient) => {
         gameLog: Game.state.log,
     };
 
-    // TODO: Send team guesses/cards remaining as well (returning users)
-
-    // > Send cards, users on connection for current client
+    // TODO: Send team guesses/cards remaining as well (returning users) [all game data]
     WSS.broadcast_client(JSON.stringify(clientData), wsClient);
-    console.log('>>>>>>>>> Message Sent - Client Data >>>>>>>>>');
+    console.log('>>>>>>>>> MESSAGE SENT - Client Data >>>>>>>>>');
     console.log('======= END - Client Connected =======');
 
     /*================================================
@@ -85,38 +81,43 @@ WSS.on('connection', (wsClient) => {
     ==================================================*/
 
     wsClient.on('message', function incoming(data) {
-        console.log('>>>>>>>>> Message Recieved >>>>>>>>>');
-        let updateData = JSON.parse(data);
-        console.log('type: ', updateData.type);
+        console.log('>>>>>>>>> MESSAGE RECIEVED >>>>>>>>>');
+        const messageData = JSON.parse(data);
+        console.log('type: ', messageData.type);
 
-        switch (updateData.type) {
+        switch (messageData.type) {
             /*================================================*/
             /*================================================*/
 
-            // HANDLER: => USER CONNECTED
+            // HANDLER: => userConnected
             case 'userConnected': {
-                // > Send new user data to all other users
-                console.log('======= MESSAGE - userConnected =======');
-                updateData.id = uuidv4();
-                clientData.userID = updateData.user.id; // set id for disconnecting user removal
-                Game.addUser(updateData.user);
-                WSS.broadcast(JSON.stringify(updateData), wsClient);
-                console.log('>>>>>>>>> Message Sent - userConnected >>>>>>>>>');
+                // USER CONNECTION IS NOW CONFIRMED, ADD
+                console.log('======= START - MESSAGE - userConnected =======');
+                messageData.id = uuidv4();
+                clientData.userID = messageData.user.id; // set id for disconnecting user removal
 
-                // > Determine/set/send host
+                Game.addUser(messageData.user);
+                WSS.broadcast(JSON.stringify(messageData), wsClient);
+                console.log('>>>>>>>>> MESSAGE SENT - userConnected >>>>>>>>>');
+
                 if (!Game.state.originalHost) {
-                    console.log('> Original Host');
-                    Game.setOriginalHost(updateData.user.id);
+                    Game.setOriginalHost(messageData.user.id);
                 }
 
-                if (WSS.clients.size === 1 || Game.state.originalHost === updateData.user.id) {
-                    updateData.user.isHost = Game.setHost(updateData.user.id);
+                if (
+                    WSS.clients.size === 1 ||
+                    Game.state.originalHost === messageData.user.id ||
+                    Game.state.host === ''
+                ) {
+                    Game.setHost(messageData.user.id);
 
-                    // Send host data to all
-                    updateData.id = uuidv4();
-                    updateData.type = 'updateUserIsHost';
-                    WSS.broadcast_all(JSON.stringify(updateData));
-                    console.log('>>>>>>>>> Message Sent - updateUserIsHost >>>>>>>>>');
+                    const newMessage = {
+                        id: uuidv4(),
+                        type: 'updateUserHost',
+                        userID: messageData.user.id,
+                    };
+                    WSS.broadcast_all(JSON.stringify(newMessage));
+                    console.log('>>>>>>>>> MESSAGE SENT - updateUserIsHost >>>>>>>>>');
                 }
 
                 console.log('======= END MESSAGE - userConnected =======');
@@ -126,13 +127,13 @@ WSS.on('connection', (wsClient) => {
             /*================================================*/
             /*================================================*/
 
-            // HANDLER: => USER NAME
+            // HANDLER: => updateUserName
             case 'updateUserName': {
-                console.log('======= MESSAGE - updateUserName =======');
-                updateData.id = uuidv4();
-                Game.setUserName(updateData.userID, updateData.newName);
-                WSS.broadcast_all(JSON.stringify(updateData));
-                console.log('>>>>>>>>> Message Sent - updateUserName >>>>>>>>>');
+                console.log('======= START - MESSAGE - updateUserName =======');
+                messageData.id = uuidv4();
+                Game.setUserName(messageData.userID, messageData.newName);
+                WSS.broadcast_all(JSON.stringify(messageData));
+                console.log('>>>>>>>>> MESSAGE SENT - updateUserName >>>>>>>>>');
                 console.log('======= END MESSAGE - updateUserName =======');
                 break;
             }
@@ -140,13 +141,13 @@ WSS.on('connection', (wsClient) => {
             /*================================================*/
             /*================================================*/
 
-            // HANDLER: => USER TEAM
+            // HANDLER: => updateUserTeam
             case 'updateUserTeam': {
-                console.log('======= MESSAGE - updateUserTeam =======');
-                updateData.id = uuidv4();
-                Game.setUserTeam(updateData.userID, updateData.newTeam);
-                WSS.broadcast_all(JSON.stringify(updateData));
-                console.log('>>>>>>>>> Message Sent - updateUserTeam >>>>>>>>>');
+                console.log('======= START - MESSAGE - updateUserTeam =======');
+                messageData.id = uuidv4();
+                Game.setUserTeam(messageData.userID, messageData.newTeam);
+                WSS.broadcast_all(JSON.stringify(messageData));
+                console.log('>>>>>>>>> MESSAGE SENT - updateUserTeam >>>>>>>>>');
                 console.log('======= END MESSAGE - updateUserTeam =======');
                 break;
             }
@@ -154,13 +155,13 @@ WSS.on('connection', (wsClient) => {
             /*================================================*/
             /*================================================*/
 
-            // HANDLER: => USER POSITION
+            // HANDLER: => updateUserPosition
             case 'updateUserPosition': {
-                console.log('======= MESSAGE - updateUserPosition =======');
-                updateData.id = uuidv4();
-                Game.setUserPosition(updateData.userID, updateData.newPosition);
-                WSS.broadcast_all(JSON.stringify(updateData));
-                console.log('>>>>>>>>> Message Sent - updateUserPosition >>>>>>>>>');
+                console.log('======= START - MESSAGE - updateUserPosition =======');
+                messageData.id = uuidv4();
+                Game.setUserPosition(messageData.userID, messageData.newPosition);
+                WSS.broadcast_all(JSON.stringify(messageData));
+                console.log('>>>>>>>>> MESSAGE SENT - updateUserPosition >>>>>>>>>');
                 console.log('======= END MESSAGE - updateUserPosition =======');
                 break;
             }
@@ -168,13 +169,13 @@ WSS.on('connection', (wsClient) => {
             /*================================================*/
             /*================================================*/
 
-            // HANDLER: => ADD HIGHLIGHT
+            // HANDLER: => updateAddHighlight
             case 'updateAddHighlight': {
-                console.log('======= MESSAGE - updateAddHighlight =======');
-                updateData.id = uuidv4();
-                Game.addHighlight(updateData.highlight);
-                WSS.broadcast(JSON.stringify(updateData), wsClient);
-                console.log('>>>>>>>>> Message Sent - updateAddHighlight >>>>>>>>>');
+                console.log('======= START - MESSAGE - updateAddHighlight =======');
+                messageData.id = uuidv4();
+                Game.addHighlight(messageData.highlight);
+                WSS.broadcast(JSON.stringify(messageData), wsClient);
+                console.log('>>>>>>>>> MESSAGE SENT - updateAddHighlight >>>>>>>>>');
                 console.log('======= END MESSAGE - updateAddHighlight =======');
                 break;
             }
@@ -182,13 +183,13 @@ WSS.on('connection', (wsClient) => {
             /*================================================*/
             /*================================================*/
 
-            // HANDLER: => DELETE HIGHLIGHT
+            // HANDLER: => updateDeleteHighlight
             case 'updateDeleteHighlight': {
-                console.log('======= MESSAGE - updateDeleteHighlight =======');
-                updateData.id = uuidv4();
-                Game.deleteHighlight(updateData.userID, updateData.cardIndex);
-                WSS.broadcast(JSON.stringify(updateData), wsClient);
-                console.log('>>>>>>>>> Message Sent - updateDeleteHighlight >>>>>>>>>');
+                console.log('======= START - MESSAGE - updateDeleteHighlight =======');
+                messageData.id = uuidv4();
+                Game.deleteHighlight(messageData.userID, messageData.cardIndex);
+                WSS.broadcast(JSON.stringify(messageData), wsClient);
+                console.log('>>>>>>>>> MESSAGE SENT - updateDeleteHighlight >>>>>>>>>');
                 console.log('======= END MESSAGE - updateDeleteHighlight =======');
                 break;
             }
@@ -196,14 +197,14 @@ WSS.on('connection', (wsClient) => {
             /*================================================*/
             /*================================================*/
 
-            // HANDLER: => DELETE USER HIGHLIGHTS
+            // HANDLER: => updateDeleteUserHighlights
             // NOTE: will be done on user disconnecting
             case 'updateDeleteUserHighlights': {
-                // console.log('======= MESSAGE - updateDeleteUserHighlights =======')
-                // updateData.id = uuidv4()
-                // Game.deleteUserHighlights( updateData.userID )
-                // WSS.broadcast( JSON.stringify( updateData ), wsClient )
-                // console.log('>>>>>>>>> Message Sent - updateDeleteUserHighlights >>>>>>>>>')
+                // console.log('======= START - MESSAGE - updateDeleteUserHighlights =======')
+                // messageData.id = uuidv4()
+                // Game.deleteUserHighlights( messageData.userID )
+                // WSS.broadcast( JSON.stringify( messageData ), wsClient )
+                // console.log('>>>>>>>>> MESSAGE SENT - updateDeleteUserHighlights >>>>>>>>>')
                 // console.log('======= END MESSAGE - updateDeleteUserHighlights =======')
                 // break
             }
@@ -211,14 +212,14 @@ WSS.on('connection', (wsClient) => {
             /*================================================*/
             /*================================================*/
 
-            // HANDLER: => DELETE CARD HIGHLIGHTS
+            // HANDLER: => updateDeleteCardHighlights
             // NOTE: may not need this, will be done on cardChoose
             case 'updateDeleteCardHighlights': {
-                // console.log('======= MESSAGE - updateDeleteCardHighlights =======')
-                // updateData.id = uuidv4()
-                // Game.deleteCardHighlights( updateData.cardIndex )
-                // WSS.broadcast( JSON.stringify( updateData ), wsClient )
-                // console.log('>>>>>>>>> Message Sent - updateDeleteCardHighlights >>>>>>>>>')
+                // console.log('======= START - MESSAGE - updateDeleteCardHighlights =======')
+                // messageData.id = uuidv4()
+                // Game.deleteCardHighlights( messageData.cardIndex )
+                // WSS.broadcast( JSON.stringify( messageData ), wsClient )
+                // console.log('>>>>>>>>> MESSAGE SENT - updateDeleteCardHighlights >>>>>>>>>')
                 // console.log('======= END MESSAGE - updateDeleteCardHighlights =======')
                 // break
             }
@@ -226,14 +227,14 @@ WSS.on('connection', (wsClient) => {
             /*================================================*/
             /*================================================*/
 
-            // HANDLER: => DELETE ALL HIGHLIGHTS
+            // HANDLER: => updateDeleteAllHighlights
             // NOTE: may not need this, will be done on turn-end (cardChoose condition/result)
             case 'updateDeleteAllHighlights': {
-                // console.log('======= MESSAGE - updateDeleteAllHighlights =======')
-                // updateData.id = uuidv4()
+                // console.log('======= START - MESSAGE - updateDeleteAllHighlights =======')
+                // messageData.id = uuidv4()
                 // Game.deleteCardHighlights()
-                // WSS.broadcast( JSON.stringify( updateData ), wsClient )
-                // console.log('>>>>>>>>> Message Sent - updateDeleteAllHighlights >>>>>>>>>')
+                // WSS.broadcast( JSON.stringify( messageData ), wsClient )
+                // console.log('>>>>>>>>> MESSAGE SENT - updateDeleteAllHighlights >>>>>>>>>')
                 // console.log('======= END MESSAGE - updateDeleteAllHighlights =======')
                 // break
             }
@@ -250,7 +251,7 @@ WSS.on('connection', (wsClient) => {
     ==================================================*/
 
     wsClient.on('close', (wsClient) => {
-        console.log('======= Client Disonnected =======');
+        console.log('======= START - Client Disonnected =======');
 
         // > Determine if host
         console.log('Game.isUserHost( clientData.userID ): ', Game.isUserHost(clientData.userID));
@@ -266,13 +267,13 @@ WSS.on('connection', (wsClient) => {
             Game.setHost(Game.state.users[0].id);
 
             // Send new host data to all
-            let updateData = {
+            const messageData = {
                 id: uuidv4(),
                 user: Game.state.users[0],
                 type: 'updateUserIsHost',
             };
-            WSS.broadcast_all(JSON.stringify(updateData), wsClient);
-            console.log('>>>>>>>>> Message Sent - updateUserIsHost >>>>>>>>>');
+            WSS.broadcast_all(JSON.stringify(messageData), wsClient);
+            console.log('>>>>>>>>> MESSAGE SENT - updateUserIsHost >>>>>>>>>');
         }
 
         // > If all users have left, begin session closing countdown
@@ -281,13 +282,13 @@ WSS.on('connection', (wsClient) => {
         }
 
         // > Set data for disconnect message
-        let updateData = {
+        const messageData = {
             id: uuidv4(), // message id
             userID: clientData.userID, // user removal id
-            type: 'clientDisconnected',
+            type: 'userDisconnected',
         };
-        WSS.broadcast(JSON.stringify(updateData), wsClient);
-        console.log('>>>>>>>>> Message Sent - clientDisconnected >>>>>>>>>');
+        WSS.broadcast(JSON.stringify(messageData), wsClient);
+        console.log('>>>>>>>>> MESSAGE SENT - userDisconnected >>>>>>>>>');
         console.log('======= END - Client Disonnected =======');
     });
 });

@@ -97,7 +97,7 @@ let usersSlice = createSlice({
 });
 export const {
     addUser,
-    deleteUser,
+    removeUser,
     setUsers,
     setUserName,
     setUserTeam,

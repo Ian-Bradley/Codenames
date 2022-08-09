@@ -3,12 +3,13 @@ import { GAME_STATE_SETUP, TEXT_GAME_SETUP } from '../../util/constants.js';
 
 const initialState = {
     game: {
-        state: GAME_STATE_SETUP, // TODO: change to auth
+        host: '',
         clue: '',
-        guesses: 0,
-        instruction: TEXT_GAME_SETUP,
         round: 0,
+        state: GAME_STATE_SETUP, // TODO: change to auth
+        guesses: 0,
         userTotal: 1,
+        instruction: TEXT_GAME_SETUP,
     },
 };
 
@@ -21,6 +22,13 @@ let gameSlice = createSlice({
         setGameState: function (state, action) {
             // action.payload = game state (String)
             state.game.state = action.payload;
+        },
+
+        /*======================================*/
+
+        setHost: function (state, action) {
+            // action.payload = user id (String)
+            state.game.host = action.payload;
         },
 
         /*======================================*/
@@ -59,12 +67,6 @@ let gameSlice = createSlice({
 
         /*======================================*/
 
-        decrementRound: function (state, action) {
-            state.game.round = state.game.round - 1;
-        },
-
-        /*======================================*/
-
         setUserTotal: function (state, action) {
             // action.payload = amount/count/total (Number)
             state.game.userTotal = action.payload;
@@ -86,14 +88,14 @@ let gameSlice = createSlice({
     },
 });
 export const {
-    setGameState,
     setClue,
-    seGuesses,
-    setInstruction,
+    setHost,
     setRound,
-    incrementRound,
-    decrementRound,
+    seGuesses,
+    setGameState,
     setUserTotal,
+    setInstruction,
+    incrementRound,
     incrementUserTotal,
     decrementUserTotal,
 } = gameSlice.actions;

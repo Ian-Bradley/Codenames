@@ -8,10 +8,6 @@ const F = require('./lib/util/functions.js');
 // const { setGameState } = require('./modules/game.module.js')
 
 /*================================================
-    BLOCK: HELPERS
-==================================================*/
-
-/*================================================
     BLOCK: CONSTRUCTION METHODS
 ==================================================*/
 
@@ -167,7 +163,7 @@ module.exports = class Game {
     }
 
     /*================================================
-        BLOCK: STATE METHODS - Host
+        INNERBLOCK: STATE METHODS - Host
     ==================================================*/
 
     // FUNCTION: => isUserHost
@@ -243,7 +239,7 @@ module.exports = class Game {
     }
 
     /*================================================
-        BLOCK: STATE METHODS - Game Settings
+        INNERBLOCK: STATE METHODS - Game Settings
     ==================================================*/
 
     // FUNCTION: => setGameState
@@ -292,7 +288,7 @@ module.exports = class Game {
     }
 
     /*================================================
-        BLOCK: STATE METHODS - Team Info
+        INNERBLOCK: STATE METHODS - Team Info
     ==================================================*/
 
     // FUNCTION: => setTeamCards
@@ -331,7 +327,7 @@ module.exports = class Game {
     }
 
     /*================================================
-        BLOCK: STATE METHODS - Users
+        INNERBLOCK: STATE METHODS - Users
     ==================================================*/
 
     // FUNCTION: => addUser
@@ -356,7 +352,7 @@ module.exports = class Game {
     }
 
     /*================================================
-        BLOCK: STATE METHODS - User Info
+        INNERBLOCK: STATE METHODS - User Info
     ==================================================*/
 
     // FUNCTION: => setUserName
@@ -405,7 +401,7 @@ module.exports = class Game {
     }
 
     /*================================================
-        BLOCK: STATE METHODS - Highlighting
+        INNERBLOCK: STATE METHODS - Highlighting
     ==================================================*/
 
     // FUNCTION: => addHighlight
@@ -473,7 +469,7 @@ module.exports = class Game {
     }
 
     /*================================================
-        BLOCK: STATE METHODS - Game Log
+        INNERBLOCK: STATE METHODS - Game Log
     ==================================================*/
 
     // FUNCTION: => addLogItem

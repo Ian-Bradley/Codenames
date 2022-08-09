@@ -3,6 +3,8 @@ export const WS_URL = 'ws://localhost:3001';
 
 export const DEBOUNCE_DELAY= 200;
 
+// TODO change to actual math...
+// rows = x+1, columns = x+5, loop for length 5 for both
 export const COLUMNS=  {
     TWO: [1, 6, 11, 16, 21],
     THREE: [2, 7, 12, 17, 22],
@@ -62,6 +64,7 @@ export const GAME_STATE_SPYMASTER_BLUE = 'spymaster-blue';
 export const GAME_STATE_OPERATIVE_BLUE = 'operative-blue';
 export const GAME_STATE_END = 'end';
 
+//TODO RENAME
 export const TEXT_Opponent__waitingSpymaster =
     'The opponent spymaster is playing, wait for your turn...';
 export const TEXT_Opponent__waitingOperatives =

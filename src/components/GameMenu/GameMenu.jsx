@@ -17,12 +17,11 @@ export default function GameMenu(props) {
         BLOCK: STATE
     ==================================================*/
 
-    // Redux
-    const isUserHost = useSelector((state) => {
-        return state['user'].user.isHost;
+    const user = useSelector((state) => {
+        return state['user'].user;
     });
-    const gameState = useSelector((state) => {
-        return state['game'].game.state;
+    const game = useSelector((state) => {
+        return state['game'].game;
     });
 
     /*================================================
@@ -58,9 +57,9 @@ export default function GameMenu(props) {
     ==================================================*/
 
     const displayMenu = () => {
-        if (gameState === GAME_STATE_SETUP) {
+        if (game.gameState === GAME_STATE_SETUP) {
             let buttons = [];
-            if (isUserHost) {
+            if (game.host === user.id) {
                 buttons = [
                     <Button
                         key={0}

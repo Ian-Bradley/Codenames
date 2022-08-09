@@ -80,7 +80,7 @@ export const getCookie = (name) => {
 
 
 
-
+// ONLY FOR TESTINGS
 /*======================================*/
 // FUNCTION: => shuffleArray
 const shuffleArray = ( arr ) => {

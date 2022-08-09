@@ -27,7 +27,7 @@ import {
 import { debounce, createCards } from '../util/functions.js';
 import './App.scss';
 
-const FAKE_CARDS = createCards();
+// const FAKE_CARDS = createCards();
 
 /*================================================
     BLOCK: REDUX ACTIONS
@@ -39,14 +39,14 @@ import { setCards } from '../redux/features/cards.feature.js';
 import { setDimensions } from '../redux/features/dimensions.feature.js';
 /*======================================*/
 import {
-    setGameState,
     setClue,
-    seGuesses,
-    setInstruction,
+    setHost,
     setRound,
-    incrementRound,
-    decrementRound,
+    seGuesses,
+    setGameState,
     setUserTotal,
+    setInstruction,
+    incrementRound,
     incrementUserTotal,
     decrementUserTotal,
 } from '../redux/features/game.feature.js';
@@ -80,7 +80,7 @@ import { setID, setName, setTeam, setPosition } from '../redux/features/user.fea
 /*======================================*/
 import {
     addUser,
-    deleteUser,
+    removeUser,
     setUsers,
     setUserName,
     setUserTeam,
@@ -95,6 +95,8 @@ export default function App() {
     // const messages = useSelector( ( state ) => { return state['messages'].messages } )
 
     // Redux
+    const dispatch = useDispatch();
+    // TODO may not need return, arrow is implicit
     const user = useSelector((state) => {
         return state['user'].user;
     });
@@ -122,7 +124,6 @@ export default function App() {
 
     // Hooks
     const [WSReady, setWSReady] = useState(false);
-    const dispatch = useDispatch();
 
     /*================================================
         BLOCK: HOOKS - APP DIMENSIONS
@@ -185,50 +186,45 @@ export default function App() {
 
         WS.onmessage = (messageData) => {
             const updateData = JSON.parse(messageData.data);
-            console.log('>>>>>>>>> Message Recieved - ' + updateData.type + ' >>>>>>>>>');
+            console.log('>>>>>>>>> MESSAGE RECIEVED - ' + updateData.type + ' >>>>>>>>>');
 
             switch (updateData.type) {
                 /*================================================*/
                 /*================================================*/
 
-                // HANDLER: => CLIENT CONNECTED
+                // HANDLER: => clientConnected
                 case 'clientConnected': {
                     // This handler is only fired ONCE when the CURRENT user joins
-                    console.log('======= MESSAGE - clientConnected =======');
+                    console.log('======= START - MESSAGE - clientConnected =======');
 
-                    // ==> Set current user ID
                     // TODO: returning users will not do this
                     // they will get id/name from cookies/localStorage OR from here on "return check" (create a new variable)
-                    console.log('> Setting ID');
+
                     if (updateData.userID) {
-                        console.log('within - ID');
                         dispatch(setID(updateData.userID));
                     }
 
-                    // ==> Set cards
                     if (!(updateData.cards === undefined) && updateData.cards.length) {
                         dispatch(setCards(updateData.cards));
                     }
 
-                    // ==> Set users
                     if (!(updateData.users === undefined) && updateData.users.length) {
                         dispatch(setUsers(updateData.users));
-                        dispatch(setUserTotal(updateData.users.length + 1));
+                        dispatch(setUserTotal(updateData.users.length + 1)); // + 1 for current user
                     }
 
-                    // ==> Set log
                     if (!(updateData.gameLog === undefined) && updateData.gameLog.length) {
                         dispatch(setLog(updateData.gameLog));
                     }
 
-                    // TODO: =>>>>>>>> AWAIT/ASYNC BEFORE SENDING THIS
-                    // ==> Send current user information to server
+                    // TODO: =>>>>> AWAIT/ASYNC DISPATCHES BEFORE SENDING THIS
                     let newUpdate = {
                         type: 'userConnected',
                         user: user,
                     };
                     WS.send(JSON.stringify(newUpdate));
-                    console.log('>>>>>>>>> Message Sent - userConnected >>>>>>>>>');
+
+                    console.log('>>>>>>>>> MESSAGE SENT - userConnected >>>>>>>>>');
                     console.log('======= END - MESSAGE - clientConnected =======');
                     break;
                 }
@@ -236,10 +232,10 @@ export default function App() {
                 /*================================================*/
                 /*================================================*/
 
-                // HANDLER: => USER CONNECTED
+                // HANDLER: => userConnected
                 case 'userConnected': {
                     // This handler is only fired when OTHER users join
-                    console.log('======= MESSAGE - userConnected =======');
+                    console.log('======= START - MESSAGE - userConnected =======');
                     dispatch(addUser(updateData.user));
                     dispatch(incrementUserTotal());
                     console.log('======= END - MESSAGE - userConnected =======');
@@ -249,22 +245,22 @@ export default function App() {
                 /*================================================*/
                 /*================================================*/
 
-                // HANDLER: => CLIENT DISCONNECTED
-                case 'clientDisconnected': {
+                // HANDLER: => userDisconnected
+                case 'userDisconnected': {
                     // This handler is only fired when OTHER users leave
-                    console.log('======= MESSAGE - clientDisconnected =======');
-                    dispatch(deleteUser(updateData.userID));
+                    console.log('======= START - MESSAGE - userDisconnected =======');
+                    dispatch(removeUser(updateData.userID));
                     dispatch(decrementUserTotal());
-                    console.log('======= END - MESSAGE - clientDisconnected =======');
+                    console.log('======= END - MESSAGE - userDisconnected =======');
                     break;
                 }
 
                 /*================================================*/
                 /*================================================*/
 
-                // HANDLER: => USER NAME
+                // HANDLER: => updateUserName
                 case 'updateUserName': {
-                    console.log('======= MESSAGE - updateUserName =======');
+                    console.log('======= START - MESSAGE - updateUserName =======');
                     if (updateData.userID === user.id) {
                         dispatch(setName(updateData.newName));
                     } else {
@@ -277,9 +273,10 @@ export default function App() {
                 /*================================================*/
                 /*================================================*/
 
-                // HANDLER: => USER TEAM
+                // HANDLER: => updateUserTeam
                 case 'updateUserTeam': {
-                    console.log('======= MESSAGE - updateUserTeam =======');
+                    console.log('======= START - MESSAGE - updateUserTeam =======');
+                    console.log(updateData);
                     if (updateData.userID === user.id) {
                         dispatch(setTeam(updateData.newTeam));
                     } else {
@@ -292,9 +289,10 @@ export default function App() {
                 /*================================================*/
                 /*================================================*/
 
-                // HANDLER: => USER POSITION
+                // HANDLER: => updateUserPosition
                 case 'updateUserPosition': {
-                    console.log('======= MESSAGE - updateUserPosition =======');
+                    console.log('======= START - MESSAGE - updateUserPosition =======');
+                    console.log(updateData);
                     if (updateData.userID === user.id) {
                         dispatch(setPosition(updateData.newPosition));
                     } else {
@@ -307,27 +305,20 @@ export default function App() {
                 /*================================================*/
                 /*================================================*/
 
-                // HANDLER: => USER HOST
-                // case 'updateUserIsHost': {
-                //     console.log('======= MESSAGE - updateUserIsHost =======')
-                //     if ( updateData.user.id === user.id ) {
-                //         dispatch( setIsHost( true ) )
-                //         dispatch( removeUsersIsHost() )
-                //     }
-                //     else {
-                //         dispatch( setIsHost( false ) )
-                //         dispatch( setUserIsHost( updateData.user.id ) )
-                //     }
-                //     console.log('======= END - MESSAGE - updateUserIsHost =======')
-                //     break
-                // }
+                // HANDLER: => updateUserHost
+                case 'updateUserHost': {
+                    console.log('======= START - MESSAGE - updateUserHost =======');
+                    dispatch(setHost(updateData.userID));
+                    console.log('======= END - MESSAGE - updateUserHost =======');
+                    break;
+                }
 
                 /*================================================*/
                 /*================================================*/
 
-                // HANDLER: => ADD HIGHLIGHT
+                // HANDLER: => updateAddHighlight
                 case 'updateAddHighlight': {
-                    console.log('======= MESSAGE - updateAddHighlight =======');
+                    console.log('======= START - MESSAGE - updateAddHighlight =======');
                     dispatch(addHighlight(updateData.highlight));
                     console.log('======= END - MESSAGE - updateAddHighlight =======');
                     break;
@@ -336,9 +327,9 @@ export default function App() {
                 /*================================================*/
                 /*================================================*/
 
-                // HANDLER: => DELETE HIGHLIGHT
+                // HANDLER: => updateDeleteHighlight
                 case 'updateDeleteHighlight': {
-                    console.log('======= MESSAGE - updateDeleteHighlight =======');
+                    console.log('======= START - MESSAGE - updateDeleteHighlight =======');
                     dispatch(deleteHighlight(updateData.userID, updateData.cardIndex));
                     console.log('======= END - MESSAGE - updateDeleteHighlight =======');
                     break;
@@ -390,51 +381,48 @@ export default function App() {
         BLOCK: WS SENDERS - USER INFO
     ==================================================*/
 
-    // FUNCTION: ==> sendUserName
-    // TODO
+    // FUNCTION: => sendUserName
     const sendUserName = (userID, newName) => {
-        console.log('===> sendUserName');
+        console.log('===> START - sendUserName');
         let newUpdate = {
             type: 'updateUserName',
             userID: userID,
             newName: newName,
         };
         WS.send(JSON.stringify(newUpdate));
-        console.log('>>>>>>>>> Message Sent - updateUserName >>>>>>>>>');
+        console.log('>>>>>>>>> MESSAGE SENT - updateUserName >>>>>>>>>');
         console.log('===> END - sendUserName');
     };
 
     /*======================================*/
     /*======================================*/
 
-    // FUNCTION: ==> sendUserTeam
-    // TODO
+    // FUNCTION: => sendUserTeam
     const sendUserTeam = (userID, newTeam) => {
-        console.log('===> sendUserTeam');
+        console.log('===> START - sendUserTeam');
         let newUpdate = {
             type: 'updateUserTeam',
             userID: userID,
             newTeam: newTeam,
         };
         WS.send(JSON.stringify(newUpdate));
-        console.log('>>>>>>>>> Message Sent - updateUserTeam >>>>>>>>>');
+        console.log('>>>>>>>>> MESSAGE SENT - updateUserTeam >>>>>>>>>');
         console.log('===> END - sendUserTeam');
     };
 
     /*======================================*/
     /*======================================*/
 
-    // FUNCTION: ==> sendUserPosition
-    // TODO
+    // FUNCTION: => sendUserPosition
     const sendUserPosition = (userID, newPosition) => {
-        console.log('===> sendUserPosition');
+        console.log('===> START - sendUserPosition');
         let newUpdate = {
             type: 'updateUserPosition',
             userID: userID,
             newPosition: newPosition,
         };
         WS.send(JSON.stringify(newUpdate));
-        console.log('>>>>>>>>> Message Sent - updateUserPosition >>>>>>>>>');
+        console.log('>>>>>>>>> MESSAGE SENT - updateUserPosition >>>>>>>>>');
         console.log('===> END - sendUserPosition');
     };
 
@@ -442,7 +430,7 @@ export default function App() {
         BLOCK: WS SENDERS - INTERACTIONS
     ==================================================*/
 
-    // FUNCTION: ==> sendClue
+    // FUNCTION: => sendClue
     // TODO
     const sendClue = (clue) => {
         // ==> update game log
@@ -460,7 +448,7 @@ export default function App() {
     /*======================================*/
     /*======================================*/
 
-    // FUNCTION: ==> sendCard
+    // FUNCTION: => sendCard
     // TODO
     const sendCard = (cardIndex) => {
         // use user --> updates from server will arrive as different commands, they will not use sendCard here
@@ -475,26 +463,26 @@ export default function App() {
     /*======================================*/
     /*======================================*/
 
-    // FUNCTION: ==> sendHighlight
+    // FUNCTION: => sendHighlight
     // TODO
     const sendHighlight = (cardIndex) => {
-        console.log('===> sendHighlight');
+        console.log('===> START - sendHighlight');
         if (!user.highlights.includes(cardIndex)) {
             let newUpdate = {
                 type: 'updateAddHighlight',
-                userID: user,
+                userID: user.id,
                 cardIndex: cardIndex,
             };
             WS.send(JSON.stringify(newUpdate));
-            console.log('>>>>>>>>> Message Sent - updateAddHighlight >>>>>>>>>');
+            console.log('>>>>>>>>> MESSAGE SENT - updateAddHighlight >>>>>>>>>');
         } else {
             let newUpdate = {
                 type: 'updateDeleteHighlight',
-                userID: user,
+                userID: user.id,
                 cardIndex: cardIndex,
             };
             WS.send(JSON.stringify(newUpdate));
-            console.log('>>>>>>>>> Message Sent - updateRemoveHighlight >>>>>>>>>');
+            console.log('>>>>>>>>> MESSAGE SENT - updateRemoveHighlight >>>>>>>>>');
         }
         console.log('===> END - sendHighlight');
     };
@@ -503,14 +491,12 @@ export default function App() {
         BLOCK: DISPLAYING
     ==================================================*/
 
-    // FUNCTION: ==> displayCards
-    // TODO
+    // FUNCTION: => displayCards
     const displayCards = () => {
         if (!(cards === undefined) && cards.length) {
             let cardArray = [];
             let positionData = {};
             for (let i = 0; i < cards.length; i++) {
-
                 positionData = {
                     top: CARD_BASE_TOP,
                     left: CARD_BASE_LEFT,
@@ -542,8 +528,8 @@ export default function App() {
 
                 let highlightList = [];
                 if (!(highlights === undefined) && highlights.length) {
-                    for(let i = 0; i< highlights.length; i++) {
-                        if( highlights[i].cardIndex === cards[i].index ) {
+                    for (let i = 0; i < highlights.length; i++) {
+                        if (highlights[i].cardIndex === cards[i].index) {
                             highlightList.push(highlights[i]);
                         }
                     }

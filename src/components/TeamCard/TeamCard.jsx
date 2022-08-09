@@ -18,13 +18,13 @@ import './TeamCard.scss';
 
 /**
  * @props team (Object) Team data for name, and remaining guesses and cards
- * @props sendUserTeam (Function)
- * @props sendUserPosition (Function)
+ * @props sendUserTeam (Function) // TODO: use SocketProvider and util function to send?
+ * @props sendUserPosition (Function) // TODO: use SocketProvider and util function to send?
  */
 
 export default function TeamCard(props) {
     /*================================================
-        BLOCK STATES
+        BLOCK: STATES
     ==================================================*/
 
     const user = useSelector((state) => {
@@ -38,7 +38,7 @@ export default function TeamCard(props) {
     });
 
     /*================================================
-        BLOCK HELPER
+        BLOCK: HELPER
     ==================================================*/
 
     // FUNCTION: => countPositions
@@ -61,56 +61,29 @@ export default function TeamCard(props) {
 
     // FUNCTION: => onSelectPosition
     const onSelectPosition = (positionButton) => {
-        console.log('=== ON SELECT POSITION');
-
-        console.log('user.team: ', user.team);
-        console.log('user.position: ', user.position);
-
-        console.log('props.team.name: ', props.team.name);
-        console.log('positionButton: ', positionButton);
-
-        let colorUserTeam = user.team;
-        let positionUser = user.position;
-
-        const isOnTeam = colorUserTeam;
+        const isOnTeam = user.team;
         const isTeamCardRed = props.team.name === COLOR_RED;
         const isTeamCardBlue = props.team.name === COLOR_BLUE;
-        const isSameTeam = props.team.name === colorUserTeam;
-        const isUserOperative = positionUser === OPERATIVE;
-        const isUserSpymaster = positionUser === SPYMASTER;
+        const isSameTeam = props.team.name === user.team;
+        const isUserOperative = user.position === OPERATIVE;
+        const isUserSpymaster = user.position === SPYMASTER;
         const isButtonOperative = positionButton === OPERATIVE;
         const isButtonSpymaster = positionButton === SPYMASTER;
 
-        console.log('colorUserTeam: ', colorUserTeam);
-        console.log('positionUser: ', positionUser);
-        
-        console.log('isOnTeam: ', isOnTeam);
-        console.log('isTeamCardRed: ', isTeamCardRed);
-        console.log('isTeamCardBlue: ', isTeamCardBlue);
-        console.log('isSameTeam: ', isSameTeam);
-        console.log('isUserOperative: ', isUserOperative);
-        console.log('isUserSpymaster: ', isUserSpymaster);
-        console.log('isButtonOperative: ', isButtonOperative);
-        console.log('isButtonSpymaster: ', isButtonSpymaster);
-
         // > User does not have a team
         if (!isOnTeam && isTeamCardRed && isButtonOperative) {
-            console.log('=== SEND USER');
             props.sendUserTeam(user.id, props.team.name);
             props.sendUserPosition(user.id, positionButton);
         }
         if (!isOnTeam && isTeamCardRed && isButtonSpymaster) {
-            console.log('=== SEND USER');
             props.sendUserTeam(user.id, props.team.name);
             props.sendUserPosition(user.id, positionButton);
         }
         if (!isOnTeam && isTeamCardBlue && isButtonOperative) {
-            console.log('=== SEND USER');
             props.sendUserTeam(user.id, props.team.name);
             props.sendUserPosition(user.id, positionButton);
         }
         if (!isOnTeam && isTeamCardBlue && isButtonSpymaster) {
-            console.log('=== SEND USER');
             props.sendUserTeam(user.id, props.team.name);
             props.sendUserPosition(user.id, positionButton);
         }
@@ -162,18 +135,10 @@ export default function TeamCard(props) {
         BLOCK: DISPLAYING
     ==================================================*/
 
-    // FUNCTION: => displayTeamCardClass
-    const displayTeamCardClass = () => {
-        return 'team-card team-' + props.team.name;
-    };
-
-    /*======================================*/
-    /*======================================*/
-
     // FUNCTION: => displayUsersList
     const displayUsersList = (position) => {
         let usersList = [];
-
+        // TODO: maybe change to map
         // Connected users
         if (!(users === undefined) && users.length) {
             for (let i = 0; i < users.length; i++) {
@@ -255,7 +220,7 @@ export default function TeamCard(props) {
     ==================================================*/
 
     return (
-        <div className={displayTeamCardClass()}>
+        <div className={'team-card team-' + props.team.name}>
             <div className='remaining-cards'>
                 <span>{displayRemainingCards()}</span>
             </div>
@@ -264,12 +229,12 @@ export default function TeamCard(props) {
                 <span>{displayRemainingGuesses()}</span>
             </div>
             <div className='team-operatives'>
-                <div className='team-card-title'>Operative(s)</div>
+                <div className='team-card-title'>{OPERATIVE+'(s)'}</div>
                 <ul className='team-list'>{displayUsersList(OPERATIVE)}</ul>
                 {displayButtonOperative()}
             </div>
             <div className='team-spymaster'>
-                <div className='team-card-title'>Spymaster</div>
+                <div className='team-card-title'>{SPYMASTER+'(s)'}</div>
                 <ul className='team-list'>{displayUsersList(SPYMASTER)}</ul>
                 {displayButtonSpymaster()}
             </div>
